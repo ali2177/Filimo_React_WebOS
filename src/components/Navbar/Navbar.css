@@ -1,0 +1,47 @@
+.drawer {
+  flex-shrink: 0;
+  width: 270px;
+  height: 100vh;
+  overflow-y: auto;
+  overflow: hidden;
+  border: none;
+
+  padding-right: 70px;
+  /* height: 100%; */
+  /* right: 0; */
+
+  background: linear-gradient(180deg, #0c0c0c 0%, #151515 70.04%);
+}
+.drawer-focus {
+  background: linear-gradient(180deg, #0c0c0c 0%, #151515 70.04%);
+  flex-shrink: 0;
+  width: 120px;
+  border: none;
+  padding-right: 40px;
+  /* height: 100%; */
+  /* overflow: auto; */
+  /* overflow-y: auto; */
+}
+.drawer-focus .menu-item-label {
+  display: none;
+}
+.drawer-focus .button-sign {
+  margin-bottom: 70px;
+}
+.drawer-focus .button-notsign {
+  margin-bottom: 70px;
+}
+.drawer .button {
+  margin-bottom: 30px;
+}
+.drawer-focused {
+  flex-shrink: 0;
+  background-color: beige;
+  width: 100px;
+  padding-right: "22px";
+  padding-left: "22px";
+  padding-top: "60px";
+  border: "none";
+  /* overflow: auto;
+  overflow-y: scroll; */
+}

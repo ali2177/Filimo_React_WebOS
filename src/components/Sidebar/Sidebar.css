@@ -1,0 +1,40 @@
+.logo-element {
+  padding-top: 68px;
+  margin-right: 10px;
+  margin-bottom: 100px;
+  /* position: fixed; */
+  width: 328px;
+  z-index: 1000;
+  /* background-color: #111111; */
+  /* background: linear-gradient(180deg, #0C0C0C 100%, #151515 70.04%); */
+}
+.logo-expended {
+  width: 110px;
+  height: 40px;
+}
+.logo {
+  width: 40px;
+  height: 40px;
+}
+.menu-items {
+  width: 100%;
+  height: 900px;
+  padding-right: 20px;
+  overflow-y: scroll;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.menuItem h8 {
+  font-size: 24px;
+  line-height: 40px;
+  letter-spacing: 0em;
+  text-align: right;
+}
+.menu-item-label {
+  padding-right: 10px;
+  padding-left: 10px;
+}
