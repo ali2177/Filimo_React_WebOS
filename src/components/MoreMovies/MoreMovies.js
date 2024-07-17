@@ -168,7 +168,6 @@ const MoreMovies = () => {
                   movies={movieItem.movies.data}
                   focusKeey={`MOVIE_LIST_${index}`}
                   index={index}
-                  onFocus={onRowFocus}
                 />
               </div>
             ))}

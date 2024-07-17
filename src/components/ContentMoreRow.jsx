@@ -78,10 +78,10 @@ const ContentMoreRow = ({
     navigate(`/moremovies/${row}`);
   };
   useEffect(() => {
-    if (localStorage.getItem("lastFocusMore") === null) {
+    if (localStorage.getItem("lastFocusMoreMovie") === null) {
       setFocus("MOVIEMore_0_0");
     } else {
-      setFocus(localStorage.getItem("lastFocusMore"));
+      setFocus(localStorage.getItem("lastFocusMoreMovie"));
     }
     // setFocus("MOVIEMore_0_0");
     // focusSelf();

@@ -24,7 +24,7 @@ function MovieMore({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
       // }
     },
     onEnterPress: () => {
-      localStorage.setItem("lastFocusMore", focusKeey);
+      localStorage.setItem("lastFocusMoreMovie", focusKeey);
       navigate(`/movie/${movie.uid}`);
     },
     focusable: true,

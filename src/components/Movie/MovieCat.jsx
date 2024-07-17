@@ -38,6 +38,12 @@ function MovieCat({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
       block: "center",
     });
   };
+  useEffect(() => {
+    console.log(movie);
+    if (movie.badge.hear) {
+      console.log(movie.badge.hear);
+    }
+  }, [movie]);
 
   return (
     <div

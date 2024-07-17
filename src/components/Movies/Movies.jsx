@@ -62,6 +62,7 @@ function Movies({ isLogin }) {
     localStorage.removeItem("lastFocusCrew");
     localStorage.removeItem("lastFocusRecomm");
     localStorage.removeItem("lastFocusCat");
+    localStorage.removeItem("lastFocusMoreMovie");
     pageLocation = location.pathname;
     window.addEventListener("keydown", keyHandler);
     return () => window.removeEventListener("keydown", keyHandler);
@@ -161,6 +162,8 @@ function Movies({ isLogin }) {
   if (!data.data) return <NetworkError />;
 
   if (!data.data[0]) return <NetworkError />;
+
+  console.log(data.data);
 
   return (
     <>

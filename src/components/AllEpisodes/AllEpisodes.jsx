@@ -15,6 +15,7 @@ import NetworkError from "../NetworkError/NetworkError";
 import Loader from "../Loader/Loader";
 import ContentRow from "../ContentRow";
 import ContentOnlyRow from "../ContentOnlyRow";
+import ContentMoreRow from "../ContentMoreRow.jsx";
 
 const AllEpisodes = () => {
   const myRef = useRef(null);
@@ -31,13 +32,13 @@ const AllEpisodes = () => {
   const [curretFocusedMovie, setCurretFocusedMovie] = useState(null);
 
   useEffect(() => {
+    localStorage.removeItem("lastFocusActor");
+    localStorage.removeItem("lastFocusCrew");
     window.addEventListener("keydown", keyHandler);
     window.scrollTo({ top: 0 });
     return () => window.removeEventListener("keydown", keyHandler);
   }, []);
-  useEffect(() => {
-    focusSelf();
-  });
+
   const keyHandler = (key) => {
     // check if keycode is the return button on the remote and the remove button on your keyboard
     if (key.keyCode === 10009 || key.keyCode === 8) {
@@ -89,7 +90,7 @@ const AllEpisodes = () => {
                 {movieItem.link_text}
               </h3>
 
-              <ContentOnlyRow
+              <ContentMoreRow
                 linkText={data.data[0].link_text}
                 movieFocused={movieSet}
                 row={movieItem.tag_id}

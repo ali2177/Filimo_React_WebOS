@@ -180,5 +180,5 @@ export const categoriiesIfNotSignIn = [
   //     { contName: "ترکیه", contValue: "turkey" },
   //   ],
   // },
-  { label: "حساب کاربری", value: "login", icon: "live" },
+  { label: "ورود", value: "login", icon: "live" },
 ];
