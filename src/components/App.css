@@ -1033,7 +1033,7 @@ Tint, Red, Dark, 12, Success
 }
 
 .profile {
-  padding-top: 128px;
+  padding-top: 38px;
   padding-right: 40px;
   background: #151515;
   width: 100%;
@@ -1075,14 +1075,14 @@ Tint, Red, Dark, 12, Success
 .subscription {
   display: flex;
   padding: 50px 30px 50px 30px;
+  margin-bottom: 30px;
   /* padding-left: ; */
 
   /* flex-direction: row; */
 
-  gap: 600px;
-
-  width: 1300px;
-  height: 300px;
+  justify-content: space-between;
+  align-items: center;
+  width: 80%;
   background: radial-gradient(
       100% 297.11% at 100% 0%,
       rgba(255, 255, 255, 0.06) 0%,
@@ -1092,7 +1092,17 @@ Tint, Red, Dark, 12, Success
   border-radius: 12px;
 }
 .subscription-notif {
-  padding-top: 100px;
+  display: flex;
+  padding: 20px 28px;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 8px;
+  background: var(
+    --opacity-colors-natural-dark-white-8-dark,
+    rgba(255, 255, 255, 0.08)
+  );
+  height: 50px;
 }
 
 .subscription-text {
@@ -1100,7 +1110,7 @@ Tint, Red, Dark, 12, Success
   flex-direction: column;
   align-items: flex-start;
   gap: 24px;
-  width: 417px;
+  width: 70%;
 }
 .subscription-text h4 {
   font-style: normal;
@@ -1128,6 +1138,32 @@ Tint, Red, Dark, 12, Success
   letter-spacing: 0em;
   text-align: right;
   color: #e8e8e8;
+}
+.profile-pic-wrraper {
+  width: 104px;
+  height: 104px;
+  border-radius: 104px;
+  background: lightgray -3.429px -3.048px / 105.495% 105.495% no-repeat;
+  overflow: hidden;
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+.user-info-id {
+  display: flex;
+  padding: 8px 16px;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  border-radius: 800px;
+  background: var(
+    --opacity-colors-natural-dark-white-12-dark,
+    rgba(255, 255, 255, 0.12)
+  );
+
+  /* BG Blur/Background Blur 01 */
+  backdrop-filter: blur(20px);
 }
 
 .subtitle-list {
