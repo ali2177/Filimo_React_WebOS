@@ -34,13 +34,7 @@ const PlayBotton = ({ data, onFocus, onEnterPress }) => {
     <FocusContext.Provider value={focusKey}>
       <div
         ref={ref}
-        className="btn-play u500"
-        style={{
-          backgroundColor: focused
-            ? "green"
-            : `${data?.data?.watch_action.btn.bg_color}`,
-          color: `${data?.data?.watch_action.btn.text_color}`,
-        }}
+        className={focused ? "btn-play btn-play-focus u500" : "btn-play u500"}
       >
         {data?.data?.watch_action.link_text}
       </div>

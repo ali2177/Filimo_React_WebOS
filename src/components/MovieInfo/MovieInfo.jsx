@@ -68,30 +68,40 @@ function MovieInfo({ isLogin }) {
 
   useEffect(() => {
     localStorage.removeItem("lastFocusMore");
-    if (
-      localStorage.getItem("lastFocusActor") === null &&
-      localStorage.getItem("lastFocusCrew") === null
-    ) {
-      window.scrollTo({ top: 0 });
-      setFocus("paly-btn");
-    } else if (localStorage.getItem("lastFocusActor")) {
-      setFocus(localStorage.getItem("lastFocusActor"));
+    if (localStorage.getItem("seasonBtn")) {
+      console.log(localStorage.getItem("seasonBtn"));
+      setFocus("season-btn");
     } else {
-      setFocus(localStorage.getItem("lastFocusCrew"));
+      if (
+        localStorage.getItem("lastFocusActor") === null &&
+        localStorage.getItem("lastFocusCrew") === null
+      ) {
+        window.scrollTo({ top: 0 });
+        setFocus("paly-btn");
+      } else if (localStorage.getItem("lastFocusActor")) {
+        setFocus(localStorage.getItem("lastFocusActor"));
+      } else {
+        setFocus(localStorage.getItem("lastFocusCrew"));
+      }
     }
   }, []);
   useEffect(() => {
     window.scrollTo({ top: 0 });
-    if (
-      localStorage.getItem("lastFocusActor") === null &&
-      localStorage.getItem("lastFocusCrew") === null
-    ) {
-      window.scrollTo({ top: 0 });
-      setFocus("paly-btn");
-    } else if (localStorage.getItem("lastFocusActor")) {
-      setFocus(localStorage.getItem("lastFocusActor"));
+    if (localStorage.getItem("seasonBtn")) {
+      console.log(localStorage.getItem("seasonBtn"));
+      setFocus("season-btn");
     } else {
-      setFocus(localStorage.getItem("lastFocusCrew"));
+      if (
+        localStorage.getItem("lastFocusActor") === null &&
+        localStorage.getItem("lastFocusCrew") === null
+      ) {
+        window.scrollTo({ top: 0 });
+        setFocus("paly-btn");
+      } else if (localStorage.getItem("lastFocusActor")) {
+        setFocus(localStorage.getItem("lastFocusActor"));
+      } else {
+        setFocus(localStorage.getItem("lastFocusCrew"));
+      }
     }
   }, [location]);
 
@@ -126,13 +136,13 @@ function MovieInfo({ isLogin }) {
   const handleSeasonBtnFocus = () => {
     seasonBtn.current.scrollIntoView({
       behavior: "smooth",
-      block: "center",
+      block: "end",
     });
   };
   const handleRecommBtnFocus = () => {
     recommBtn.current.scrollIntoView({
       behavior: "smooth",
-      block: "center",
+      block: "end",
     });
   };
   const handlePlayPress = () => {
@@ -178,10 +188,16 @@ function MovieInfo({ isLogin }) {
       <main className="main">
         {isShowAlert && <Alert />}
 
-        <div className="hero">
-          <div className="hero-gradiant"></div>
+        <div
+          style={{
+            background:
+              "linear-gradient(0deg, #151515 0%, rgba(21, 21, 21, 0.25) 30%, rgba(21, 21, 21, 0.00) 100%), linear-gradient(270deg, rgba(21, 21, 21, 0.80) 0%, rgba(21, 21, 21, 0.40) 28.12%, rgba(21, 21, 21, 0.00) 46.87%)",
+          }}
+          className="hero"
+        >
+          {/* <div className="hero-gradiant"></div> */}
           <img
-            src={data?.data?.General?.thumbnails?.movie_img_b}
+            src={data?.data?.General?.cover_data.horizontal}
             className="hero-poster"
             // alt={data?.title}
           />
@@ -226,30 +242,31 @@ function MovieInfo({ isLogin }) {
               <MovieDetailBadge movie={data?.data?.General} />
             </div>
             <div ref={myRef} className="hero-controls">
-              <PlayBotton
-                data={data}
-                onEnterPress={handlePlayPress}
-                onFocus={handleScrolling}
-              />
-              <div style={{ width: "50%" }}>
-                {/* <h3 className="u700">گزینه ها</h3> */}
-                <div style={{ display: "flex", gap: "10px" }}>
-                  {data.data.General.pre_title === "سریال" && (
-                    <div style={{ width: "50%" }} ref={seasonBtn}>
-                      <SeasonBtn
-                        ui_id={data?.data?.General.uid}
-                        onFocus={handleSeasonBtnFocus}
-                      />
-                    </div>
-                  )}
+              <div style={{ display: "flex", gap: "50px", width: "70%" }}>
+                <PlayBotton
+                  data={data}
+                  onEnterPress={handlePlayPress}
+                  onFocus={handleScrolling}
+                />
 
-                  <div style={{ width: "50%" }} ref={recommBtn}>
-                    <RecommBtn
-                      movieRow={movieRecom?.data[0].movies.data}
-                      onFocus={handleRecommBtnFocus}
-                      linkText={"فیلم های پیشنهادی"}
+                {/* <h3 className="u700">گزینه ها</h3> */}
+
+                {data.data.General.pre_title === "سریال" && (
+                  <div style={{ width: "50%" }} ref={seasonBtn}>
+                    <SeasonBtn
+                      seriesName={data?.data?.General?.title}
+                      ui_id={data?.data?.General.uid}
+                      onFocus={handleSeasonBtnFocus}
                     />
                   </div>
+                )}
+
+                <div style={{ width: "50%" }} ref={recommBtn}>
+                  <RecommBtn
+                    movieRow={movieRecom?.data[0].movies.data}
+                    onFocus={handleRecommBtnFocus}
+                    linkText={"فیلم های پیشنهادی"}
+                  />
                 </div>
               </div>
             </div>

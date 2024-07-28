@@ -11,12 +11,15 @@ import {
   getCurrentFocusKey,
 } from "@noriginmedia/norigin-spatial-navigation";
 
-const SeasonBtn = ({ ui_id, onFocus, onEnterPress }) => {
+const SeasonBtn = ({ ui_id, onFocus, onEnterPress, seriesName }) => {
   const { ref, focused, focusSelf, focusKey } = useFocusable({
     onFocus,
     onEnterPress: () => {
+      localStorage.setItem("seasonBtn", "season-btn");
+      localStorage.setItem("seriesName", seriesName);
       navigate(`/allepisodes/${ui_id}`);
     },
+    focusKey: "season-btn",
   });
 
   const navigate = useNavigate();
@@ -35,11 +38,7 @@ const SeasonBtn = ({ ui_id, onFocus, onEnterPress }) => {
     <FocusContext.Provider value={focusKey}>
       <div
         ref={ref}
-        className="btn-ctrl u500"
-        style={{
-          backgroundColor: focused ? "green" : "black",
-          color: "white",
-        }}
+        className={focused ? "btn-ctrl btn-play-focus u500" : "btn-ctrl u500"}
       >
         تمامی قسمت ها
       </div>

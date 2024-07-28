@@ -24,6 +24,7 @@ const ContentRow = ({
   onFocus,
   row,
   index,
+  scrollRef,
 }) => {
   // const [scroll, setscroll] = useState(0);
   const { ref, focusKey, focused, focusSelf } = useFocusable({
@@ -130,7 +131,9 @@ const ContentRow = ({
   return (
     <FocusContext.Provider value={focusKey}>
       <div className="contentRowWrapper" ref={ref}>
-        <h3 className="u700">{title}</h3>
+        <h3 style={{ paddingTop: "0px", margin: "12px" }} className="u700">
+          {title}
+        </h3>
         <div className="contentScrollingWrapper" ref={scrollingRef}>
           <div className="contentRowScrollingContent">
             {movies.slice(0, 6).map((movie, i) => (
@@ -142,6 +145,7 @@ const ContentRow = ({
                   // onFocus={() => onAssetFocus(i, movie)}
                   // onEnterPress={() => handleInterPress(movie)}
                   focusKeey={`MOVIE_${index}__${i}`}
+                  scrollRef={scrollRef}
                 />
               </div>
             ))}

@@ -23,8 +23,10 @@ function Movies({ isLogin }) {
     saveLastFocusedChild: false,
   });
   const myRef = useRef(null);
+  const scrollRef = useRef(null);
   const [curretFocusedMovie, setCurretFocusedMovie] = useState(null);
   const [movies, setMovies] = useState();
+  const [pageLocation, setPageLocation] = useState();
   const [showExitModal, setShowExitModal] = useState(false);
   let doubleClickFlag;
   const location = useLocation("");
@@ -32,7 +34,6 @@ function Movies({ isLogin }) {
   const { tag_id, other_data } = useParams();
   const observer = useRef();
   let jwt = localStorage.getItem("jwt");
-  let pageLocation;
   const { data, error, isFetching } = useGetMoviesQuery({
     tag_id,
     other_data,
@@ -63,7 +64,8 @@ function Movies({ isLogin }) {
     localStorage.removeItem("lastFocusRecomm");
     localStorage.removeItem("lastFocusCat");
     localStorage.removeItem("lastFocusMoreMovie");
-    pageLocation = location.pathname;
+    localStorage.removeItem("seasonBtn");
+    setPageLocation(location.pathname);
     window.addEventListener("keydown", keyHandler);
     return () => window.removeEventListener("keydown", keyHandler);
   }, [location]);
@@ -163,74 +165,95 @@ function Movies({ isLogin }) {
 
   if (!data.data[0]) return <NetworkError />;
 
-  console.log(data.data);
-
   return (
     <>
       <main className="main">
         {showExitModal && <Snackbar />}
         <>
-          <Content
-            data={data.data.filter((item) => item.output_type === "movie")}
-            curretFocusedMovie={curretFocusedMovie}
-            type={other_data}
-            firstRow={data.data.filter((item) => item.output_type === "movie")}
-          />
-
           <div
-            ref={myRef}
+            ref={scrollRef}
             style={{
-              paddingTop: "30px",
-              marginRight: "30px",
-              marginTop: "-290px",
               overflow: "hidden",
               overflowY: "scroll",
-              height: "600px",
+              height: "100vh",
             }}
           >
-            {movies &&
-              data.data
-                .filter((item) => item.output_type === "movie")
-                .map(
-                  (movieItem, index) => (
-                    <ContentRow
-                      title={movieItem.link_text}
-                      movieFocused={movieSet}
-                      movies={movieItem.movies.data}
-                      focusKeey={`MOVIE_LIST_${index}`}
-                      index={index}
-                      movieLinkKey={movieItem.link_key}
-                      movieTag={movieItem.tag_id}
-                      onFocus={onRowFocus}
-                      row={
-                        movieItem.link_key
-                          ? movieItem.link_key
-                          : movieItem.tag_id
-                      }
-                    />
-                  )
-                  // movieItem.link_text != null ? (
-                  //   <div
-                  //     key={movieItem.id}
-                  //     // ref={lastMovieElement}
-                  //     style={{ marginBottom: "50px" }}
-                  //   >
-                  //     <h3 className="u700">{movieItem.link_text}</h3>
-
-                  //     <MovieList
-                  //       movieFocused={movieSet}
-                  //       row={
-                  //         movieItem.link_key
-                  //           ? movieItem.link_key
-                  //           : movieItem.tag_id
-                  //       }
-                  //       movies={movieItem.movies.data}
-                  //     />
-                  //   </div>
-                  // ) : (
-                  //   ""
-                  // )
+            {pageLocation === "/" && (
+              <Content
+                data={data.data.filter((item) => item.output_type === "movie")}
+                curretFocusedMovie={curretFocusedMovie}
+                type={other_data}
+                firstRow={data.data.filter(
+                  (item) => item.output_type === "movie"
                 )}
+              />
+            )}
+
+            <div
+              ref={myRef}
+              style={{
+                paddingTop: "30px",
+                marginRight: "30px",
+                marginTop: pageLocation === "/" ? "-490px" : "0",
+                position: "relative",
+              }}
+            >
+              {movies &&
+                data.data
+                  .filter((item) => item.output_type === "movie")
+                  .map(
+                    (movieItem, index) => (
+                      <>
+                        {index !== 0 && (
+                          <div
+                            className={
+                              localStorage.getItem("lastFocusRow") === "MOVIE_0"
+                                ? "back-grad back-grad-no-bg"
+                                : "back-grad"
+                            }
+                          ></div>
+                        )}
+                        <ContentRow
+                          title={movieItem.link_text}
+                          movieFocused={movieSet}
+                          movies={movieItem.movies.data}
+                          focusKeey={`MOVIE_LIST_${index}`}
+                          index={index}
+                          movieLinkKey={movieItem.link_key}
+                          movieTag={movieItem.tag_id}
+                          onFocus={onRowFocus}
+                          row={
+                            movieItem.link_key
+                              ? movieItem.link_key
+                              : movieItem.tag_id
+                          }
+                          scrollRef={scrollRef}
+                        />
+                      </>
+                    )
+                    // movieItem.link_text != null ? (
+                    //   <div
+                    //     key={movieItem.id}
+                    //     // ref={lastMovieElement}
+                    //     style={{ marginBottom: "50px" }}
+                    //   >
+                    //     <h3 className="u700">{movieItem.link_text}</h3>
+
+                    //     <MovieList
+                    //       movieFocused={movieSet}
+                    //       row={
+                    //         movieItem.link_key
+                    //           ? movieItem.link_key
+                    //           : movieItem.tag_id
+                    //       }
+                    //       movies={movieItem.movies.data}
+                    //     />
+                    //   </div>
+                    // ) : (
+                    //   ""
+                    // )
+                  )}
+            </div>
           </div>
         </>
       </main>

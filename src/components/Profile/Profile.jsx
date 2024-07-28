@@ -95,13 +95,13 @@ function Profile() {
                 </p>
               </div>
               {/* <SignOutBtn /> */}
-              <SignOutBtn jwt={jwt} />
             </div>
 
             <div className="subscription-notif u500">
               {UserData?.data?.attributes.profile_state_info.pay_desc}
             </div>
           </div>
+          <SignOutBtn jwt={jwt} />
         </main>
       </FocusContext.Provider>
     );

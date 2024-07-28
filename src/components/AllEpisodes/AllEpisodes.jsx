@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { MovieList } from "../index";
 import { useGetAllEpisodesQuery } from "../../services/TMDB";
+import logo from "../../assets/images/televika_type.png";
 import {
   FocusableComponentLayout,
   FocusContext,
@@ -16,6 +17,8 @@ import Loader from "../Loader/Loader";
 import ContentRow from "../ContentRow";
 import ContentOnlyRow from "../ContentOnlyRow";
 import ContentMoreRow from "../ContentMoreRow.jsx";
+import SeasonCount from "./SeasonCount.jsx";
+import EpisodesWrapper from "./EpisodesWrapper.jsx";
 
 const AllEpisodes = () => {
   const myRef = useRef(null);
@@ -30,6 +33,8 @@ const AllEpisodes = () => {
   const { ui_id } = useParams();
   const { data, error, isFetching } = useGetAllEpisodesQuery(ui_id);
   const [curretFocusedMovie, setCurretFocusedMovie] = useState(null);
+  const [curretSeasonChosen, setCurretSeasonChosen] = useState(null);
+  const [curretSeasonDetail, setCurretSeasonDetail] = useState(null);
 
   useEffect(() => {
     localStorage.removeItem("lastFocusActor");
@@ -38,12 +43,47 @@ const AllEpisodes = () => {
     window.scrollTo({ top: 0 });
     return () => window.removeEventListener("keydown", keyHandler);
   }, []);
+  useEffect(() => {
+    setCurretSeasonChosen(data?.data[data.data.length - 1]?.movies?.data);
+    getUserData(
+      localStorage.getItem("jwt"),
+      data?.data[data.data.length - 1].movies?.data[0].serial_parent_new,
+      data?.data[data.data.length - 1].movies?.data[0].serial_season_part
+    );
+  }, [data]);
+
+  const getUserData = async (jwt, parent_id, part) => {
+    try {
+      const res = await fetch(
+        `https://www.televika.com/api/fa/v1/movie/serial/episodebyseason/parent_id/${parent_id}/part/${part}?json_type=simple`,
+        {
+          method: "GET",
+          headers: { Authorization: `Bearer ${jwt}` },
+        }
+      );
+      const blocks = await res?.json();
+      console.log(blocks.data[0]);
+      if (blocks) {
+        setCurretSeasonDetail(blocks.data[0]);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const keyHandler = (key) => {
     // check if keycode is the return button on the remote and the remove button on your keyboard
     if (key.keyCode === 10009 || key.keyCode === 8) {
       navigate(-1);
     }
+  };
+  const HandleSeasonEnterPress = (season) => {
+    setCurretSeasonChosen(season.movies.data);
+    getUserData(
+      localStorage.getItem("jwt"),
+      season.movies.data[0].serial_parent_new,
+      season.movies.data[0].serial_season_part
+    );
   };
   const onRowFocus = React.useCallback(
     ({ y }) => {
@@ -75,34 +115,44 @@ const AllEpisodes = () => {
   return (
     <FocusContext.Provider value={focusKey}>
       <div
-        ref={myRef}
         style={{
-          marginRight: "40px",
-          overflow: "hidden",
-          overflowY: "scroll",
+          display: "flex",
+          flexDirection: "column",
+          width: "100%",
           height: "100%",
+          paddingTop: "65px",
+          paddingRight: "80px",
         }}
       >
-        {data.data.map((movieItem, index) =>
-          movieItem.link_text != null ? (
-            <div>
-              <h3 className="u700" style={{ marginTop: "108px" }}>
-                {movieItem.link_text}
-              </h3>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "94%",
+          }}
+        >
+          <img src={logo} className="logo-expended" />
+          <h1 className="u500">
+            {localStorage
+              .getItem("seriesName")
+              .substring(0, localStorage.getItem("seriesName").indexOf("-"))}
+          </h1>
+        </div>
 
-              <ContentMoreRow
-                linkText={data.data[0].link_text}
-                movieFocused={movieSet}
-                row={movieItem.tag_id}
-                movies={movieItem.movies.data}
-                index={index}
-                focusKeey={`MOVIE_LIST_${index}`}
-              />
-            </div>
-          ) : (
-            ""
-          )
-        )}
+        <div
+          ref={myRef}
+          style={{
+            position: "relative",
+            overflow: "hidden",
+          }}
+        >
+          <SeasonCount data={data} onEnterPress={HandleSeasonEnterPress} />
+          <EpisodesWrapper
+            curretSeasonChosen={curretSeasonChosen}
+            curretSeasonDetail={curretSeasonDetail}
+          />
+        </div>
       </div>
     </FocusContext.Provider>
   );

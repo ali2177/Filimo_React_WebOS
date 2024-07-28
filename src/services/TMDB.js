@@ -30,7 +30,7 @@ export const tmdbApi = createApi({
           return `/movie/movie/list/tagid/${tag_id}/other_data/${other_data}/?json_type=simple`;
         }
 
-        return `movie/movie/list/tagid/1/list_perpage/30/list_offset/1?json_type=simple&device_type=react_tizen`;
+        return `movie/movie/list/tagid/1/list_perpage/25/list_offset/0?json_type=simple&device_type=react_tizen`;
       },
     }),
 

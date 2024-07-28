@@ -4,19 +4,16 @@ import testLogo from "../../assets/genres/testlogo.svg";
 import calender from "../../assets/images/calender-green.svg";
 
 const Content = ({ data, curretFocusedMovie, type }) => {
-  if (curretFocusedMovie === null)
+  if (curretFocusedMovie === null || !curretFocusedMovie?.cover)
     return (
       <div className="content">
         <div className="gradiant"></div>
-        <img
-          className="content-poster"
-          src={data[0].movies.data[0].pic.movie_img_b}
-        />
-        <div className="content-text">
+        {/* <img className="content-poster" src={data[0].movies.data[0]?.cover} /> */}
+        {/* <div className="content-text">
           <h1 className="u700">{data[0].movies.data[0]?.movie_title}</h1>
           <Badge movie={data[0].movies.data[0]} />
-          <p className="u400">{data[0].movies.data[0]?.descr?.slice(0, 200)}</p>
-          {/* {curretFocusedMovie?.serial.enable === true ? (
+          <p className="u400">{data[0].movies.data[0]?.descr?.slice(0, 200)}</p> */}
+        {/* {curretFocusedMovie?.serial.enable === true ? (
           <div className="calender">
             <img src={calender} />
             <span className="u500">{curretFocusedMovie?.serial.season_id}</span>
@@ -27,7 +24,7 @@ const Content = ({ data, curretFocusedMovie, type }) => {
             <span className="u500">قسمت</span>
           </div>
         ) : null} */}
-        </div>
+        {/* </div> */}
       </div>
     );
 
@@ -59,10 +56,10 @@ const Content = ({ data, curretFocusedMovie, type }) => {
 
   return (
     <div className="content">
-      <div className="gradiant"></div>
+      {/* <div className="gradiant"></div> */}
       <img
         className="content-poster"
-        src={curretFocusedMovie?.pic.movie_img_b}
+        src={curretFocusedMovie?.cover_data?.horizontal}
       />
       <div className="content-text">
         <h1 className="u700">{curretFocusedMovie?.movie_title}</h1>

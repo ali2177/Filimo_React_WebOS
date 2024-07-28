@@ -36,11 +36,7 @@ const RecommBtn = ({ movieRow, onFocus, linkText }) => {
     <FocusContext.Provider value={focusKey}>
       <div
         ref={ref}
-        className="btn-ctrl u500"
-        style={{
-          backgroundColor: focused ? "green" : "black",
-          color: "white",
-        }}
+        className={focused ? "btn-ctrl btn-play-focus u500" : "btn-ctrl u500"}
       >
         فیلم های پیشنهادی
       </div>

@@ -9,11 +9,18 @@ import {
   setFocus,
 } from "@noriginmedia/norigin-spatial-navigation";
 
-function Movie({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
+function Movie({
+  movie,
+  movieFocus,
+  onFocus,
+  onEnterPress,
+  focusKeey,
+  scrollRef,
+}) {
   const { ref, focused, focusSelf, focusKey } = useFocusable({
     focusKey: focusKeey,
     onFocus: () => {
-      // handleScrolling();
+      handleScrolling();
       onMovieFocus();
       if (parseInt(focusKeey[7]) >= 0) {
         localStorage.setItem(
@@ -41,12 +48,34 @@ function Movie({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
   const onMovieFocus = () => {
     movieFocus(movie);
   };
-  // const handleScrolling = () => {
-  //   myRef.current.scrollIntoView({
+  // function scrollToTargetAdjusted() {
+  //   const headerOffset = 10;
+  //   const elementPosition = myRef.current.getBoundingClientRect().top;
+  //   const offsetPosition = elementPosition + window.scrollY - headerOffset;
+  //   window.scrollTo({
+  //     top: offsetPosition,
   //     behavior: "smooth",
-  //     block: "end",
   //   });
+  // }
+  // const handleScrolling = () => {
+  //   const headerOffset = 70;
+  //   console.log(myRef.current.getBoundingClientRect().top);
+  //   console.log(window.scrollY);
+  //   const elementPosition = myRef.current.getBoundingClientRect().top;
+  //   const offsetPosition = elementPosition + window.scrollY - headerOffset;
+  //   console.log(offsetPosition);
+  //   // window.scrollTo({
+  //   //   top: offsetPosition,
+  //   //   behavior: "smooth",
+  //   // });
+  //   scrollRef.current.scrollTop = offsetPosition;
   // };
+  const handleScrolling = () => {
+    myRef.current.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+    });
+  };
 
   return (
     <div
