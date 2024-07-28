@@ -4,16 +4,20 @@ import {
   setFocus,
   getCurrentFocusKey,
 } from "@noriginmedia/norigin-spatial-navigation";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 
 const Episode = ({ movieItem, focusKeey }) => {
   const myRef = useRef(null);
+  const navigate = useNavigate();
+
   const { ref, focused, focusSelf } = useFocusable({
     focusKey: focusKeey,
     onFocus: () => {
       handleScrolling();
     },
     onEnterPress: () => {
-      console.log("pressed");
+      localStorage.removeItem("seasonBtn");
+      navigate(`/movie/${movieItem.uid}`);
     },
     focusable: true,
     trackChildren: true,
@@ -35,8 +39,6 @@ const Episode = ({ movieItem, focusKeey }) => {
     const numberSide = Math.floor(duration / 60);
     return numberSide;
   };
-
-  console.log(movieItem);
 
   return (
     <div ref={myRef} className="episode-wrapper">
