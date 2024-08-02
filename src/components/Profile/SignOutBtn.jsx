@@ -20,11 +20,6 @@ const SignOutBtn = ({ onFocus, jwt }) => {
     isFocusBoundary: false,
     preferredChildFocusKey: null,
   });
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    focusSelf();
-  }, []);
 
   const handleSignOut = async () => {
     const myHeaders = new Headers();

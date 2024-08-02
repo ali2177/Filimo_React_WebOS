@@ -82,6 +82,9 @@ function Sidebar({ focusd, isLogin }) {
     jwt = localStorage.getItem("jwt");
     getUserData(jwt);
   }, [isLogin]);
+  useEffect(() => {
+    getUserData(jwt);
+  }, [jwt]);
 
   return (
     <>

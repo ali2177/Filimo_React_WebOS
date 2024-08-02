@@ -114,6 +114,10 @@ export const tmdbApi = createApi({
       query: ({ listName, accountId, sessionId, page }) =>
         `/account/${accountId}/${listName}?api_key=${tmdbApiKey}&session_id=${sessionId}&page=${page}`,
     }),
+    // Get User Specific Lists
+    getUsersProfile: builder.query({
+      query: ({ jwtSub }) => `/user/Authenticate/list_profile?guid=${jwtSub}`,
+    }),
   }),
 });
 
@@ -133,4 +137,5 @@ export const {
   useGetAllEpisodesQuery,
   useGetMoviesByActorIdQuery,
   useGetListQuery,
+  useGetUsersProfileQuery,
 } = tmdbApi;

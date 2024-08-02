@@ -28,6 +28,7 @@ import SearchResult from "./Search/SearchResult";
 import AllEpisodes from "./AllEpisodes/AllEpisodes";
 import MoreSingle from "./AllEpisodes/AllEpisodesSingle";
 import Ip from "./Ip/Ip";
+import UsersProfile from "./UsersProfile/UsersProfile";
 
 init({
   debug: false,
@@ -62,6 +63,7 @@ function App() {
       location.pathname.slice(0, 7) === "/moreSi" ||
       location.pathname.slice(0, 7) === "/profil" ||
       location.pathname.slice(0, 7) === "/ipchec" ||
+      location.pathname.slice(0, 7) === "/usersP" ||
       location.pathname.slice(0, 6) === "/login"
     ) {
       setIsShowMenu(false);
@@ -149,6 +151,7 @@ function App() {
           <Route exact path="/allepisodes/:ui_id" element={<AllEpisodes />} />
           <Route exact path="/profile" element={<Profile />} />
           <Route exact path="/player" element={<TvPlayer />} />
+          <Route exact path="/usersProfile" element={<UsersProfile />} />
 
           <Route exact path="/categories" element={<Categories />} />
           <Route exact path="/login" element={<Loogin />} />

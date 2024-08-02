@@ -121,9 +121,6 @@ const Loogin = () => {
         <div className="login-body-right">
           <div className="login-body-right-head">
             <div className="login-body-right-title">
-              <span className="u700">
-                {data.data.attributes.page_text.qrSection.step}
-              </span>
               <p className="u700">
                 {data.data.attributes.page_text.qrSection.title}
               </p>
