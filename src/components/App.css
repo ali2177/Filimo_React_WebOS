@@ -144,8 +144,14 @@
 }
 .more-item {
   width: 200px;
-  height: 336px;
+  height: 346px;
   margin-top: 20px;
+  background: var(
+    --dark-mode-opacity-of-neutral-white-8,
+    rgba(255, 255, 255, 0.08)
+  );
+  backdrop-filter: blur(20px);
+  border-radius: 10px;
 }
 .links {
   color: #737373;
