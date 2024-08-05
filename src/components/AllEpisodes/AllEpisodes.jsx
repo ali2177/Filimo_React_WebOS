@@ -33,6 +33,7 @@ const AllEpisodes = () => {
   const { ui_id } = useParams();
   const { data, error, isFetching } = useGetAllEpisodesQuery(ui_id);
   const [curretFocusedMovie, setCurretFocusedMovie] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [curretSeasonChosen, setCurretSeasonChosen] = useState(null);
   const [curretSeasonDetail, setCurretSeasonDetail] = useState(null);
 
@@ -65,6 +66,7 @@ const AllEpisodes = () => {
       console.log(blocks.data[0]);
       if (blocks) {
         setCurretSeasonDetail(blocks.data[0]);
+        setIsLoading(false);
       }
     } catch (e) {
       console.log(e);
@@ -78,6 +80,8 @@ const AllEpisodes = () => {
     }
   };
   const HandleSeasonEnterPress = (season) => {
+    localStorage.setItem("lastSeasonFocus", season.title);
+    setIsLoading(true);
     setCurretSeasonChosen(season.movies.data);
     getUserData(
       localStorage.getItem("jwt"),
@@ -148,6 +152,7 @@ const AllEpisodes = () => {
           }}
         >
           <SeasonCount data={data} onEnterPress={HandleSeasonEnterPress} />
+          {isLoading && <Loader />}
           <EpisodesWrapper
             curretSeasonChosen={curretSeasonChosen}
             curretSeasonDetail={curretSeasonDetail}

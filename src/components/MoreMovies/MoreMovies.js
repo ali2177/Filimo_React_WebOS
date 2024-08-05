@@ -155,6 +155,7 @@ const MoreMovies = () => {
           style={{
             marginRight: "40px",
             height: "3000px",
+            width: "100%",
           }}
         >
           {data.data

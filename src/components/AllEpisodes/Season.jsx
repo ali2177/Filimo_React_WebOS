@@ -12,9 +12,14 @@ const Season = ({ title, count, onEnterPress }) => {
         setFocus("Episode_0");
       }
     },
+    focusKey: title,
   });
   useEffect(() => {
-    focusSelf();
+    if (localStorage.getItem("lastSeasonFocus")) {
+      setFocus(localStorage.getItem("lastSeasonFocus"));
+    } else {
+      focusSelf();
+    }
   }, []);
   return (
     <li

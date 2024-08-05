@@ -47,6 +47,7 @@ function MovieInfo({ isLogin }) {
     localStorage.removeItem("subtitle");
     localStorage.removeItem("formAction");
     localStorage.removeItem("movie_src");
+    localStorage.removeItem("lastSeasonFocus");
     window.addEventListener("keydown", keyHandler);
     return () => window.removeEventListener("keydown", keyHandler);
   }, []);

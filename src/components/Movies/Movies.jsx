@@ -65,6 +65,7 @@ function Movies({ isLogin }) {
     localStorage.removeItem("lastFocusCat");
     localStorage.removeItem("lastFocusMoreMovie");
     localStorage.removeItem("seasonBtn");
+    localStorage.removeItem("lastSeasonFocus");
     setPageLocation(location.pathname);
     window.addEventListener("keydown", keyHandler);
     return () => window.removeEventListener("keydown", keyHandler);
