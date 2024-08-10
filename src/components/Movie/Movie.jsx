@@ -93,17 +93,21 @@ function Movie({
 
       <Link ref={myRef} className="swiper-link" to={`/movie/${movie.uid}`}>
         {movie.movie_img_m ? (
-          <img
-            src={movie.movie_img_m}
-            alt={movie.movie_title_en}
-            className="swiper-image"
-          />
+          <LazyLoad height={356} width={212} threshold={0.95}>
+            <img
+              src={movie.movie_img_m}
+              alt={movie.movie_title_en}
+              className="swiper-image"
+            />
+          </LazyLoad>
         ) : (
-          <img
-            src={movie.pic.movie_img_m}
-            alt={movie.movie_title_en}
-            className="swiper-image"
-          />
+          <LazyLoad height={356} width={212} threshold={0.95}>
+            <img
+              src={movie.pic.movie_img_m}
+              alt={movie.movie_title_en}
+              className="swiper-image"
+            />
+          </LazyLoad>
         )}
         <h8 className="movie-title u500">{movie.movie_title}</h8>
       </Link>

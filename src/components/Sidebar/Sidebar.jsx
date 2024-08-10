@@ -12,7 +12,7 @@ import logo from "../../assets/images/televika_type.png";
 import televikaX from "../../assets/images/televika_sign.png";
 import SidebarItem from "./SidebarItem";
 
-function Sidebar({ focusd, isLogin }) {
+const Sidebar = React.memo(({ focusd, isLogin }) => {
   const { ref, focused } = useFocusable();
   const myref = useRef(null);
   const [userData, setUserData] = useState(null);
@@ -252,5 +252,5 @@ function Sidebar({ focusd, isLogin }) {
       </div>
     </>
   );
-}
+});
 export default Sidebar;

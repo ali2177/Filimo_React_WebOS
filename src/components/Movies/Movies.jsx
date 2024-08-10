@@ -25,7 +25,7 @@ function Movies({ isLogin }) {
   const myRef = useRef(null);
   const scrollRef = useRef(null);
   const [curretFocusedMovie, setCurretFocusedMovie] = useState(null);
-  const [movies, setMovies] = useState();
+  const [movies, setMovies] = useState(null);
   const [pageLocation, setPageLocation] = useState();
   const [showExitModal, setShowExitModal] = useState(false);
   let doubleClickFlag;
@@ -66,6 +66,7 @@ function Movies({ isLogin }) {
     localStorage.removeItem("lastFocusMoreMovie");
     localStorage.removeItem("seasonBtn");
     localStorage.removeItem("lastSeasonFocus");
+    localStorage.removeItem("lastFocusRowBeforeReload");
     setPageLocation(location.pathname);
     window.addEventListener("keydown", keyHandler);
     return () => window.removeEventListener("keydown", keyHandler);
@@ -82,6 +83,10 @@ function Movies({ isLogin }) {
           .data[0]
       );
   }, [data]);
+  useEffect(() => {
+    if (localStorage.getItem("lastFocusRowBeforeReload"))
+      setFocus(`${localStorage.getItem("lastFocusRowBeforeReload")}__0`);
+  }, [movies]);
 
   useEffect(() => {
     setCurretFocusedMovie(null);
@@ -114,49 +119,56 @@ function Movies({ isLogin }) {
   //   setFocus("sn:focusable-item-12");
   // }, [focusSelf]);
 
-  // const lastMovieElement = useCallback(
-  //   (node) => {
-  //     if (isFetching) return;
-  //     if (observer.current) observer.current.disconnect();
-  //     observer.current = new IntersectionObserver((entries) => {
-  //       if (entries[0].isIntersecting) {
-  //         console.log("visible");
+  const lastMovieElement = useCallback(
+    (node) => {
+      if (isFetching) return;
+      if (observer.current) observer.current.disconnect();
 
-  //         console.log(movies?.links?.forward);
-  //         console.log(movies);
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          console.log("visible");
 
-  //         var myHeaders = new Headers();
-  //         if (jwt) {
-  //           myHeaders.append("Authorization", `Bearer ${jwt}`);
-  //           var requestOptions = {
-  //             method: "GET",
-  //             headers: myHeaders,
-  //             redirect: "follow",
-  //           };
-  //         } else {
-  //           var requestOptions = {
-  //             method: "GET",
-  //             redirect: "follow",
-  //           };
-  //         }
+          console.log(movies?.links?.forward);
+          console.log(movies);
 
-  //         fetch(`${movies?.links?.forward}`, requestOptions)
-  //           .then((response) => response.json())
-  //           .then((result) => {
-  //             console.log(result);
-  //             setMovies((prevmovies) => ({
-  //               ...prevmovies,
-  //               links: result?.links,
-  //               data: [...prevmovies.data, ...result.data],
-  //             }));
-  //           })
-  //           .catch((error) => console.log("error", error));
-  //       }
-  //     });
-  //     if (node) observer.current.observe(node);
-  //   },
-  //   [isFetching, movies]
-  // );
+          var myHeaders = new Headers();
+          if (jwt) {
+            myHeaders.append("Authorization", `Bearer ${jwt}`);
+            var requestOptions = {
+              method: "GET",
+              headers: myHeaders,
+              redirect: "follow",
+            };
+          } else {
+            var requestOptions = {
+              method: "GET",
+              redirect: "follow",
+            };
+          }
+
+          if (movies?.links?.forward) {
+            fetch(`${movies?.links?.forward}`, requestOptions)
+              .then((response) => response.json())
+              .then((result) => {
+                console.log(result);
+                localStorage.setItem(
+                  "lastFocusRowBeforeReload",
+                  localStorage.getItem("lastFocusRow")
+                );
+                setMovies((prevmovies) => ({
+                  ...prevmovies,
+                  links: result?.links,
+                  data: [...prevmovies.data, ...result.data],
+                }));
+              })
+              .catch((error) => console.log("error", error));
+          }
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [isFetching, movies]
+  );
 
   if (error) return <NetworkError />;
 
@@ -200,7 +212,7 @@ function Movies({ isLogin }) {
               }}
             >
               {movies &&
-                data.data
+                movies.data
                   .filter((item) => item.output_type === "movie")
                   .map(
                     (movieItem, index) => (
@@ -214,22 +226,24 @@ function Movies({ isLogin }) {
                             }
                           ></div>
                         )}
-                        <ContentRow
-                          title={movieItem.link_text}
-                          movieFocused={movieSet}
-                          movies={movieItem.movies.data}
-                          focusKeey={`MOVIE_LIST_${index}`}
-                          index={index}
-                          movieLinkKey={movieItem.link_key}
-                          movieTag={movieItem.tag_id}
-                          onFocus={onRowFocus}
-                          row={
-                            movieItem.link_key
-                              ? movieItem.link_key
-                              : movieItem.tag_id
-                          }
-                          scrollRef={scrollRef}
-                        />
+                        <div ref={lastMovieElement}>
+                          <ContentRow
+                            title={movieItem.link_text}
+                            movieFocused={movieSet}
+                            movies={movieItem.movies.data}
+                            focusKeey={`MOVIE_LIST_${index}`}
+                            index={index}
+                            movieLinkKey={movieItem.link_key}
+                            movieTag={movieItem.tag_id}
+                            onFocus={onRowFocus}
+                            row={
+                              movieItem.link_key
+                                ? movieItem.link_key
+                                : movieItem.tag_id
+                            }
+                            scrollRef={scrollRef}
+                          />
+                        </div>
                       </>
                     )
                     // movieItem.link_text != null ? (
