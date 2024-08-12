@@ -78,12 +78,12 @@ function Movies({ isLogin }) {
   useEffect(() => {
     setMovies(data);
 
-    // if (data) {
-    //   setCurretFocusedMovie(
-    //     data.data.filter((item) => item.output_type === "movie")[0]?.movies
-    //       ?.data[0]
-    //   );
-    // }
+    if (data) {
+      setCurretFocusedMovie(
+        data.data.filter((item) => item.output_type === "movie")[0]?.movies
+          ?.data[0]
+      );
+    }
   }, [data]);
   useEffect(() => {
     if (localStorage.getItem("lastFocusRowBeforeReload"))
