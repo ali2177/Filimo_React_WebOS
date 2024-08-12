@@ -77,11 +77,13 @@ function Movies({ isLogin }) {
 
   useEffect(() => {
     setMovies(data);
-    if (data)
-      setCurretFocusedMovie(
-        data.data.filter((item) => item.output_type === "movie")[0].movies
-          .data[0]
-      );
+
+    // if (data) {
+    //   setCurretFocusedMovie(
+    //     data.data.filter((item) => item.output_type === "movie")[0]?.movies
+    //       ?.data[0]
+    //   );
+    // }
   }, [data]);
   useEffect(() => {
     if (localStorage.getItem("lastFocusRowBeforeReload"))
@@ -98,7 +100,8 @@ function Movies({ isLogin }) {
   const keyHandler = (key) => {
     // check if keycode is the return button on the remote and the remove button on your keyboard
     if (key.keyCode === 10009 || key.keyCode === 8) {
-      if (pageLocation === "/") {
+      if (location.pathname === "/") {
+        console.log(key.keyCode === 8);
         if (doubleClickFlag) {
           window.tizen.application.getCurrentApplication().exit();
           localStorage.removeItem("lastFocus");

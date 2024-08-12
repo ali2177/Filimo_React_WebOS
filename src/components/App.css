@@ -1352,6 +1352,9 @@ Tint, Red, Dark, 12, Success
   position: absolute;
   left: 100px;
   top: 0;
+  ul {
+    text-decoration: none;
+  }
   li {
     display: flex;
     padding: 16px 32px;
@@ -1361,6 +1364,7 @@ Tint, Red, Dark, 12, Success
     border-radius: 12px;
     border: 2px solid rgba(255, 255, 255, 0.2);
     margin-bottom: 20px;
+    text-decoration: none;
   }
 }
 .season-count-focused {
