@@ -243,7 +243,7 @@ function MovieInfo({ isLogin }) {
               <MovieDetailBadge movie={data?.data?.General} />
             </div>
             <div ref={myRef} className="hero-controls">
-              <div style={{ display: "flex", gap: "50px", width: "70%" }}>
+              <div style={{ display: "flex", gap: "10%", width: "100%" }}>
                 <PlayBotton
                   data={data}
                   onEnterPress={handlePlayPress}
