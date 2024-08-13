@@ -22,9 +22,9 @@ const Season = ({ title, count, onEnterPress }) => {
     }
   }, []);
   return (
-    <li
+    <div
       ref={ref}
-      className={focused ? "season-count-focused u500" : "u500"}
+      className={focused ? "season-focused season u500" : "season u500"}
       onClick={() => {
         // console.log(season.movies.data);
         // setCurretSeasonChosen(season.movies.data);
@@ -35,7 +35,7 @@ const Season = ({ title, count, onEnterPress }) => {
         <span>{count}</span>
         <span>قسمت</span>
       </div>
-    </li>
+    </div>
   );
 };
 
