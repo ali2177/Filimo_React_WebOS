@@ -1384,7 +1384,6 @@ Tint, Red, Dark, 12, Success
 .episode-wrapper {
   display: flex;
   margin-bottom: 50px;
-  gap: 40px;
   width: 65%;
   p {
     overflow: hidden;
@@ -1424,6 +1423,7 @@ Tint, Red, Dark, 12, Success
 }
 .episode-pic-wrapper {
   position: relative;
+  margin-left: 40px;
 }
 .episode-duration {
   position: absolute;
