@@ -243,7 +243,7 @@ function MovieInfo({ isLogin }) {
               <MovieDetailBadge movie={data?.data?.General} />
             </div>
             <div ref={myRef} className="hero-controls">
-              <div style={{ display: "flex", gap: "10%", width: "100%" }}>
+              <div style={{ display: "flex", width: "100%" }}>
                 <PlayBotton
                   data={data}
                   onEnterPress={handlePlayPress}
@@ -253,7 +253,10 @@ function MovieInfo({ isLogin }) {
                 {/* <h3 className="u700">گزینه ها</h3> */}
 
                 {data.data.General.pre_title === "سریال" && (
-                  <div style={{ width: "50%" }} ref={seasonBtn}>
+                  <div
+                    style={{ width: "50%", marginLeft: "50px" }}
+                    ref={seasonBtn}
+                  >
                     <SeasonBtn
                       seriesName={data?.data?.General?.title}
                       ui_id={data?.data?.General.uid}
