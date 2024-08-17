@@ -61,7 +61,6 @@ const ContentRow = ({
       return;
     }
     if (scrollingRef.current) {
-      scrollingRef.current.style.scrollBehavior = "smooth";
       if (event) {
         if (event.key === "ArrowLeft") {
           scrollingRef.current.scrollLeft -= 100;

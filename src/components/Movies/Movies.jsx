@@ -129,11 +129,6 @@ function Movies({ isLogin }) {
 
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
-          console.log("visible");
-
-          console.log(movies?.links?.forward);
-          console.log(movies);
-
           var myHeaders = new Headers();
           if (jwt) {
             myHeaders.append("Authorization", `Bearer ${jwt}`);
@@ -153,7 +148,6 @@ function Movies({ isLogin }) {
             fetch(`${movies?.links?.forward}`, requestOptions)
               .then((response) => response.json())
               .then((result) => {
-                console.log(result);
                 localStorage.setItem(
                   "lastFocusRowBeforeReload",
                   localStorage.getItem("lastFocusRow")

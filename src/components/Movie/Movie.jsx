@@ -72,7 +72,6 @@ function Movie({
   // };
   const handleScrolling = () => {
     myRef.current.scrollIntoView({
-      behavior: "smooth",
       block: "end",
     });
   };

@@ -1410,7 +1410,7 @@ Tint, Red, Dark, 12, Success
   width: 250%;
   height: 7000px;
   position: absolute;
-  top: 0;
+  top: -200px;
   right: -100px;
   z-index: -2;
 }
