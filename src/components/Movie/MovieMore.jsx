@@ -25,6 +25,7 @@ function MovieMore({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
     },
     onEnterPress: () => {
       localStorage.setItem("lastFocusMoreMovie", focusKeey);
+      localStorage.setItem("lastRouteNotplayer", location.pathname);
       navigate(`/movie/${movie.uid}`);
     },
     focusable: true,
@@ -44,7 +45,6 @@ function MovieMore({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
   };
   const handleScrolling = () => {
     myRef.current.scrollIntoView({
-      behavior: "smooth",
       block: "center",
     });
   };
@@ -54,6 +54,7 @@ function MovieMore({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
       className={focused ? "btn-focus" : "btn-not-focus"}
       ref={ref}
       style={{ width: "220px" }}
+      id="main-page-movie"
     >
       {/* <Focusable
         className={"btn-focus"}

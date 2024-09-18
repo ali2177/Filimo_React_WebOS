@@ -55,7 +55,6 @@ const ContentCrewRow = ({
       return;
     }
     if (scrollingRef.current) {
-      scrollingRef.current.style.scrollBehavior = "smooth";
       if (event.key === "ArrowLeft") {
         scrollingRef.current.scrollLeft -= 200;
       } else if (event.key === "ArrowRight") {
@@ -92,6 +91,7 @@ const ContentCrewRow = ({
   //   setFocus("sn:focusable-item-23");
   //   //handleScrolling();
   // }, [setFocus, focusKey, focused]);
+
   return (
     <FocusContext.Provider value={focusKey}>
       <div

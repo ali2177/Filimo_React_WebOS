@@ -86,13 +86,11 @@ const ContentRow = ({
     // if (location.pathname === "/movies/filter/1/movie") {
     //   setFocus("MOVIE_LIST_0");
     // }
-
     if (localStorage.getItem("lastFocus") === null) {
       setFocus("MOVIE_0__0");
     } else {
       setFocus(localStorage.getItem("lastFocus"));
     }
-
     // console.log(focusKeey);
     // console.log(focusKey);
     // focusSelf();
@@ -153,6 +151,7 @@ const ContentRow = ({
               onFocus={() => onAssetFocus()}
               focusKeey={`More_${index}`}
               type={"mainPage"}
+              movieFocus={movieFocused}
             />
           </div>
         </div>

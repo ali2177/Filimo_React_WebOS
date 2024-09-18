@@ -51,7 +51,6 @@ const Crew = () => {
   };
   const handleScrolling = () => {
     myRef.current.scrollIntoView({
-      behavior: "smooth",
       block: "center",
     });
   };
@@ -59,7 +58,7 @@ const Crew = () => {
     setCurretFocusedMovie(movieUid);
   };
   useEffect(() => {
-    setFocus("MORE_LIST_0");
+    setFocus("MORE_LIST_1");
   }, []);
 
   if (error) return <NetworkError />;
@@ -84,10 +83,9 @@ const Crew = () => {
   //     </main>
   //   );
   // }
-
   return (
     <FocusContext.Provider value={focusKey}>
-      <main className="main" style={{ paddingRight: "30px" }}>
+      <main className="main" style={{ paddingRight: "30px", height: "100vh" }}>
         {/* <div className="crew-header">
         <div className="crew-profile">
           <img
@@ -139,11 +137,15 @@ const Crew = () => {
         </h3>
         <div className="more-movies">
           {data.included.map((movieItem, index) => (
-            <MovieActorProfile
-              movie={movieItem}
-              movieFocus={movieFocusSet}
-              focusKeey={`MORE_LIST_${index}`}
-            />
+            <>
+              {index >= 1 && (
+                <MovieActorProfile
+                  movie={movieItem}
+                  movieFocus={movieFocusSet}
+                  focusKeey={`MORE_LIST_${index}`}
+                />
+              )}
+            </>
           ))}
         </div>
         {/* <Swiper

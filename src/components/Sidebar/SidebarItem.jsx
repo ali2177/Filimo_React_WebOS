@@ -24,11 +24,9 @@ const SidebarItem = ({
     onEnterPress,
     onArrowPress: (e) => {
       if (e === "left") {
-        if (localStorage.getItem("lastFocusRow") === null) {
-          setFocus("MOVIE_0__0");
-        } else {
-          setFocus(`${localStorage.getItem("lastFocusRow")}__0`);
-        }
+        setTimeout(() => {
+          setFocus(localStorage.getItem("lastMovieFocus"));
+        }, 1);
       }
     },
   });

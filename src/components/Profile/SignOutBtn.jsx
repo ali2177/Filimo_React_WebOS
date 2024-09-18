@@ -20,6 +20,7 @@ const SignOutBtn = ({ onFocus, jwt }) => {
     isFocusBoundary: false,
     preferredChildFocusKey: null,
   });
+  const navigate = useNavigate();
 
   const handleSignOut = async () => {
     const myHeaders = new Headers();
@@ -33,13 +34,14 @@ const SignOutBtn = ({ onFocus, jwt }) => {
     };
 
     fetch(
-      "https://www.televika.com/api/fa/v1/user/Authenticate/signout",
+      "https://www.filimo.com/api/fa/v1/user/Authenticate/signout",
       requestOptions
     )
       .then((response) => response.text())
       .then((result) => console.log(result))
       .catch((error) => console.error(error));
 
+    localStorage.removeItem("lastdataloaded");
     navigate("/");
   };
 

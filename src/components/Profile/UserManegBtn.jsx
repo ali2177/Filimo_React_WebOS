@@ -14,6 +14,7 @@ const UserManegBtn = () => {
     onEnterPress: () => {
       navigate("/usersProfile");
     },
+    focusKey: "user-manager",
     focusable: true,
     trackChildren: true,
     autoRestoreFocus: true,
@@ -23,7 +24,9 @@ const UserManegBtn = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    focusSelf();
+    setTimeout(() => {
+      setFocus("user-manager");
+    }, 100);
   }, []);
   return (
     <div

@@ -9,13 +9,22 @@ import {
   faFastForward,
   faList,
 } from "@fortawesome/fontawesome-free-solid";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import NextEpisodeMenu from "./NextEpisodeMenu";
+import Loader from "../Loader/Loader";
 
 let interval;
+let interval2;
+let jwt = localStorage.getItem("jwt");
 
 const TvPlayer = () => {
   const player = useTVPlayerStore((s) => s.player);
   const [movie, setMovie] = useState(null);
+  const [movieWatchData, setMovieWatchData] = useState(null);
+  const [movieUid, setMovieUid] = useState(null);
+  const [movieCastTime, setMovieCastTime] = useState(null);
+  const [isShowNextMenu, setIsShowNextMenu] = useState(false);
+  const [isLoading, setIsloading] = useState(false);
   const [activeQuality, setActiveQuality] = useState(0);
   const [activeSub, setActiveSub] = useState(0);
   const [formAction, setFormAction] = useState(null);
@@ -30,17 +39,61 @@ const TvPlayer = () => {
   const [subtitles, setSubtitles] = useState(null);
   const [playerSubFormat, setPlayerSubFormat] = useState();
   const navigate = useNavigate();
+  const location = useLocation("");
 
   useEffect(() => {
     // getData();
-    window.addEventListener("keydown", keyHandler);
-    setMovie(localStorage.getItem("movie_src"));
+    setMovieUid(localStorage.getItem("movie_uid"));
     setFormAction(localStorage.getItem("formAction"));
+    setMovieCastTime(localStorage.getItem("movie_cast_time"));
     setSubtitles(JSON.parse(localStorage.getItem("subtitles")));
-    return () => window.removeEventListener("keydown", keyHandler);
+    window.addEventListener("keydown", keyHandler);
+    return () => {
+      window.removeEventListener("keydown", keyHandler);
+    };
   }, []);
+  useEffect(() => {
+    setIsloading(true);
+    console.log(movieUid);
+    if (movieUid) {
+      getMovieData();
+    }
+    return () => {
+      window.removeEventListener("keydown", keyHandler);
+      clearInterval(interval2);
+    };
+  }, [movieUid]);
+
+  const getMovieData = () => {
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${jwt}`);
+
+    const requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    fetch(
+      `https://www.filimo.com/api/fa/v1/movie/watch/watch/uid/${movieUid}`,
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+        setMovieCastTime(result.data.attributes.cast.start);
+        setMovie(result.data.attributes.multiSRC[0][0].src);
+        setMovieWatchData(result);
+        setTimeout(() => {
+          setIsloading(false);
+        }, 3000);
+      })
+      .catch((error) => console.error(error));
+  };
 
   useEffect(() => {
+    setIsShowNextMenu(false);
+
     if (player) {
       const hls = player.getInternalPlayer("hls");
 
@@ -74,6 +127,9 @@ const TvPlayer = () => {
   const keyHandler = (key) => {
     // check if keycode is the return button on the remote and the remove button on your keyboard
     if (key.keyCode === 10009 || key.keyCode === 8) {
+      clearInterval(interval2);
+      clearInterval(interval);
+      localStorage.setItem("lastRoute", location.pathname);
       navigate(-1);
     }
   };
@@ -143,7 +199,8 @@ const TvPlayer = () => {
             label: "بازگشت",
             faIcon: faArrowLeft,
             onPress: () => {
-              navigate(-1);
+              localStorage.setItem("lastRoute", location.pathname);
+              navigate(`/movie/${movieUid}`);
             },
           },
           { action: "mute", label: "بی صدا", align: "left" },
@@ -384,9 +441,11 @@ const TvPlayer = () => {
 
     fetch(formAction, requestOptions)
       .then((response) => response.text())
-      .then((result) => console.log(result))
+      .then((result) => console.log(""))
       .catch((error) => console.log("error", error));
   };
+
+  // if (isLoading) return <Loader />;
 
   return (
     <main style={{ direction: "ltr", width: "100%" }} className="main">
@@ -490,6 +549,14 @@ const TvPlayer = () => {
           </div>
         </div>
       )}
+      {isShowNextMenu && (
+        <NextEpisodeMenu
+          nextEpisodeTitle={movieWatchData.data.attributes.cast.nextPartTitle}
+          nextEpisodeUid={movieWatchData.data.attributes.cast.nextPartUid}
+          currentUid={movieUid}
+        />
+      )}
+
       {/* {isShowAudList && (
         <div className="subtitle-list u500">
           <div className="sub-back"></div>
@@ -540,6 +607,18 @@ const TvPlayer = () => {
           interval = setInterval(() => {
             sendVisitUrl();
           }, 1000);
+          interval2 = setInterval(() => {
+            if (player.getCurrentTime() >= movieCastTime) {
+              if (movieCastTime === null) {
+                setIsShowNextMenu(false);
+              } else {
+                setIsShowNextMenu(true);
+              }
+              clearInterval(interval2);
+            } else {
+              setIsShowNextMenu(false);
+            }
+          }, 1000);
 
           const hls = player?.getInternalPlayer("hls");
 
@@ -556,6 +635,7 @@ const TvPlayer = () => {
         }}
         onPause={() => {
           clearInterval(interval);
+          clearInterval(interval2);
         }}
       />
     </main>

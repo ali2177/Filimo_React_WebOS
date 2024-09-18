@@ -10,6 +10,7 @@ import {
 } from "@noriginmedia/norigin-spatial-navigation";
 
 function MovieRecoom({ movie, movieFocus, onFocus, onEnterPress, focusKeeey }) {
+  const location = useLocation("");
   const { ref, focused, focusSelf, focusKey } = useFocusable({
     // onFocus: () => {
     //   handleScrolling();
@@ -18,6 +19,7 @@ function MovieRecoom({ movie, movieFocus, onFocus, onEnterPress, focusKeeey }) {
       localStorage.removeItem("lastFocusCrew");
       localStorage.removeItem("lastFocusActor");
       localStorage.removeItem("lastFocusMore");
+      localStorage.setItem("lastRouteNotplayer", location.pathname);
       navigate(`/movie/${movie.uid}`);
     },
     focusable: true,
@@ -36,7 +38,6 @@ function MovieRecoom({ movie, movieFocus, onFocus, onEnterPress, focusKeeey }) {
   };
   const handleScrolling = () => {
     myRef.current.scrollIntoView({
-      behavior: "smooth",
       block: "center",
     });
   };

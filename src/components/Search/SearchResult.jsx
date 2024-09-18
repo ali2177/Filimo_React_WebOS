@@ -19,6 +19,8 @@ const SearchResult = () => {
   const navigate = useNavigate();
   const [curretFocusedMovie, setCurretFocusedMovie] = useState("");
   useEffect(() => {
+    localStorage.removeItem("seasonBtn");
+    localStorage.removeItem("recommBtn");
     window.addEventListener("keydown", keyHandler);
     setData(JSON.parse(localStorage.getItem("searchResult")));
     return () => window.removeEventListener("keydown", keyHandler);

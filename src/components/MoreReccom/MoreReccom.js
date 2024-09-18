@@ -50,8 +50,6 @@ const MoreReccom = () => {
 
   const onRowFocus = React.useCallback(
     ({ y }) => {
-      ref.current.style.scrollBehavior = "smooth";
-
       if (event) {
         if (event.key === "ArrowDown") {
           ref.current.scrollTop += 300;

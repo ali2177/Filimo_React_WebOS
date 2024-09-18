@@ -11,13 +11,17 @@ import {
   getCurrentFocusKey,
 } from "@noriginmedia/norigin-spatial-navigation";
 
-const RecommBtn = ({ movieRow, onFocus, linkText }) => {
+const RecommBtn = ({ movieRow, onFocus, linkText, uid }) => {
   const { ref, focused, focusSelf, focusKey } = useFocusable({
     onFocus,
     onEnterPress: () => {
+      console.log(focusKey);
+      localStorage.setItem("recommBtn", "recomm-btn");
+      localStorage.removeItem("seasonBtn");
       localStorage.setItem("moreSingle", JSON.stringify(movieRow));
-      navigate(`/moreSingle/${linkText}`);
+      navigate(`/moreSingle/${linkText}/${uid}`);
     },
+    focusKey: "recomm-btn",
   });
 
   const navigate = useNavigate();

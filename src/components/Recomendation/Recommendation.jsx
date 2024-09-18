@@ -1,10 +1,10 @@
-import React, { useRef, useCallback, useState } from "react";
+import React, { useRef, useCallback, useState, useEffect } from "react";
 
 import { Keyboard, Pagination, Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Focusable } from "react-js-spatial-navigation";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import ContentOnlyRow from "../ContentOnlyRow";
 import ContentRow from "../ContentRow";
 
@@ -17,6 +17,7 @@ const Recommendation = ({ movieRow, rowId }) => {
   const myRef = useRef();
   const scrollingRef = useRef();
   const navigate = useNavigate();
+  const location = useLocation("");
   const handleScrolling = () => {
     myRef.current.scrollIntoView({
       block: "end",
@@ -39,7 +40,11 @@ const Recommendation = ({ movieRow, rowId }) => {
   // const movieSet = (movieUid)=>{
   //     setCurretFocusedMovie(movieUid);
   //   }
-
+  useEffect(() => {
+    console.log(location);
+    localStorage.removeItem("seasonBtn");
+    localStorage.removeItem("lastSeasonFocus");
+  }, [location]);
   return (
     <div
       ref={myRef}

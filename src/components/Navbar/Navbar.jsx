@@ -13,7 +13,7 @@ function Navbar({ isLogin }) {
   const { ref, focusKey, hasFocusedChild, focusSelf } = useFocusable({
     trackChildren: true,
     isFocusBoundary: true,
-    focusBoundaryDirections: ["down", "up", "right"],
+    focusBoundaryDirections: ["down", "up", "right", "left"],
   });
 
   return (

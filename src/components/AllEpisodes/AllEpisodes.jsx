@@ -46,17 +46,25 @@ const AllEpisodes = () => {
   }, []);
   useEffect(() => {
     setCurretSeasonChosen(data?.data[data.data.length - 1]?.movies?.data);
-    getUserData(
-      localStorage.getItem("jwt"),
-      data?.data[data.data.length - 1].movies?.data[0].serial_parent_new,
-      data?.data[data.data.length - 1].movies?.data[0].serial_season_part
-    );
+    if (localStorage.getItem("lastSeasonFocus_parent_new")) {
+      getUserData(
+        localStorage.getItem("jwt"),
+        localStorage.getItem("lastSeasonFocus_parent_new"),
+        localStorage.getItem("lastSeasonFocus_season_part")
+      );
+    } else {
+      getUserData(
+        localStorage.getItem("jwt"),
+        data?.data[data.data.length - 1].movies?.data[0].serial_parent_new,
+        data?.data[data.data.length - 1].movies?.data[0].serial_season_part
+      );
+    }
   }, [data]);
 
   const getUserData = async (jwt, parent_id, part) => {
     try {
       const res = await fetch(
-        `https://www.televika.com/api/fa/v1/movie/serial/episodebyseason/parent_id/${parent_id}/part/${part}?json_type=simple`,
+        `https://www.filimo.com/api/fa/v1/movie/serial/episodebyseason/parent_id/${parent_id}/part/${part}?json_type=simple`,
         {
           method: "GET",
           headers: { Authorization: `Bearer ${jwt}` },
@@ -76,11 +84,21 @@ const AllEpisodes = () => {
   const keyHandler = (key) => {
     // check if keycode is the return button on the remote and the remove button on your keyboard
     if (key.keyCode === 10009 || key.keyCode === 8) {
+      // navigate(localStorage.getItem("lastRouteNotplayer"));
       navigate(-1);
     }
   };
   const HandleSeasonEnterPress = (season) => {
+    console.log(season.movies?.data[0]);
     localStorage.setItem("lastSeasonFocus", season.title);
+    localStorage.setItem(
+      "lastSeasonFocus_parent_new",
+      season.movies?.data[0].serial_parent_new
+    );
+    localStorage.setItem(
+      "lastSeasonFocus_season_part",
+      season.movies?.data[0].serial_season_part
+    );
     setIsLoading(true);
     setCurretSeasonChosen(season.movies.data);
     getUserData(
@@ -93,7 +111,6 @@ const AllEpisodes = () => {
     ({ y }) => {
       myRef.current.scrollTo({
         top: y,
-        behavior: "smooth",
       });
       // console.log(ref.current.scrollTop);
       // ref.current.scrollTop += 10;

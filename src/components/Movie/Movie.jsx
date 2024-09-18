@@ -22,6 +22,11 @@ function Movie({
     onFocus: () => {
       handleScrolling();
       onMovieFocus();
+
+      if (focusKeey.slice(9) === "0") {
+        localStorage.setItem("lastMovieFocus", focusKeey);
+      }
+
       if (parseInt(focusKeey[7]) >= 0) {
         localStorage.setItem(
           "lastFocusRow",
@@ -33,20 +38,20 @@ function Movie({
     },
     onEnterPress: () => {
       localStorage.setItem("lastFocus", focusKeey);
+      let path = [location.pathname];
+      localStorage.setItem("lastRouteNotplayer", JSON.stringify(path));
+      localStorage.removeItem("lastRoute");
       navigate(`/movie/${movie.uid}`);
     },
-    focusable: true,
-    trackChildren: true,
-    autoRestoreFocus: true,
-    isFocusBoundary: false,
-    preferredChildFocusKey: null,
   });
+  const location = useLocation("");
   const myRef = useRef();
   const navigate = useNavigate();
 
   //set focus for current movie and pass it to parent
   const onMovieFocus = () => {
-    movieFocus(movie);
+    console.log(movie);
+    movieFocus(movie, focusKeey);
   };
   // function scrollToTargetAdjusted() {
   //   const headerOffset = 10;
@@ -72,7 +77,7 @@ function Movie({
   // };
   const handleScrolling = () => {
     myRef.current.scrollIntoView({
-      block: "end",
+      block: focusKey.slice(6, 7) === "0" ? "end" : "center",
     });
   };
 
@@ -81,6 +86,7 @@ function Movie({
       className={focused ? "btn-focus" : "btn-not-focus"}
       ref={ref}
       style={{ width: "220px" }}
+      id="main-page-movie"
     >
       {/* <Focusable
         className={"btn-focus"}
@@ -92,21 +98,17 @@ function Movie({
 
       <Link ref={myRef} className="swiper-link" to={`/movie/${movie.uid}`}>
         {movie.movie_img_m ? (
-          <LazyLoad height={356} width={212} threshold={0.95}>
-            <img
-              src={movie.movie_img_m}
-              alt={movie.movie_title_en}
-              className="swiper-image"
-            />
-          </LazyLoad>
+          <img
+            src={movie.movie_img_m}
+            alt={movie.movie_title_en}
+            className="swiper-image"
+          />
         ) : (
-          <LazyLoad height={356} width={212} threshold={0.95}>
-            <img
-              src={movie.pic.movie_img_m}
-              alt={movie.movie_title_en}
-              className="swiper-image"
-            />
-          </LazyLoad>
+          <img
+            src={movie.pic.movie_img_m}
+            alt={movie.movie_title_en}
+            className="swiper-image"
+          />
         )}
         <h8 className="movie-title u500">{movie.movie_title}</h8>
       </Link>

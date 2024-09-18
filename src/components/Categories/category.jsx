@@ -32,7 +32,6 @@ const Category = ({ image, title, focusKeey, tag_id }) => {
   }, []);
   const handleScrolling = () => {
     myRef.current.scrollIntoView({
-      behavior: "smooth",
       block: "center",
     });
   };

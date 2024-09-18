@@ -4,6 +4,10 @@ import testLogo from "../../assets/genres/testlogo.svg";
 import calender from "../../assets/images/calender-green.svg";
 
 const Content = ({ data, curretFocusedMovie, type }) => {
+  useEffect(() => {
+    // movieSet();
+    console.log(curretFocusedMovie);
+  }, [curretFocusedMovie]);
   if (curretFocusedMovie === null || !curretFocusedMovie?.cover)
     return (
       <div className="content">

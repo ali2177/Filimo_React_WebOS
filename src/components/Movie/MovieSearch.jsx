@@ -10,11 +10,13 @@ import {
 } from "@noriginmedia/norigin-spatial-navigation";
 
 function MovieSearch({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
+  const location = useLocation("");
   const { ref, focused, focusSelf, focusKey } = useFocusable({
     onFocus: () => {
       handleScrolling();
     },
     onEnterPress: () => {
+      localStorage.setItem("lastRouteNotplayer", location.pathname);
       navigate(`/movie/${movie.uid}`);
     },
     focusable: true,
@@ -33,7 +35,6 @@ function MovieSearch({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
   };
   const handleScrolling = () => {
     myRef.current.scrollIntoView({
-      behavior: "smooth",
       block: "center",
     });
   };

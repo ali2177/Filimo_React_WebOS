@@ -41,7 +41,7 @@ const User = ({ jwtSub, user }) => {
     };
 
     fetch(
-      "https://www.televika.com/api/fa/v1/user/Authenticate/signin_profile",
+      "https://www.filimo.com/api/fa/v1/user/Authenticate/signin_profile",
       requestOptions
     )
       .then((response) => response.json())
@@ -65,6 +65,7 @@ const User = ({ jwtSub, user }) => {
       {!user.attributes.avatar && (
         <div className="user-profile-placeholder">
           <svg
+            className="user-profile-placeholder-svg"
             xmlns="http://www.w3.org/2000/svg"
             width="120"
             height="120"

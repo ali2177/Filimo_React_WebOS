@@ -43,7 +43,7 @@ function Search() {
   const getData = async (querry, jwtt) => {
     try {
       const res = await fetch(
-        `https://www.televika.com/api/fa/v1/movie/movie/list/tagid/1000300/text/${querry}?json_type=simple`
+        `https://www.filimo.com/api/fa/v1/movie/movie/list/tagid/1000300/text/${querry}?json_type=simple`
       );
       const blocks = await res?.json();
       localStorage.setItem("searchResult", JSON.stringify(blocks));

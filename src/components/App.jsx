@@ -76,7 +76,7 @@ function App() {
   const getUserData = async (jwt) => {
     try {
       const res = await fetch(
-        `https://www.televika.com/api/fa/v1/partner/TV/profile`,
+        `https://www.filimo.com/api/fa/v1/partner/TV/profile`,
         {
           method: "GET",
           headers: { Authorization: `Bearer ${jwt}` },
@@ -140,7 +140,7 @@ function App() {
             element={<MovieInfo isLogin={isLogin} />}
           />
           <Route exact path="/moremovies/:tag_id" element={<MoreMovies />} />
-          <Route exact path="/moreSingle/:title" element={<MoreSingle />} />
+          <Route exact path="/moreSingle/:title/:id" element={<MoreSingle />} />
           <Route exact path="/morereccom/:id" element={<MoreReccom />} />
           <Route
             exact

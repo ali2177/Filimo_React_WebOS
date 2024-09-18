@@ -10,12 +10,14 @@ import {
 } from "@noriginmedia/norigin-spatial-navigation";
 
 function MovieCat({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
+  const location = useLocation("");
   const { ref, focused, focusSelf, focusKey } = useFocusable({
     onFocus: () => {
       handleScrolling();
     },
     onEnterPress: () => {
       localStorage.setItem("lastFocusCat", focusKeey);
+      localStorage.setItem("lastRouteNotplayer", location.pathname);
       navigate(`/movie/${movie.uid}`);
     },
     focusable: true,
@@ -34,7 +36,6 @@ function MovieCat({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
   };
   const handleScrolling = () => {
     myRef.current.scrollIntoView({
-      behavior: "smooth",
       block: "center",
     });
   };
@@ -50,6 +51,7 @@ function MovieCat({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
       className={focused ? "btn-focus" : "btn-not-focus"}
       ref={ref}
       style={{ width: "220px" }}
+      id="main-page-movie"
     >
       {/* <Focusable
         className={"btn-focus"}

@@ -15,7 +15,11 @@ function MovieActorProfile({ movie, movieFocus, onEnterPress, focusKeey }) {
       handleScrolling();
     },
     onEnterPress: () => {
-      navigate(`/movie/${movie.uid}`);
+      localStorage.setItem("lastRouteNotplayer", location.pathname);
+      navigate(`/movie/${movie.attributes.uid}`);
+      localStorage.removeItem("lastFocusActor");
+      localStorage.removeItem("lastFocusCrew");
+      localStorage.removeItem("lastFocusRecomm");
     },
     focusable: true,
     trackChildren: true,
@@ -26,6 +30,7 @@ function MovieActorProfile({ movie, movieFocus, onEnterPress, focusKeey }) {
   });
   const myRef = useRef();
   const navigate = useNavigate();
+  const location = useLocation("");
 
   //set focus for current movie and pass it to parent
   const onMovieFocus = () => {
@@ -33,10 +38,15 @@ function MovieActorProfile({ movie, movieFocus, onEnterPress, focusKeey }) {
   };
   const handleScrolling = () => {
     myRef.current.scrollIntoView({
-      behavior: "smooth",
       block: "center",
     });
   };
+
+  useEffect(() => {
+    localStorage.removeItem("seasonBtn");
+    localStorage.removeItem("recommBtn");
+    localStorage.removeItem("lastSeasonFocus");
+  }, [location]);
 
   return (
     <div
@@ -52,7 +62,11 @@ function MovieActorProfile({ movie, movieFocus, onEnterPress, focusKeey }) {
         }}
       > */}
 
-      <Link ref={myRef} className="swiper-link" to={`/movie/${movie.uid}`}>
+      <Link
+        ref={myRef}
+        className="swiper-link"
+        to={`/movie/${movie.attributes.uid}`}
+      >
         {movie.attributes.pic.movie_img_m ? (
           <img
             src={movie.attributes.pic.movie_img_m}

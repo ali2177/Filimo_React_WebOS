@@ -7,6 +7,7 @@ import {
 import { useNavigate, Link, useLocation } from "react-router-dom";
 
 const Episode = ({ movieItem, focusKeey }) => {
+  const location = useLocation("");
   const myRef = useRef(null);
   const navigate = useNavigate();
 
@@ -17,6 +18,14 @@ const Episode = ({ movieItem, focusKeey }) => {
     },
     onEnterPress: () => {
       localStorage.removeItem("seasonBtn");
+      localStorage.removeItem("recommBtn");
+      // let path = [
+      //   ...JSON.parse(localStorage.getItem("lastRouteNotplayer")),
+      //   location.pathname,
+      // ];
+      // localStorage.setItem("lastRouteNotplayer", JSON.stringify(path));
+      // // localStorage.setItem("lastRouteNotplayer", location.pathname);
+      // localStorage.removeItem("lastRoute");
       navigate(`/movie/${movieItem.uid}`);
     },
     focusable: true,
@@ -31,7 +40,6 @@ const Episode = ({ movieItem, focusKeey }) => {
   //   }, []);
   const handleScrolling = () => {
     myRef.current.scrollIntoView({
-      behavior: "smooth",
       block: "center",
     });
   };

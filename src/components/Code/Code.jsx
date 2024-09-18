@@ -4,7 +4,7 @@ const Code = ({ code }) => {
   const codeAray = code.split("").reverse();
 
   return (
-    <div style={{ display: "flex", gap: "12px" }}>
+    <div style={{ display: "flex" }}>
       {codeAray.map((item) => (
         <div
           style={{
@@ -17,6 +17,7 @@ const Code = ({ code }) => {
             borderRadius: "8px",
             fontSize: "40px",
             fontWeight: "500",
+            marginLeft: "20px",
           }}
         >
           {item}

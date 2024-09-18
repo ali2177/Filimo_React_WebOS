@@ -26,7 +26,7 @@ function Actors({ actorsRow }) {
 
   const handleScrolling = () => {
     ref.current.scrollIntoView({
-      block: "center",
+      block: "start",
     });
   };
   const movieSet = (movieUid) => {

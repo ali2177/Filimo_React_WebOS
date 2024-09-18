@@ -36,7 +36,7 @@ function Profile() {
   const getUserData = async (jwt) => {
     try {
       const res = await fetch(
-        `https://www.televika.com/api/fa/v1/partner/TV/profile`,
+        `https://www.filimo.com/api/fa/v1/partner/TV/profile`,
         {
           method: "GET",
           headers: { Authorization: `Bearer ${jwt}` },
@@ -51,8 +51,6 @@ function Profile() {
   };
 
   useEffect(() => {
-    // focusSelf();
-
     window.scrollTo(0, 0);
     if (jwt) {
       getUserData(jwt);
@@ -118,7 +116,10 @@ function Profile() {
             <div className="subscription-text">
               <div className="subscription-status">
                 <div className="profile-pic-wrraper">
-                  <img src={UserData?.data?.attributes.profile_icon_info} />
+                  <img
+                    className="profile-pic-image"
+                    src={UserData?.data?.attributes.profile_icon_info}
+                  />
                 </div>
                 <div className="user-info">
                   <p className="u500">

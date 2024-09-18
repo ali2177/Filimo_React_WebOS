@@ -37,7 +37,7 @@ const Loogin = () => {
   const getData = async () => {
     try {
       const res = await fetch(
-        `https://www.televika.com/api/fa/v1/user/Authenticate/sync_account_verify/code/${code}/ref_type/tv`
+        `https://www.filimo.com/api/fa/v1/user/Authenticate/sync_account_verify/code/${code}/ref_type/tv`
       );
       const blocks = await res?.json();
       jwt = blocks.data.attributes.jwt;
@@ -52,7 +52,7 @@ const Loogin = () => {
     try {
       setIsLoading(true);
       const res = await fetch(
-        `https://www.televika.com/api/fa/v1/user/Authenticate/get_verify_code?ref_type=tv`
+        `https://www.filimo.com/api/fa/v1/user/Authenticate/get_verify_code?ref_type=tv`
       );
       const blocks = await res?.json();
       setData(blocks);
@@ -76,7 +76,8 @@ const Loogin = () => {
         localStorage.setItem("mobile_number", dataSet.mobile_number);
         localStorage.setItem("name", dataSet.name);
         localStorage.setItem("username", dataSet.username);
-        navigate("/");
+        localStorage.removeItem("lastdataloaded");
+        navigate(-1);
       }
     }, 1000);
     return () => {

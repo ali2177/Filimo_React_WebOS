@@ -49,7 +49,6 @@ const MoreCategory = () => {
     ({ y }) => {
       myRef.current.scrollTo({
         top: y,
-        behavior: "smooth",
       });
       // console.log(ref.current.scrollTop);
       // ref.current.scrollTop += 10;
@@ -79,10 +78,12 @@ const MoreCategory = () => {
       <div
         ref={myRef}
         style={{
-          marginRight: "40px",
+          paddingRight: "40px",
           overflow: "hidden",
           overflowY: "scroll",
           height: "100%",
+          background:
+            "linear-gradient(270deg, #151515 0%, rgba(17, 17, 17, 0.75) 50.79%, rgba(12, 12, 12, 0) 100%), linear-gradient(180deg, rgba(21, 21, 21, 0) 67.35%, #151515 100%)",
         }}
       >
         {data.data.map((movieItem, index) =>

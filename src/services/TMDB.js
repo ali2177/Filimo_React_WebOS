@@ -5,7 +5,7 @@ const tmdbApiKey = process.env.REACT_APP_TMDB_KEY;
 export const tmdbApi = createApi({
   reducerPath: "tmdbApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://www.televika.com/api/fa/v1/",
+    baseUrl: "https://www.filimo.com/api/fa/v1/",
     prepareHeaders(headers) {
       const token = localStorage.getItem("jwt");
 
@@ -30,7 +30,7 @@ export const tmdbApi = createApi({
           return `/movie/movie/list/tagid/${tag_id}/other_data/${other_data}/?json_type=simple`;
         }
 
-        return `movie/movie/list/tagid/1/list_perpage/5/list_offset/0?json_type=simple&device_type=react_tizen`;
+        return `movie/movie/list/tagid/1/list_perpage/4/list_offset/0?json_type=simple&device_type=react_tizen`;
       },
     }),
 
