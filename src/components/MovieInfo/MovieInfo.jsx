@@ -242,6 +242,8 @@ function MovieInfo({ isLogin }) {
 
   if (isFetching) return <Loader />;
 
+  console.log(movieData?.data);
+
   return (
     <FocusContext.Provider value={focusKey}>
       {!isLoading && (
@@ -288,26 +290,31 @@ function MovieInfo({ isLogin }) {
                 <HeroBadge movie={movieData?.data?.General} />
                 {movieData?.data?.General?.serial.enable === true ? (
                   <div className="schedule">
-                    <div className="calender">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="28"
-                        height="28"
-                        viewBox="0 0 28 28"
-                        fill="none"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          clip-rule="evenodd"
-                          d="M9.33333 10.5C8.689 10.5 8.16667 9.97766 8.16667 9.33333V8.16667H5.83333V12.8333H22.1667V8.16667H19.8333V9.33333C19.8333 9.97766 19.311 10.5 18.6667 10.5C18.0223 10.5 17.5 9.97766 17.5 9.33333V8.16667H10.5V9.33333C10.5 9.97766 9.97767 10.5 9.33333 10.5ZM17.5 5.83333H10.5V4.66667C10.5 4.02233 9.97767 3.5 9.33333 3.5C8.689 3.5 8.16667 4.02233 8.16667 4.66667V5.83333H5.83333C4.54467 5.83333 3.5 6.878 3.5 8.16667V21C3.5 22.2887 4.54467 23.3333 5.83333 23.3333H22.1667C23.4553 23.3333 24.5 22.2887 24.5 21V8.16667C24.5 6.878 23.4553 5.83333 22.1667 5.83333H19.8333V4.66667C19.8333 4.02233 19.311 3.5 18.6667 3.5C18.0223 3.5 17.5 4.02233 17.5 4.66667V5.83333ZM5.83333 15.1667V21H22.1667V15.1667H5.83333Z"
-                          fill="#A1A1A1"
-                        />
-                      </svg>
-                      <span className="u500">
-                        {movieData?.data?.General?.serial.schedule?.text}
-                      </span>
-                    </div>
-                    <img className="dot" src={dot} />
+                    {movieData?.data?.General?.serial.schedule && (
+                      <>
+                        <div className="calender">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="28"
+                            height="28"
+                            viewBox="0 0 28 28"
+                            fill="none"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              clip-rule="evenodd"
+                              d="M9.33333 10.5C8.689 10.5 8.16667 9.97766 8.16667 9.33333V8.16667H5.83333V12.8333H22.1667V8.16667H19.8333V9.33333C19.8333 9.97766 19.311 10.5 18.6667 10.5C18.0223 10.5 17.5 9.97766 17.5 9.33333V8.16667H10.5V9.33333C10.5 9.97766 9.97767 10.5 9.33333 10.5ZM17.5 5.83333H10.5V4.66667C10.5 4.02233 9.97767 3.5 9.33333 3.5C8.689 3.5 8.16667 4.02233 8.16667 4.66667V5.83333H5.83333C4.54467 5.83333 3.5 6.878 3.5 8.16667V21C3.5 22.2887 4.54467 23.3333 5.83333 23.3333H22.1667C23.4553 23.3333 24.5 22.2887 24.5 21V8.16667C24.5 6.878 23.4553 5.83333 22.1667 5.83333H19.8333V4.66667C19.8333 4.02233 19.311 3.5 18.6667 3.5C18.0223 3.5 17.5 4.02233 17.5 4.66667V5.83333ZM5.83333 15.1667V21H22.1667V15.1667H5.83333Z"
+                              fill="#A1A1A1"
+                            />
+                          </svg>
+                          <span className="u500">
+                            {movieData?.data?.General?.serial.schedule?.text}
+                          </span>
+                        </div>
+                        <img className="dot" src={dot} />
+                      </>
+                    )}
+
                     <div className="calender">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

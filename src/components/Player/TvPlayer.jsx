@@ -8,6 +8,8 @@ import {
   faFastBackward,
   faFastForward,
   faList,
+  faReply,
+  faArrowAltCircleRight,
 } from "@fortawesome/fontawesome-free-solid";
 import { useNavigate, useLocation } from "react-router-dom";
 import NextEpisodeMenu from "./NextEpisodeMenu";
@@ -23,6 +25,8 @@ const TvPlayer = () => {
   const [movieWatchData, setMovieWatchData] = useState(null);
   const [movieUid, setMovieUid] = useState(null);
   const [movieCastTime, setMovieCastTime] = useState(null);
+  const [movieIntroTimeStart, setMovieIntroTimeStart] = useState(null);
+  const [movieIntroTimeEnd, setMovieIntroTimeEnd] = useState(null);
   const [isShowNextMenu, setIsShowNextMenu] = useState(false);
   const [isLoading, setIsloading] = useState(false);
   const [activeQuality, setActiveQuality] = useState(0);
@@ -35,9 +39,10 @@ const TvPlayer = () => {
   const [isShowSubList, setIsShowSubList] = useState(false);
   const [isShowQualList, setIsShowQualList] = useState(false);
   const [isShowAudList, setIsShowAudList] = useState(false);
-  const [isShowPlayerWithSub, setIsShowPlayerWithSub] = useState(false);
+
   const [subtitles, setSubtitles] = useState(null);
-  const [playerSubFormat, setPlayerSubFormat] = useState();
+  const [isShowIntroBtn, setIsShowIntroBtn] = useState(false);
+
   const navigate = useNavigate();
   const location = useLocation("");
 
@@ -82,6 +87,8 @@ const TvPlayer = () => {
       .then((result) => {
         console.log(result);
         setMovieCastTime(result.data.attributes.cast.start);
+        setMovieIntroTimeStart(result.data.attributes?.intro?.start);
+        setMovieIntroTimeEnd(result.data.attributes?.intro?.end);
         setMovie(result.data.attributes.multiSRC[0][0].src);
         setMovieWatchData(result);
         setTimeout(() => {
@@ -200,7 +207,7 @@ const TvPlayer = () => {
             faIcon: faArrowLeft,
             onPress: () => {
               localStorage.setItem("lastRoute", location.pathname);
-              navigate(`/movie/${movieUid}`);
+              navigate(-1);
             },
           },
           { action: "mute", label: "بی صدا", align: "left" },
@@ -289,6 +296,7 @@ const TvPlayer = () => {
               setIsShowQualList(true);
             },
           },
+
           {
             action: "custom",
             align: "center",
@@ -303,6 +311,7 @@ const TvPlayer = () => {
             },
           },
           { action: "playpause", label: "پخش", align: "center" },
+          { action: "playpause", label: "پخش مجدد", align: "center" },
           {
             action: "custom",
             align: "center",
@@ -375,12 +384,56 @@ const TvPlayer = () => {
             label: "بازگشت",
             faIcon: faArrowLeft,
             onPress: () => {
-              navigate(-1);
+              navigate(`/movie/${movie.uid}`);
             },
           },
           { action: "mute", label: "بی صدا", align: "left" },
         ]
       : []),
+
+    ...(movieWatchData?.data.attributes.cast.nextPartUid
+      ? [
+          {
+            action: "custom",
+            align: "right",
+            label: "قسمت بعدی",
+            faIcon: faArrowAltCircleRight,
+            onPress: () => {
+              localStorage.setItem(
+                "movie_uid",
+                movieWatchData?.data.attributes.cast.nextPartUid
+              );
+              window.location.reload();
+            },
+          },
+        ]
+      : []),
+    ...(isShowIntroBtn
+      ? [
+          {
+            action: "custom",
+            align: "left",
+            label: "رد کردن تیتراز",
+            faIcon: faArrowAltCircleRight,
+            onPress: () => {
+              player.seekTo(
+                player.getCurrentTime() +
+                  (movieIntroTimeEnd - movieIntroTimeStart)
+              );
+              setIsShowIntroBtn(false);
+            },
+          },
+        ]
+      : []),
+    {
+      action: "custom",
+      label: "پخش مجدد",
+      align: "center",
+      faIcon: faReply,
+      onPress: () => {
+        window.location.reload();
+      },
+    },
   ];
 
   const customButtonsWithNoAud = [
@@ -549,13 +602,13 @@ const TvPlayer = () => {
           </div>
         </div>
       )}
-      {isShowNextMenu && (
+      {/* {isShowNextMenu && (
         <NextEpisodeMenu
           nextEpisodeTitle={movieWatchData.data.attributes.cast.nextPartTitle}
           nextEpisodeUid={movieWatchData.data.attributes.cast.nextPartUid}
           currentUid={movieUid}
         />
-      )}
+      )} */}
 
       {/* {isShowAudList && (
         <div className="subtitle-list u500">
@@ -592,52 +645,66 @@ const TvPlayer = () => {
         </div>
       )} */}
 
-      <TVPlayer
-        playing={true}
-        url={movie}
-        customButtons={customButtonsWithSub}
-        config={{
-          file: {
-            attributes: {
-              crossOrigin: "true",
+      {movieWatchData && (
+        <TVPlayer
+          subTitle={movieWatchData.data.attributes.movie_title}
+          playing={true}
+          url={movie}
+          customButtons={customButtonsWithSub}
+          config={{
+            file: {
+              attributes: {
+                crossOrigin: "true",
+              },
             },
-          },
-        }}
-        onPlay={() => {
-          interval = setInterval(() => {
-            sendVisitUrl();
-          }, 1000);
-          interval2 = setInterval(() => {
-            if (player.getCurrentTime() >= movieCastTime) {
-              if (movieCastTime === null) {
-                setIsShowNextMenu(false);
+          }}
+          onPlay={() => {
+            interval = setInterval(() => {
+              sendVisitUrl();
+            }, 1000);
+            interval2 = setInterval(() => {
+              if (player.getCurrentTime() >= movieCastTime) {
+                if (movieCastTime === null) {
+                  setIsShowNextMenu(false);
+                } else {
+                  setIsShowNextMenu(true);
+                }
+                clearInterval(interval2);
               } else {
-                setIsShowNextMenu(true);
+                setIsShowNextMenu(false);
               }
-              clearInterval(interval2);
-            } else {
-              setIsShowNextMenu(false);
-            }
-          }, 1000);
+              if (movieIntroTimeStart && movieIntroTimeEnd) {
+                if (
+                  player.getCurrentTime() >= movieIntroTimeStart &&
+                  player.getCurrentTime() <= movieIntroTimeEnd
+                ) {
+                  setIsShowIntroBtn(true);
+                }
+                if (player.getCurrentTime() > movieIntroTimeEnd) {
+                  setIsShowIntroBtn(false);
+                }
+              }
+            }, 1000);
 
-          const hls = player?.getInternalPlayer("hls");
+            const hls = player?.getInternalPlayer("hls");
 
-          // console.log(hls.levels);
-          // // hls.currentLevel = hls.levels[1].bitrate;
-          // console.log(hls.currentLevel);
-          // hls.nextLevel = hls.levels[4];
-          // console.log(hls.nextLevel);
-          // console.log(hls.levels[4].bitrate);
+            // console.log(hls.levels);
+            // // hls.currentLevel = hls.levels[1].bitrate;
+            // console.log(hls.currentLevel);
+            // hls.nextLevel = hls.levels[4];
+            // console.log(hls.nextLevel);
+            // console.log(hls.levels[4].bitrate);
 
-          // const intervalCall = setInterval(() => {
-          //   getData();
-          // }, 3000);
-        }}
-        onPause={() => {
-          clearInterval(interval);
-          clearInterval(interval2);
-        }}
-      />
+            // const intervalCall = setInterval(() => {
+            //   getData();
+            // }, 3000);
+          }}
+          onPause={() => {
+            clearInterval(interval);
+            clearInterval(interval2);
+          }}
+        />
+      )}
     </main>
   );
 };

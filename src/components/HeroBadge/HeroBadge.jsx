@@ -5,15 +5,22 @@ import imdb from "../../assets/images/imdb-yellow.svg";
 import dot from "../../assets/genres/dot.svg";
 
 const HeroBadge = ({ movie }) => {
-  console.log(movie?.categories.length);
+  
+  const convertToFarsi = (number) => {
+    const farsiNumbers = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+    return String(number)
+      .split('')
+      .map(num => farsiNumbers[num] || num)
+      .join('');
+  };
   return (
     <div className="badge hero-badge">
-      <span>{movie?.age_range}</span>
-      {/* {movie?.age_range.slice(0, 2) !== "0" &&
+      {/* <span>{movie?.age_range}</span> */}
+      {movie?.age_range.slice(0, 2) !== "0" &&
         movie?.age_range !== "all" &&
         movie?.age_range !== "6-12" && (
           <div>
-            <span>{"+" + movie?.age_range.slice(0, 2) + " سال"}</span>
+            <span>{convertToFarsi(movie?.age_range.slice(0, 2))  + "+"}</span>
           </div>
         )}
       {movie?.age_range === "all" && (
@@ -23,9 +30,9 @@ const HeroBadge = ({ movie }) => {
       )}
       {movie?.age_range === "6-12" && (
         <div>
-          <span>6-12 سال</span>
+          <span>{convertToFarsi(movie?.age_range.slice(0, 1))+ "+"}</span>
         </div>
-      )} */}
+      )}
       <div style={{ marginRight: "20px" }}>
         <span className="u500">{movie?.duration.text}</span>
       </div>
@@ -57,7 +64,7 @@ const HeroBadge = ({ movie }) => {
         ))}
       </div>
       <div style={{ marginRight: "20px" }}>
-        <span>{movie?.pro_year}</span>
+        <span>{ convertToFarsi(movie?.pro_year)}</span>
       </div>
 
       {movie?.subtitle.enable ? (
