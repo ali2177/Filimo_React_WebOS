@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useReducer } from "react";
 import Badge from "../Badge/Badge";
+import gradiant from "../../assets/images/Rectangle.svg";
 import testLogo from "../../assets/genres/testlogo.svg";
 import calender from "../../assets/images/calender-green.svg";
 
@@ -60,7 +61,7 @@ const Content = ({ data, curretFocusedMovie, type }) => {
 
   return (
     <div className="content">
-      {/* <div className="gradiant"></div> */}
+      <div className="gradiant"></div>
       <img
         className="content-poster"
         src={curretFocusedMovie?.cover_data?.horizontal}

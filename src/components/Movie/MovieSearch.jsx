@@ -16,7 +16,6 @@ function MovieSearch({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
       handleScrolling();
     },
     onEnterPress: () => {
-      localStorage.setItem("lastRouteNotplayer", location.pathname);
       navigate(`/movie/${movie.uid}`);
     },
     focusable: true,

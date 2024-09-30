@@ -5,7 +5,7 @@ const tmdbApiKey = process.env.REACT_APP_TMDB_KEY;
 export const tmdbApi = createApi({
   reducerPath: "tmdbApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://www.filimo.com/api/fa/v1/",
+    baseUrl: "https://www.televika.com/api/fa/v1/",
     prepareHeaders(headers) {
       const token = localStorage.getItem("jwt");
 

@@ -41,7 +41,7 @@ const User = ({ jwtSub, user }) => {
     };
 
     fetch(
-      "https://www.filimo.com/api/fa/v1/user/Authenticate/signin_profile",
+      "https://www.televika.com/api/fa/v1/user/Authenticate/signin_profile",
       requestOptions
     )
       .then((response) => response.json())

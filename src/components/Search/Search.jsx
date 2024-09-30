@@ -1,4 +1,13 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
+import {
+  FocusableComponentLayout,
+  FocusContext,
+  FocusDetails,
+  KeyPressDetails,
+  useFocusable,
+  setFocus,
+  getCurrentFocusKey,
+} from "@noriginmedia/norigin-spatial-navigation";
 
 import { useNavigate } from "react-router-dom";
 
@@ -18,15 +27,22 @@ function Search() {
   const [curretFocusedMovie, setCurretFocusedMovie] = useState("");
 
   useEffect(() => {
+    localStorage.removeItem("lastFocus");
+    localStorage.removeItem("lastFocusRow");
+    localStorage.removeItem("lastMovieFocus");
+    localStorage.removeItem("lastRouteNotplayer");
+    localStorage.removeItem("lastSeasonFocus_parent_new");
+    localStorage.removeItem("lastSeasonFocus_season_part");
     window.addEventListener("keydown", keyHandler);
     setData(JSON.parse(localStorage.getItem("searchResult")));
     if (localStorage.getItem("searchQuery"))
       setSearchQuery(localStorage.getItem("searchQuery"));
     return () => window.removeEventListener("keydown", keyHandler);
   }, []);
-  useEffect(() => {
-    setData(JSON.parse(localStorage.getItem("searchResult")));
-  }, [JSON.parse(localStorage.getItem("searchResult"))]);
+
+  // useEffect(() => {
+  //   setData(JSON.parse(localStorage.getItem("searchResult")));
+  // }, [JSON.parse(localStorage.getItem("searchResult"))]);
 
   const movieFocusSet = (movieUid) => {
     setCurretFocusedMovie(movieUid);
@@ -43,10 +59,15 @@ function Search() {
   const getData = async (querry, jwtt) => {
     try {
       const res = await fetch(
-        `https://www.filimo.com/api/fa/v1/movie/movie/list/tagid/1000300/text/${querry}?json_type=simple`
+        `https://www.televika.com/api/fa/v1/movie/movie/list/tagid/1000300/text/${querry}?json_type=simple`
       );
       const blocks = await res?.json();
-      localStorage.setItem("searchResult", JSON.stringify(blocks));
+      localStorage.setItem(
+        "searchResult",
+        JSON.stringify(
+          blocks.data.filter((item) => item.output_type === "movie")
+        )
+      );
       localStorage.setItem("searchQuery", querry);
       navigate("/searchResult");
       setData(blocks);

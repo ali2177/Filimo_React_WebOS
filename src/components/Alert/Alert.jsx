@@ -1,26 +1,20 @@
 import React from "react";
-
-const Alert = () => {
+import AlertBtn from "./AlertBtn";
+const Alert = ({ type, handleBtnEnter }) => {
   return (
     <div class="infoo alert">
       <div class="alert-content">
-        <div class="alert-icon">
-          <svg
-            width="50"
-            height="50"
-            viewBox="0 0 50 50"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <rect width="50" height="50" rx="25" fill="white" />
-            <path d="M27 22H23V40H27V22Z" fill="#006CE3" />
-            <path
-              d="M25 18C24.2089 18 23.4355 17.7654 22.7777 17.3259C22.1199 16.8864 21.6072 16.2616 21.3045 15.5307C21.0017 14.7998 20.9225 13.9956 21.0769 13.2196C21.2312 12.4437 21.6122 11.731 22.1716 11.1716C22.731 10.6122 23.4437 10.2312 24.2196 10.0769C24.9956 9.92252 25.7998 10.0017 26.5307 10.3045C27.2616 10.6072 27.8864 11.1199 28.3259 11.7777C28.7654 12.4355 29 13.2089 29 14C29 15.0609 28.5786 16.0783 27.8284 16.8284C27.0783 17.5786 26.0609 18 25 18V18Z"
-              fill="#006CE3"
-            />
-          </svg>
+        <div>
+          {type === "خرید بلیت و تماشا" ? (
+            <p className="u700">
+              بلیت اکران آنلاین را فقط می‌توانید از وبسایت تلویکا بخرید.
+            </p>
+          ) : (
+            <p className="u700">برای خرید به سایت یا اپ فیلیمو مراجعه کنید</p>
+          )}
         </div>
-        <p>برای خرید به سایت یا اپ فیلیمو مراجعه کنید</p>
+
+        <AlertBtn onEnterPress={handleBtnEnter} />
       </div>
     </div>
   );

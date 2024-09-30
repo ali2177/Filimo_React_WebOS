@@ -1,9 +1,7 @@
 import React from "react";
 import { Focusable } from "react-js-spatial-navigation";
 
-const NetworkError = ({
-  errorText = "مشکلی به وجود آمده است لطفا از اتصال اینترنت خود مطمئا شوید",
-}) => {
+const NetworkError = ({ errorText = "مشکلی به وجود آمده است       " }) => {
   return (
     <main
       style={{

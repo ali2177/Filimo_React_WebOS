@@ -19,7 +19,7 @@ function MovieRecoom({ movie, movieFocus, onFocus, onEnterPress, focusKeeey }) {
       localStorage.removeItem("lastFocusCrew");
       localStorage.removeItem("lastFocusActor");
       localStorage.removeItem("lastFocusMore");
-      localStorage.setItem("lastRouteNotplayer", location.pathname);
+
       navigate(`/movie/${movie.uid}`);
     },
     focusable: true,

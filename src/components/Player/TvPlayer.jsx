@@ -17,13 +17,14 @@ import Loader from "../Loader/Loader";
 
 let interval;
 let interval2;
-let jwt = localStorage.getItem("jwt");
+let movieSrc;
 
 const TvPlayer = () => {
   const player = useTVPlayerStore((s) => s.player);
   const [movie, setMovie] = useState(null);
   const [movieWatchData, setMovieWatchData] = useState(null);
   const [movieUid, setMovieUid] = useState(null);
+  const [jwt, setJwt] = useState(null);
   const [movieCastTime, setMovieCastTime] = useState(null);
   const [movieIntroTimeStart, setMovieIntroTimeStart] = useState(null);
   const [movieIntroTimeEnd, setMovieIntroTimeEnd] = useState(null);
@@ -47,27 +48,27 @@ const TvPlayer = () => {
   const location = useLocation("");
 
   useEffect(() => {
+    window.addEventListener("keydown", keyHandler);
+
     // getData();
+    setJwt(localStorage.getItem("jwt"));
     setMovieUid(localStorage.getItem("movie_uid"));
+
     setFormAction(localStorage.getItem("formAction"));
     setMovieCastTime(localStorage.getItem("movie_cast_time"));
     setSubtitles(JSON.parse(localStorage.getItem("subtitles")));
-    window.addEventListener("keydown", keyHandler);
-    return () => {
-      window.removeEventListener("keydown", keyHandler);
-    };
-  }, []);
-  useEffect(() => {
-    setIsloading(true);
-    console.log(movieUid);
-    if (movieUid) {
-      getMovieData();
-    }
     return () => {
       window.removeEventListener("keydown", keyHandler);
       clearInterval(interval2);
     };
-  }, [movieUid]);
+  }, []);
+  useEffect(() => {
+    setIsloading(true);
+    // console.log(movieUid);
+    if (movieUid && jwt) {
+      getMovieData();
+    }
+  }, [movieUid, jwt]);
 
   const getMovieData = () => {
     const myHeaders = new Headers();
@@ -80,22 +81,24 @@ const TvPlayer = () => {
     };
 
     fetch(
-      `https://www.filimo.com/api/fa/v1/movie/watch/watch/uid/${movieUid}`,
+      `https://www.televika.com/api/fa/v1/movie/watch/watch/uid/${movieUid}/?devicetype=tizen_react`,
       requestOptions
     )
       .then((response) => response.json())
       .then((result) => {
-        console.log(result);
         setMovieCastTime(result.data.attributes.cast.start);
         setMovieIntroTimeStart(result.data.attributes?.intro?.start);
         setMovieIntroTimeEnd(result.data.attributes?.intro?.end);
         setMovie(result.data.attributes.multiSRC[0][0].src);
+
         setMovieWatchData(result);
         setTimeout(() => {
           setIsloading(false);
         }, 3000);
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        console.log("error");
+      });
   };
 
   useEffect(() => {
@@ -136,7 +139,8 @@ const TvPlayer = () => {
     if (key.keyCode === 10009 || key.keyCode === 8) {
       clearInterval(interval2);
       clearInterval(interval);
-      localStorage.setItem("lastRoute", location.pathname);
+      // localStorage.setItem("lastRoute", location.pathname);
+      // console.log("back");
       navigate(-1);
     }
   };
@@ -311,7 +315,7 @@ const TvPlayer = () => {
             },
           },
           { action: "playpause", label: "پخش", align: "center" },
-          { action: "playpause", label: "پخش مجدد", align: "center" },
+
           {
             action: "custom",
             align: "center",
@@ -384,7 +388,7 @@ const TvPlayer = () => {
             label: "بازگشت",
             faIcon: faArrowLeft,
             onPress: () => {
-              navigate(`/movie/${movie.uid}`);
+              navigate(-1);
             },
           },
           { action: "mute", label: "بی صدا", align: "left" },
@@ -431,7 +435,7 @@ const TvPlayer = () => {
       align: "center",
       faIcon: faReply,
       onPress: () => {
-        window.location.reload();
+        player.seekTo(player.getCurrentTime() - player.getCurrentTime());
       },
     },
   ];
@@ -498,111 +502,115 @@ const TvPlayer = () => {
       .catch((error) => console.log("error", error));
   };
 
-  // if (isLoading) return <Loader />;
+  if (isLoading) {
+    return <Loader />;
+  } else {
+    if (movie !== null) {
+      return (
+        <main style={{ direction: "ltr", width: "100%" }} className="main">
+          {isShowSubList && (
+            <div className="subtitle-list u500">
+              <div className="sub-back"></div>
+              <div className="sub-content">
+                <p style={{ textAlign: "center" }}>انتخاب زیرنویس</p>
 
-  return (
-    <main style={{ direction: "ltr", width: "100%" }} className="main">
-      {isShowSubList && (
-        <div className="subtitle-list u500">
-          <div className="sub-back"></div>
-          <div className="sub-content">
-            <p style={{ textAlign: "center" }}>انتخاب زیرنویس</p>
-
-            <hr />
-            <ul>
-              {subtitles.map((sub, index) => (
-                <Focusable
-                  onClickEnter={() => {
-                    setTreackLang(sub.lng);
-                    setIsShowSubList(false);
-                    setActiveSub(index);
-                  }}
-                  className="sub-header u700"
-                >
-                  <li
-                    className={activeSub === index ? "active-quality" : ""}
-                    id={index}
-                  >
-                    {sub.lng_fa}
+                <hr />
+                <ul>
+                  {subtitles.map((sub, index) => (
+                    <Focusable
+                      onClickEnter={() => {
+                        setTreackLang(sub.lng);
+                        setIsShowSubList(false);
+                        setActiveSub(index);
+                      }}
+                      className="sub-header u700"
+                    >
+                      <li
+                        className={activeSub === index ? "active-quality" : ""}
+                        id={index}
+                      >
+                        {sub.lng_fa}
+                      </li>
+                    </Focusable>
+                  ))}
+                  <li>
+                    <Focusable
+                      onClickEnter={() => {
+                        setTreackLang("none");
+                        setIsShowSubList(false);
+                      }}
+                      className="sub-header u700"
+                    >
+                      خاموش
+                    </Focusable>
                   </li>
-                </Focusable>
-              ))}
-              <li>
+                </ul>
                 <Focusable
                   onClickEnter={() => {
-                    setTreackLang("none");
                     setIsShowSubList(false);
                   }}
-                  className="sub-header u700"
+                  className="sub-header"
                 >
-                  خاموش
+                  بستن
                 </Focusable>
-              </li>
-            </ul>
-            <Focusable
-              onClickEnter={() => {
-                setIsShowSubList(false);
-              }}
-              className="sub-header"
-            >
-              بستن
-            </Focusable>
-          </div>
-        </div>
-      )}
-      {isShowQualList && (
-        <div className="subtitle-list u500">
-          <div className="sub-back"></div>
-          <div className="sub-content">
-            <p style={{ textAlign: "center" }}>انتخاب کیفیت</p>
+              </div>
+            </div>
+          )}
+          {isShowQualList && (
+            <div className="subtitle-list u500">
+              <div className="sub-back"></div>
+              <div className="sub-content">
+                <p style={{ textAlign: "center" }}>انتخاب کیفیت</p>
 
-            <hr />
-            <ul>
-              {qualityLevels.map((quality, index) => (
-                <Focusable
-                  onClickEnter={() => {
-                    const hls = player?.getInternalPlayer("hls");
-                    hls.currentLevel = index;
-                    // player?.getInternalPlayer("hls").currentLevel = index;
-                    setIsShowQualList(false);
-                    setActiveQuality(index);
-                  }}
-                  className="sub-header u700"
-                >
-                  <li
-                    className={activeQuality === index ? "active-quality" : ""}
-                    id={index}
-                  >
-                    {quality.name}
+                <hr />
+                <ul>
+                  {qualityLevels.map((quality, index) => (
+                    <Focusable
+                      onClickEnter={() => {
+                        const hls = player?.getInternalPlayer("hls");
+                        hls.currentLevel = index;
+                        // player?.getInternalPlayer("hls").currentLevel = index;
+                        setIsShowQualList(false);
+                        setActiveQuality(index);
+                      }}
+                      className="sub-header u700"
+                    >
+                      <li
+                        className={
+                          activeQuality === index ? "active-quality" : ""
+                        }
+                        id={index}
+                      >
+                        {quality.name}
+                      </li>
+                    </Focusable>
+                  ))}
+                  <li>
+                    <Focusable
+                      onClickEnter={() => {
+                        const hls = player?.getInternalPlayer("hls");
+                        hls.currentLevel = -1;
+                        // player?.getInternalPlayer("hls").currentLevel = index;
+                        setIsShowQualList(false);
+                      }}
+                      className="sub-header u700"
+                    >
+                      خودکار
+                    </Focusable>
                   </li>
-                </Focusable>
-              ))}
-              <li>
+                </ul>
                 <Focusable
                   onClickEnter={() => {
-                    const hls = player?.getInternalPlayer("hls");
-                    hls.currentLevel = -1;
-                    // player?.getInternalPlayer("hls").currentLevel = index;
                     setIsShowQualList(false);
                   }}
-                  className="sub-header u700"
+                  className="sub-header"
                 >
-                  خودکار
+                  بستن
                 </Focusable>
-              </li>
-            </ul>
-            <Focusable
-              onClickEnter={() => {
-                setIsShowQualList(false);
-              }}
-              className="sub-header"
-            >
-              بستن
-            </Focusable>
-          </div>
-        </div>
-      )}
-      {/* {isShowNextMenu && (
+              </div>
+            </div>
+          )}
+          {/* {isShowNextMenu && (
         <NextEpisodeMenu
           nextEpisodeTitle={movieWatchData.data.attributes.cast.nextPartTitle}
           nextEpisodeUid={movieWatchData.data.attributes.cast.nextPartUid}
@@ -610,7 +618,7 @@ const TvPlayer = () => {
         />
       )} */}
 
-      {/* {isShowAudList && (
+          {/* {isShowAudList && (
         <div className="subtitle-list u500">
           <div className="sub-back"></div>
           <div className="sub-content">
@@ -645,68 +653,74 @@ const TvPlayer = () => {
         </div>
       )} */}
 
-      {movieWatchData && (
-        <TVPlayer
-          subTitle={movieWatchData.data.attributes.movie_title}
-          playing={true}
-          url={movie}
-          customButtons={customButtonsWithSub}
-          config={{
-            file: {
-              attributes: {
-                crossOrigin: "true",
-              },
-            },
-          }}
-          onPlay={() => {
-            interval = setInterval(() => {
-              sendVisitUrl();
-            }, 1000);
-            interval2 = setInterval(() => {
-              if (player.getCurrentTime() >= movieCastTime) {
-                if (movieCastTime === null) {
-                  setIsShowNextMenu(false);
-                } else {
-                  setIsShowNextMenu(true);
-                }
+          {movieWatchData && movie && (
+            <TVPlayer
+              subTitle={movieWatchData.data.attributes.movie_title.replace(
+                ")",
+                " "
+              )}
+              playing={true}
+              url={movie}
+              customButtons={customButtonsWithSub}
+              config={{
+                file: {
+                  attributes: {
+                    crossOrigin: "true",
+                  },
+                },
+              }}
+              onPlay={() => {
+                interval = setInterval(() => {
+                  sendVisitUrl();
+                }, 1000);
+                interval2 = setInterval(() => {
+                  if (player.getCurrentTime() >= movieCastTime) {
+                    if (movieCastTime === null) {
+                      setIsShowNextMenu(false);
+                    } else {
+                      setIsShowNextMenu(true);
+                    }
+                    clearInterval(interval2);
+                  } else {
+                    setIsShowNextMenu(false);
+                  }
+                  if (movieIntroTimeStart && movieIntroTimeEnd) {
+                    if (
+                      player.getCurrentTime() >= movieIntroTimeStart &&
+                      player.getCurrentTime() <= movieIntroTimeEnd
+                    ) {
+                      setIsShowIntroBtn(true);
+                    }
+                    if (player.getCurrentTime() > movieIntroTimeEnd) {
+                      setIsShowIntroBtn(false);
+                    }
+                  }
+                }, 1000);
+
+                const hls = player?.getInternalPlayer("hls");
+
+                console.log(player.getInternalPlayer()?.textTracks);
+                console.log(player.getInternalPlayer()?.audioTracks);
+                // // hls.currentLevel = hls.levels[1].bitrate;
+                // console.log(hls.currentLevel);
+                // hls.nextLevel = hls.levels[4];
+                // console.log(hls.nextLevel);
+                // console.log(hls.levels[4].bitrate);
+
+                // const intervalCall = setInterval(() => {
+                //   getData();
+                // }, 3000);
+              }}
+              onPause={() => {
+                clearInterval(interval);
                 clearInterval(interval2);
-              } else {
-                setIsShowNextMenu(false);
-              }
-              if (movieIntroTimeStart && movieIntroTimeEnd) {
-                if (
-                  player.getCurrentTime() >= movieIntroTimeStart &&
-                  player.getCurrentTime() <= movieIntroTimeEnd
-                ) {
-                  setIsShowIntroBtn(true);
-                }
-                if (player.getCurrentTime() > movieIntroTimeEnd) {
-                  setIsShowIntroBtn(false);
-                }
-              }
-            }, 1000);
-
-            const hls = player?.getInternalPlayer("hls");
-
-            // console.log(hls.levels);
-            // // hls.currentLevel = hls.levels[1].bitrate;
-            // console.log(hls.currentLevel);
-            // hls.nextLevel = hls.levels[4];
-            // console.log(hls.nextLevel);
-            // console.log(hls.levels[4].bitrate);
-
-            // const intervalCall = setInterval(() => {
-            //   getData();
-            // }, 3000);
-          }}
-          onPause={() => {
-            clearInterval(interval);
-            clearInterval(interval2);
-          }}
-        />
-      )}
-    </main>
-  );
+              }}
+            />
+          )}
+        </main>
+      );
+    }
+  }
 };
 
 export default TvPlayer;

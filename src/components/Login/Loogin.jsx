@@ -37,7 +37,7 @@ const Loogin = () => {
   const getData = async () => {
     try {
       const res = await fetch(
-        `https://www.filimo.com/api/fa/v1/user/Authenticate/sync_account_verify/code/${code}/ref_type/tv`
+        `https://www.televika.com/api/fa/v1/user/Authenticate/sync_account_verify/code/${code}/ref_type/tv`
       );
       const blocks = await res?.json();
       jwt = blocks.data.attributes.jwt;
@@ -52,7 +52,7 @@ const Loogin = () => {
     try {
       setIsLoading(true);
       const res = await fetch(
-        `https://www.filimo.com/api/fa/v1/user/Authenticate/get_verify_code?ref_type=tv`
+        `https://www.televika.com/api/fa/v1/user/Authenticate/get_verify_code?ref_type=tv`
       );
       const blocks = await res?.json();
       setData(blocks);

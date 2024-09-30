@@ -9,6 +9,7 @@ import {
   TvPlayer,
   Search,
 } from "./index";
+import Splash from "./Splash";
 import SpatialNavigation from "react-js-spatial-navigation";
 import "./App.css";
 import MoreMovies from "./MoreMovies/MoreMovies";
@@ -29,6 +30,7 @@ import AllEpisodes from "./AllEpisodes/AllEpisodes";
 import MoreSingle from "./AllEpisodes/AllEpisodesSingle";
 import Ip from "./Ip/Ip";
 import UsersProfile from "./UsersProfile/UsersProfile";
+import MoreMovieSingle from "./MoreMovies/MoreMovieSingle";
 
 init({
   debug: false,
@@ -39,6 +41,7 @@ init({
 function App() {
   const location = useLocation("");
   const [isShowMenu, setIsShowMenu] = useState(true);
+  const [isShowSplash, setIsShowSplash] = useState(true);
   const [isLogin, setIsLogin] = useState(false);
   let jwt = localStorage.getItem("jwt");
 
@@ -64,8 +67,10 @@ function App() {
       location.pathname.slice(0, 7) === "/profil" ||
       location.pathname.slice(0, 7) === "/ipchec" ||
       location.pathname.slice(0, 7) === "/usersP" ||
+      location.pathname.slice(0, 7) === "/moreMo" ||
       location.pathname.slice(0, 6) === "/login"
     ) {
+      setIsShowSplash(false);
       setIsShowMenu(false);
     } else {
       setIsShowMenu(true);
@@ -76,7 +81,7 @@ function App() {
   const getUserData = async (jwt) => {
     try {
       const res = await fetch(
-        `https://www.filimo.com/api/fa/v1/partner/TV/profile`,
+        `https://www.televika.com/api/fa/v1/partner/TV/profile`,
         {
           method: "GET",
           headers: { Authorization: `Bearer ${jwt}` },
@@ -115,55 +120,85 @@ function App() {
       clearInterval(intervalCall);
     };
   }, [jwt]);
+  //start timer when user login
+  useEffect(() => {
+    //start timer
+    setTimeout(() => {
+      setIsShowSplash(false);
+    }, 3000);
+  }, []);
 
   return (
     <SpatialNavigation>
       <div className="root">
-        {isShowMenu ? <Navbar isLogin={isLogin} /> : null}
+        {isShowSplash ? (
+          <Splash />
+        ) : (
+          <>
+            {" "}
+            {isShowMenu ? <Navbar isLogin={isLogin} /> : null}
+            <Routes>
+              <Route exact path="/ipcheck" element={<Ip />} />
+              <Route exact path="/" element={<Movies isLogin={isLogin} />} />
+              <Route
+                exact
+                path="/movies/filter/:tag_id/:other_data"
+                element={<Movies isLogin={isLogin} />}
+              />
+              <Route
+                exact
+                path="/approved"
+                element={<Movies isLogin={isLogin} />}
+              />
+              <Route
+                exact
+                path="/movie/:id"
+                element={<MovieInfo isLogin={isLogin} />}
+              />
+              <Route
+                exact
+                path="/moremovies/:tag_id"
+                element={<MoreMovies />}
+              />
+              <Route
+                exact
+                path="/moreSingle/:title/:id"
+                element={<MoreSingle />}
+              />
+              <Route
+                exact
+                path="/moreMovieSingle"
+                element={<MoreMovieSingle />}
+              />
+              <Route exact path="/morereccom/:id" element={<MoreReccom />} />
+              <Route
+                exact
+                path="/morecategory/:tag_id"
+                element={<MoreCategory />}
+              />
+              <Route exact path="/actor/:crew_name" element={<Crew />} />
+              <Route
+                exact
+                path="/allepisodes/:ui_id"
+                element={<AllEpisodes />}
+              />
+              <Route exact path="/profile" element={<Profile />} />
+              <Route exact path="/player" element={<TvPlayer />} />
+              <Route exact path="/usersProfile" element={<UsersProfile />} />
 
-        <Routes>
-          <Route exact path="/ipcheck" element={<Ip />} />
-          <Route exact path="/" element={<Movies isLogin={isLogin} />} />
-          <Route
-            exact
-            path="/movies/filter/:tag_id/:other_data"
-            element={<Movies isLogin={isLogin} />}
-          />
-          <Route
-            exact
-            path="/approved"
-            element={<Movies isLogin={isLogin} />}
-          />
-          <Route
-            exact
-            path="/movie/:id"
-            element={<MovieInfo isLogin={isLogin} />}
-          />
-          <Route exact path="/moremovies/:tag_id" element={<MoreMovies />} />
-          <Route exact path="/moreSingle/:title/:id" element={<MoreSingle />} />
-          <Route exact path="/morereccom/:id" element={<MoreReccom />} />
-          <Route
-            exact
-            path="/morecategory/:tag_id"
-            element={<MoreCategory />}
-          />
-          <Route exact path="/actor/:crew_name" element={<Crew />} />
-          <Route exact path="/allepisodes/:ui_id" element={<AllEpisodes />} />
-          <Route exact path="/profile" element={<Profile />} />
-          <Route exact path="/player" element={<TvPlayer />} />
-          <Route exact path="/usersProfile" element={<UsersProfile />} />
+              <Route exact path="/categories" element={<Categories />} />
+              <Route exact path="/login" element={<Loogin />} />
+              <Route exact path="/search" element={<Search />} />
+              <Route exact path="/searchResult" element={<SearchResult />} />
 
-          <Route exact path="/categories" element={<Categories />} />
-          <Route exact path="/login" element={<Loogin />} />
-          <Route exact path="/search" element={<Search />} />
-          <Route exact path="/searchResult" element={<SearchResult />} />
-
-          <Route
-            exact
-            path="/mymovies"
-            element={<MyMovies isLogin={isLogin} />}
-          />
-        </Routes>
+              <Route
+                exact
+                path="/mymovies"
+                element={<MyMovies isLogin={isLogin} />}
+              />
+            </Routes>
+          </>
+        )}
       </div>
     </SpatialNavigation>
   );

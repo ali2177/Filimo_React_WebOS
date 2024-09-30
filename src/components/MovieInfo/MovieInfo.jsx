@@ -104,7 +104,7 @@ function MovieInfo({ isLogin }) {
         localStorage.getItem("lastFocusActor") === null &&
         localStorage.getItem("lastFocusCrew") === null
       ) {
-        window.scrollTo({ top: 0 });
+        // window.scrollTo({ top: 0 });
         setFocus("paly-btn");
       } else if (localStorage.getItem("lastFocusActor")) {
         setFocus(localStorage.getItem("lastFocusActor"));
@@ -125,7 +125,7 @@ function MovieInfo({ isLogin }) {
     };
 
     fetch(
-      `https://www.filimo.com/api/fa/v1/movie/movie/one/uid/${id}/devicetype/tizen_react?json_type=simple`,
+      `https://www.televika.com/api/fa/v1/movie/movie/one/uid/${id}/devicetype/tizen_react?json_type=simple`,
       requestOptions
     )
       .then((response) => response.json())
@@ -192,28 +192,23 @@ function MovieInfo({ isLogin }) {
   const handlePlayPress = () => {
     if (movieData?.data?.watch_action.link_text === "تمدید اشتراک") {
       setIsShowAlert(true);
-      setTimeout(() => {
-        setIsShowAlert(false);
-      }, 2000);
+      setFocus("Alert-btn");
     } else if (movieData?.data?.watch_action.link_text === "ورود و تماشا") {
       navigate("/login");
     } else if (movieData?.data?.watch_action.link_text === "ورود و خرید بلیت") {
       setIsShowAlert(true);
-      setTimeout(() => {
-        setIsShowAlert(false);
-      }, 2000);
+      setFocus("Alert-btn");
     } else if (
       movieData?.data?.watch_action.link_text === "خرید بلیت و تماشا"
     ) {
       setIsShowAlert(true);
-      setTimeout(() => {
-        setIsShowAlert(false);
-      }, 2000);
+      setFocus("Alert-btn");
+      // setTimeout(() => {
+      //   setIsShowAlert(false);
+      // }, 2000);
     } else if (movieData?.data?.watch_action.link_text === "خرید اشتراک") {
       setIsShowAlert(true);
-      setTimeout(() => {
-        setIsShowAlert(false);
-      }, 2000);
+      setFocus("Alert-btn");
     } else {
       localStorage.setItem(
         "subtitles",
@@ -248,7 +243,15 @@ function MovieInfo({ isLogin }) {
     <FocusContext.Provider value={focusKey}>
       {!isLoading && (
         <main className="main">
-          {isShowAlert && <Alert />}
+          {isShowAlert && (
+            <Alert
+              type={movieData?.data?.watch_action.link_text}
+              handleBtnEnter={() => {
+                setIsShowAlert(false);
+                setFocus("paly-btn");
+              }}
+            />
+          )}
 
           <div
             style={{
@@ -281,12 +284,10 @@ function MovieInfo({ isLogin }) {
                   {movieData?.data?.General?.title}
                 </h2>
                 <p className="hero-text-descr u400">
-                  {movieData?.data?.General.descr?.slice(0, 250)}
-                  {movieData?.data?.General.descr?.length >= 250 ? "..." : null}
+                  {movieData?.data?.General.descr?.slice(0, 100)}
+                  {movieData?.data?.General.descr?.length >= 100 ? "..." : null}
                 </p>
-                <span className="hero-text-title-en u500">
-                  {movieData?.data?.General?.title_en}
-                </span>
+
                 <HeroBadge movie={movieData?.data?.General} />
                 {movieData?.data?.General?.serial.enable === true ? (
                   <div className="schedule">

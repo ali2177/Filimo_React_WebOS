@@ -19,13 +19,6 @@ const Episode = ({ movieItem, focusKeey }) => {
     onEnterPress: () => {
       localStorage.removeItem("seasonBtn");
       localStorage.removeItem("recommBtn");
-      // let path = [
-      //   ...JSON.parse(localStorage.getItem("lastRouteNotplayer")),
-      //   location.pathname,
-      // ];
-      // localStorage.setItem("lastRouteNotplayer", JSON.stringify(path));
-      // // localStorage.setItem("lastRouteNotplayer", location.pathname);
-      // localStorage.removeItem("lastRoute");
       navigate(`/movie/${movieItem.uid}`);
     },
     focusable: true,

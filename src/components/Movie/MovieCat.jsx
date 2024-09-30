@@ -17,7 +17,7 @@ function MovieCat({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
     },
     onEnterPress: () => {
       localStorage.setItem("lastFocusCat", focusKeey);
-      localStorage.setItem("lastRouteNotplayer", location.pathname);
+
       navigate(`/movie/${movie.uid}`);
     },
     focusable: true,

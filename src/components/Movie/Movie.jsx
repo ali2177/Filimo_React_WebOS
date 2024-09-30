@@ -39,8 +39,6 @@ function Movie({
     onEnterPress: () => {
       localStorage.setItem("lastFocus", focusKeey);
       let path = [location.pathname];
-      localStorage.setItem("lastRouteNotplayer", JSON.stringify(path));
-      localStorage.removeItem("lastRoute");
       navigate(`/movie/${movie.uid}`);
     },
   });

@@ -36,7 +36,7 @@ function Profile() {
   const getUserData = async (jwt) => {
     try {
       const res = await fetch(
-        `https://www.filimo.com/api/fa/v1/partner/TV/profile`,
+        `https://www.televika.com/api/fa/v1/partner/TV/profile`,
         {
           method: "GET",
           headers: { Authorization: `Bearer ${jwt}` },

@@ -64,7 +64,7 @@ const AllEpisodes = () => {
   const getUserData = async (jwt, parent_id, part) => {
     try {
       const res = await fetch(
-        `https://www.filimo.com/api/fa/v1/movie/serial/episodebyseason/parent_id/${parent_id}/part/${part}?json_type=simple`,
+        `https://www.televika.com/api/fa/v1/movie/serial/episodebyseason/parent_id/${parent_id}/part/${part}/sort/DESC/perpage/150?json_type=simple`,
         {
           method: "GET",
           headers: { Authorization: `Bearer ${jwt}` },
@@ -84,7 +84,6 @@ const AllEpisodes = () => {
   const keyHandler = (key) => {
     // check if keycode is the return button on the remote and the remove button on your keyboard
     if (key.keyCode === 10009 || key.keyCode === 8) {
-      // navigate(localStorage.getItem("lastRouteNotplayer"));
       navigate(-1);
     }
   };

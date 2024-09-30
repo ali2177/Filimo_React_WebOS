@@ -34,7 +34,7 @@ const SignOutBtn = ({ onFocus, jwt }) => {
     };
 
     fetch(
-      "https://www.filimo.com/api/fa/v1/user/Authenticate/signout",
+      "https://www.televika.com/api/fa/v1/user/Authenticate/signout",
       requestOptions
     )
       .then((response) => response.text())

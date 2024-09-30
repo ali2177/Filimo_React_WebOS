@@ -29,11 +29,11 @@ function MoreItem({
       } else if (type === "moreCat") {
         localStorage.setItem("lastFocusCat", focusKeey);
         localStorage.setItem("moreSingle", JSON.stringify(movies));
-        navigate(`/moreSingle/${linkText}`);
+        navigate(`/moreMovieSingle`);
       } else {
         localStorage.setItem("lastFocusMore", focusKeey);
         localStorage.setItem("moreSingle", JSON.stringify(movies));
-        navigate(`/moreSingle/${linkText}`);
+        navigate(`/moreMovieSingle`);
       }
     },
     focusable: true,

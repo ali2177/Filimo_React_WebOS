@@ -15,7 +15,6 @@ function MovieActorProfile({ movie, movieFocus, onEnterPress, focusKeey }) {
       handleScrolling();
     },
     onEnterPress: () => {
-      localStorage.setItem("lastRouteNotplayer", location.pathname);
       navigate(`/movie/${movie.attributes.uid}`);
       localStorage.removeItem("lastFocusActor");
       localStorage.removeItem("lastFocusCrew");

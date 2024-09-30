@@ -348,7 +348,7 @@ function Movies({ isLogin }) {
               style={{
                 paddingTop: "30px",
                 marginRight: "30px",
-                marginTop: pageLocation === "/" ? "-490px" : "0",
+                marginTop: pageLocation === "/" ? "-450px" : "0",
                 position: "relative",
               }}
             >

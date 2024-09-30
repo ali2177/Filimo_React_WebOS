@@ -23,7 +23,7 @@ function Badge({ movie }) {
           <img className="dot" src={dot} />
         </>
       )}
-      {movie?.imdb_rate && (
+      {/* {movie?.imdb_rate && (
         <>
           <div>
             <img src={imdb} />
@@ -33,7 +33,7 @@ function Badge({ movie }) {
           </div>
           <img className="dot" src={dot} />
         </>
-      )}
+      )} */}
 
       {movie?.duration?.text && (
         <>

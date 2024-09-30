@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import MovieSearch from "../Movie/MovieSearch.jsx";
+import NetworkError from "../NetworkError/NetworkError.jsx";
+import Loader from "../Loader/Loader.jsx";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import {
   FocusableComponentLayout,
@@ -37,7 +39,7 @@ const MoreSingle = () => {
 
   useEffect(() => {
     if (id) {
-      setData(movieDetail.data[0].movies.data);
+      setData(movieDetail?.data[0].movies?.data);
     } else {
       setData(JSON.parse(localStorage.getItem("moreSingle")));
     }
@@ -65,7 +67,8 @@ const MoreSingle = () => {
     setCurretFocusedMovie(movieUid);
   };
 
-  console.log(data);
+  if (detailIsFetching) return <Loader />;
+  if (!data) return <NetworkError />;
 
   return (
     <FocusContext.Provider value={focusKey}>

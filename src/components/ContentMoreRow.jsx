@@ -150,6 +150,7 @@ const ContentMoreRow = ({
               focusKeey={`More_${index}`}
               type={"morePage"}
               movies={movies}
+              linkText={movieTag}
             />
           </div>
         </div>

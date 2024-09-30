@@ -5,34 +5,34 @@ import imdb from "../../assets/images/imdb-yellow.svg";
 import dot from "../../assets/genres/dot.svg";
 
 const HeroBadge = ({ movie }) => {
-  
   const convertToFarsi = (number) => {
-    const farsiNumbers = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+    const farsiNumbers = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
     return String(number)
-      .split('')
-      .map(num => farsiNumbers[num] || num)
-      .join('');
+      .split("")
+      .map((num) => farsiNumbers[num] || num)
+      .join("");
   };
   return (
     <div className="badge hero-badge">
       {/* <span>{movie?.age_range}</span> */}
       {movie?.age_range.slice(0, 2) !== "0" &&
         movie?.age_range !== "all" &&
-        movie?.age_range !== "6-12" && (
+        movie?.age_range.length === 5 && (
           <div>
-            <span>{convertToFarsi(movie?.age_range.slice(0, 2))  + "+"}</span>
+            <span className="u500">
+              {convertToFarsi(movie?.age_range.slice(0, 2)) + "+"}
+            </span>
           </div>
         )}
-      {movie?.age_range === "all" && (
-        <div>
-          <span>همه</span>
-        </div>
-      )}
-      {movie?.age_range === "6-12" && (
-        <div>
-          <span>{convertToFarsi(movie?.age_range.slice(0, 1))+ "+"}</span>
-        </div>
-      )}
+      {movie?.age_range === "all" && null}
+      {(movie?.age_range.length === 3 || movie?.age_range.length === 4) &&
+        movie?.age_range !== "all" && (
+          <div>
+            <span className="u500">
+              {convertToFarsi(movie?.age_range.slice(0, 1)) + "+"}
+            </span>
+          </div>
+        )}
       <div style={{ marginRight: "20px" }}>
         <span className="u500">{movie?.duration.text}</span>
       </div>
@@ -58,47 +58,47 @@ const HeroBadge = ({ movie }) => {
       )}
 
       <div style={{ marginRight: "20px" }}>
-        <span>محصول</span>
-        {movie?.countries.map((cont) => (
-          <span>{cont.title}</span>
+        <span className="u500">محصول</span>
+        {movie?.countries.map((cont, index) => (
+          <span style={{ marginRight: "5px" }} className="u500">
+            {cont.title}
+          </span>
         ))}
       </div>
       <div style={{ marginRight: "20px" }}>
-        <span>{ convertToFarsi(movie?.pro_year)}</span>
+        <span className="u500">{convertToFarsi(movie?.pro_year)}</span>
       </div>
 
       {movie?.subtitle.enable ? (
         <>
           <div style={{ marginRight: "20px" }}>
-            <span>{movie?.subtitle?.text}</span>
-            <img className="dot" src={dot} />
+            <span className="u500">{movie?.subtitle?.text}</span>
           </div>
         </>
       ) : (
         <>
           <div style={{ marginRight: "20px" }}>
-            <span>زیرنویس ندارد</span>
+            <span className="u500">زیرنویس ندارد</span>
           </div>
         </>
       )}
       {movie?.dubbed.enable ? (
         <>
           <div style={{ marginRight: "20px" }}>
-            <span>{movie?.dubbed?.text}</span>
+            <span className="u500">{movie?.dubbed?.text}</span>
           </div>
         </>
       ) : (
         <>
           <div style={{ marginRight: "20px" }}>
-            <span>دوبله ندارد</span>
+            <span className="u500">دوبله ندارد</span>
           </div>
         </>
       )}
 
       {movie?.categories.map((cat, index) => (
         <div style={{ marginRight: "20px" }}>
-          <p className="u500">{cat.title}</p>
-          {index < movie?.categories.length - 1 ? "," : null}
+          <span className="u500">{cat.title}</span>
         </div>
       ))}
     </div>

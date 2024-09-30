@@ -128,7 +128,10 @@ const ContentRow = ({
   return (
     <FocusContext.Provider value={focusKey}>
       <div className="contentRowWrapper" ref={ref}>
-        <h3 style={{ paddingTop: "0px", margin: "12px" }} className="u700">
+        <h3
+          style={{ paddingTop: "0px", margin: "12px 12px 0px 0px" }}
+          className="u700"
+        >
           {title}
         </h3>
         <div className="contentScrollingWrapper" ref={scrollingRef}>
