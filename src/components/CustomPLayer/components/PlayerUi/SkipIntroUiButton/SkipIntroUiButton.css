@@ -1,0 +1,49 @@
+.skip-intro-ui-btn {
+  position: absolute;
+  top: 3rem;
+  left: 4rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  direction: rtl;
+
+  color: #ffffff;
+
+  border-radius: 0.7rem;
+  border: 0.1rem solid var(--Light-Mode-Background-Colors-Background-01, #fff);
+  background: var(
+    --dark-mode-opacity-of-neutral-white-25,
+    rgba(255, 255, 255, 0.25)
+  );
+  /* BG Blur/Background Blur */
+  backdrop-filter: blur(20px);
+  padding: 0.85rem 2.4rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+
+  outline: none;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.skip-intro-ui-btn > * + * {
+  margin-right: 0.4rem;
+}
+
+.skip-intro-ui-icon {
+  fill: white;
+  width: 1rem;
+  height: 1rem;
+}
+
+.skip-intro-ui-icon-focused {
+  fill: #1a1a1a;
+}
+
+.skip-intro-ui-btn-focused {
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+}

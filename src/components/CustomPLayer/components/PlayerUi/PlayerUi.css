@@ -1,0 +1,29 @@
+.playerUi-wrapper {
+  position: relative;
+  display: flex;
+  padding: 3rem 4rem;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.2) 49.94%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+}
+
+.playerUi-wrapper > * + * {
+  margin-top: 2.4rem;
+}
+
+.playerUi-rows {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.playerUi-rows > * + * {
+  margin-top: 2.4rem;
+}
+

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import MovieSearch from "../Movie/MovieSearch.jsx";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   FocusableComponentLayout,
   FocusContext,
@@ -16,6 +16,7 @@ const MoreMovieSingle = () => {
     focusBoundaryDirections: ["left", "up", "down", "right"],
   });
   const [data, setData] = useState(null);
+  const location = useLocation();
   const navigate = useNavigate();
   const [curretFocusedMovie, setCurretFocusedMovie] = useState("");
   useEffect(() => {
@@ -32,8 +33,8 @@ const MoreMovieSingle = () => {
 
   const keyHandler = (key) => {
     // check if keycode is the return button on the remote and the remove button on your keyboard
-    if (key.keyCode === 10009 || key.keyCode === 8) {
-      navigate(-1);
+    if (key.keyCode === 10009 || key.keyCode === 8 || key.keyCode === 461) {
+      if (location.pathname !== "/player") navigate(-1);
     }
   };
 
@@ -42,7 +43,7 @@ const MoreMovieSingle = () => {
   };
   return (
     <FocusContext.Provider value={focusKey}>
-      <div className="result">
+      <div className="result" style={{ width: "100%" }}>
         {data && (
           <>
             <div className="search-title u700">

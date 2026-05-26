@@ -1,0 +1,180 @@
+.settings-sheet {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+
+.st-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 1.7rem;
+}
+
+.ss-back-btn {
+  margin-left: 0.4rem;
+}
+
+.st-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fff;
+  text-align: right;
+  line-height: 1.7rem;
+}
+
+.st-back-btn {
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0.1rem 0.4rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+}
+
+.st-back-btn svg path {
+  fill: #aaaaaa;
+}
+
+/* ── List ────────────────────────────────────────────────── */
+
+.st-list {
+  display: flex;
+  flex-direction: column;
+  max-height: 65vh;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.st-list::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Base Row ────────────────────────────────────────────── */
+
+.st-row {
+  border-radius: 0.7rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.82rem 1.23rem;
+  cursor: pointer;
+  outline: none;
+  margin-bottom: 1rem;
+}
+
+.st-row-focused {
+  background: var(--Dark-Mode-Opacity-of-Neutral-White, #fff) !important;
+  backdrop-filter: blur(20px);
+}
+
+/* ── Row content ─────────────────────────────────────────── */
+
+.st-row-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.st-row-text > * + * {
+  margin-top: 0.15rem;
+}
+
+.st-row-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  text-align: right;
+  line-height: 2.1rem;
+}
+
+.st-row-sublabel {
+  font-size: 0.9rem;
+  color: #a1a1a1;
+  text-align: right;
+}
+
+.st-row-icon {
+  font-size: 0.9rem;
+  color: #151515;
+  min-width: 1.2rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.st-row-focused .st-row-label {
+  color: #000000;
+}
+
+.st-row-focused .st-row-sublabel {
+  color: #444444;
+}
+
+.st-row-focused .st-row-icon {
+  color: #333333;
+}
+
+.st-row-icon svg path {
+  fill: #ffffff;
+}
+
+.st-row-focused .st-row-icon svg path {
+  fill: #000000;
+}
+
+/* ── Toggle switch ───────────────────────────────────────── */
+
+.st-toggle {
+  width: 2.3rem;
+  height: 1.3rem;
+  border-radius: 0.65rem;
+  background: rgba(255, 255, 255, 0.25);
+  position: relative;
+  flex-shrink: 0;
+  transition: background 0.2s ease;
+}
+
+.st-toggle-on {
+  background: #fff;
+}
+
+.st-toggle-thumb {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background: #282828;
+  position: absolute;
+  top: 0.15rem;
+  left: 0.15rem;
+  transition: left 0.2s ease;
+}
+
+.st-toggle-on .st-toggle-thumb {
+  left: 1.15rem;
+}
+
+.st-row-focused .st-toggle {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.st-row-focused .st-toggle-on {
+  background: #1565c0;
+}
+
+/* ── Divider ─────────────────────────────────────────────── */
+
+.st-divider {
+  height: 2px;
+  background: var(
+    --dark-mode-opacity-of-neutral-white-8,
+    rgba(255, 255, 255, 0.08)
+  );
+  margin: 1.55rem 0;
+  width: 100%;
+}

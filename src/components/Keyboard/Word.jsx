@@ -23,6 +23,12 @@ const Word = ({ onFocus, onEnter, item }) => {
         focused ? "keyboard-btn u700 keyboard-btn-focus" : "keyboard-btn u700"
       }
       ref={ref}
+      onMouseEnter={() => {
+        setFocus(focusKey);
+      }}
+      onClick={() => {
+        onEnter(item);
+      }}
     >
       {item}
     </div>

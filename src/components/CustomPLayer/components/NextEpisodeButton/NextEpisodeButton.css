@@ -1,0 +1,112 @@
+.next-episode-wrapper {
+  position: absolute;
+  bottom: 8rem;
+  right: 4rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  direction: rtl;
+  z-index: 15;
+}
+
+.next-episode-wrapper > * + * {
+  margin-right: 0.6rem;
+}
+
+.next-episode-dismiss {
+  padding: 1.2rem;
+  border-radius: 0.7rem;
+  background: var(
+    --dark-mode-opacity-of-neutral-white-25,
+    rgba(255, 255, 255, 0.25)
+  );
+  backdrop-filter: blur(26px);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  cursor: pointer;
+  outline: none;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.next-episode-dismiss-focused {
+  background: var(--Light-Mode-Background-Colors-Background-01, #fff);
+  border: 1 solid var(--Light-Mode-Background-Colors-Background-01, #fff);
+}
+
+.next-episode-btn {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  direction: rtl;
+  color: #ffffff;
+  border-radius: 0.7rem;
+  background: var(
+    --dark-mode-opacity-of-neutral-white-25,
+    rgba(255, 255, 255, 0.25)
+  );
+  /* BG Blur/Background Blur */
+  backdrop-filter: blur(20px);
+  padding: 0.85rem 2.4rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  transition: box-shadow 0.15s ease;
+}
+
+.next-episode-btn > * + * {
+  margin-right: 0.4rem;
+}
+
+.next-episode-btn-focused {
+  color: #1a1a1a;
+  box-shadow: 0 0 0 0.2rem #ffffff88;
+  border: 0 solid var(--Light-Mode-Background-Colors-Background-01, #fff);
+  background: var(--Light-Mode-Background-Colors-Background-01, #fff);
+}
+
+.next-episode-icon {
+  fill: white;
+  width: 1rem;
+  height: 1rem;
+}
+
+.next-episode-icon-focused {
+  fill: #1a1a1a;
+}
+
+/* Timer fill — grows left-to-right over 10s, behind the text */
+.next-episode-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.22);
+  transform-origin: left center;
+  transform: scaleX(0);
+  animation: next-episode-fill-anim 10s linear forwards;
+  z-index: 0;
+}
+
+.next-episode-btn span {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes next-episode-fill-anim {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}

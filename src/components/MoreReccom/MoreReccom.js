@@ -5,6 +5,7 @@ import NetworkError from "../NetworkError/NetworkError.jsx";
 import Loader from "../Loader/Loader.jsx";
 import { MovieList } from "../index";
 import {
+  FocusContext,
   useFocusable,
   setFocus,
 } from "@noriginmedia/norigin-spatial-navigation";
@@ -19,7 +20,7 @@ const MoreReccom = () => {
     trackChildren: true,
     preferredChildFocusKey: null,
     isFocusBoundary: true,
-    focusBoundaryDirections: ["left"],
+    focusBoundaryDirections: ["left", "up", "right"],
   });
   const { id } = useParams();
   const {
@@ -37,6 +38,19 @@ const MoreReccom = () => {
     window.scrollTo({ top: 0 });
     return () => window.removeEventListener("keydown", keyHandler);
   }, []);
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (RecomIsFetching) {
+        e.stopPropagation();
+        e.preventDefault();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown, true);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown, true);
+    };
+  }, [RecomIsFetching]);
   // useEffect(() => {
   //   console.log(focusKey);
   //   focusSelf();
@@ -76,8 +90,8 @@ const MoreReccom = () => {
 
   const keyHandler = (key) => {
     // check if keycode is the return button on the remote and the remove button on your keyboard
-    if (key.keyCode === 10009 || key.keyCode === 8) {
-      navigate(-1);
+    if (key.keyCode === 10009 || key.keyCode === 8 || key.keyCode === 461) {
+      if (location.pathname !== "/player") navigate(-1);
     }
   };
 
@@ -113,19 +127,24 @@ const MoreReccom = () => {
               />
             </div>
           ))} */}
-
-      <div className="more">
-        <h1>{movieRecom.data[0].link_text}</h1>
-        <div className="more-movies">
-          {movieRecom.data[0].movies?.data.map((movieItem, index) => (
-            <MovieSearch
-              movie={movieItem}
-              movieFocus={movieFocusSet}
-              focusKeey={`MORE_LIST_${index}`}
-            />
-          ))}
+      <FocusContext.Provider value={focusKey}>
+        <div className="more" style={{ height: "100vh", overflowY: "auto" }}>
+          <h1 className="u700">{movieRecom.data[0].link_text}</h1>
+          <div
+            ref={ref}
+            className="more-movies"
+            style={{ marginBottom: "4rem" }}
+          >
+            {movieRecom.data[0].movies?.data.map((movieItem, index) => (
+              <MovieSearch
+                movie={movieItem}
+                movieFocus={movieFocusSet}
+                focusKeey={`MORE_LIST_${index}`}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      </FocusContext.Provider>
 
       {/* {data.data.filter((item) => item.output_type === "movie").length === 1 ? (
         <>

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useGetActorQuery } from "../../services/TMDB";
 import { Focusable } from "react-js-spatial-navigation";
 import { Link } from "react-router-dom";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { Keyboard, Pagination, Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import MovieSearch from "../Movie/MovieSearch.jsx";
@@ -32,6 +32,7 @@ const Crew = () => {
     isFocusBoundary: true,
     focusBoundaryDirections: ["left"],
   });
+  const location = useLocation();
   const navigate = useNavigate();
   const myRef = useRef(null);
   const [curretFocusedMovie, setCurretFocusedMovie] = useState(null);
@@ -43,10 +44,24 @@ const Crew = () => {
     window.addEventListener("keydown", keyHandler);
     return () => window.removeEventListener("keydown", keyHandler);
   }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (isFetching) {
+        e.stopPropagation();
+        e.preventDefault();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown, true);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown, true);
+    };
+  }, [isFetching]);
   const keyHandler = (key) => {
     // check if keycode is the return button on the remote and the remove button on your keyboard
-    if (key.keyCode === 10009 || key.keyCode === 8) {
-      navigate(-1);
+    if (key.keyCode === 10009 || key.keyCode === 8 || key.keyCode === 461) {
+      if (location.pathname !== "/player") navigate(-1);
     }
   };
   const handleScrolling = () => {
@@ -85,7 +100,10 @@ const Crew = () => {
   // }
   return (
     <FocusContext.Provider value={focusKey}>
-      <main className="main" style={{ paddingRight: "30px", height: "100vh" }}>
+      <main
+        className="main"
+        style={{ paddingRight: "30px", height: "100vh", overflowY: "auto" }}
+      >
         {/* <div className="crew-header">
         <div className="crew-profile">
           <img
@@ -132,22 +150,29 @@ const Crew = () => {
           type="crew"
         />
       </div> */}
-        <h3 className="u700" style={{ marginTop: "58px" }}>
-          {data.data[0]?.attributes?.link_text}
-        </h3>
-        <div className="more-movies">
-          {data.included.map((movieItem, index) => (
-            <>
-              {index >= 1 && (
-                <MovieActorProfile
-                  movie={movieItem}
-                  movieFocus={movieFocusSet}
-                  focusKeey={`MORE_LIST_${index}`}
-                />
-              )}
-            </>
-          ))}
-        </div>
+        {data?.included ? (
+          <>
+            <h3 className="u700" style={{ marginTop: "58px" }}>
+              {data.data[0]?.attributes?.link_text}
+            </h3>
+            <div className="more-movies">
+              {data?.included.map((movieItem, index) => (
+                <>
+                  {index >= 1 && (
+                    <MovieActorProfile
+                      movie={movieItem}
+                      movieFocus={movieFocusSet}
+                      focusKeey={`MORE_LIST_${index}`}
+                    />
+                  )}
+                </>
+              ))}
+            </div>
+          </>
+        ) : (
+          <NetworkError />
+        )}
+
         {/* <Swiper
         slidesPerView={20}
         spaceBetween={50}

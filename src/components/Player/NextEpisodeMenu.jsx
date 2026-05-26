@@ -10,8 +10,15 @@ import {
 } from "@noriginmedia/norigin-spatial-navigation";
 import Subtitle from "./Subtitle";
 import NextEpisodesItem from "./NextEpisodesItem";
+import NextEpisodesExit from "./NextEpisodesExit";
 
-const NextEpisodeMenu = ({ nextEpisodeTitle, nextEpisodeUid, currentUid }) => {
+const NextEpisodeMenu = ({
+  nextEpisodeTitle,
+  nextEpisodeUid,
+  currentUid,
+  onclose,
+  onCounterFinish,
+}) => {
   const { ref, focusKey, focused, focusSelf } = useFocusable({
     focusable: true,
     trackChildren: true,
@@ -20,16 +27,16 @@ const NextEpisodeMenu = ({ nextEpisodeTitle, nextEpisodeUid, currentUid }) => {
   });
 
   useEffect(() => {
+    let counter;
     // focusSelf();
     // alternatively
-    if (nextEpisodeTitle) {
-      setFocus("next-episode");
-    } else {
-      setFocus("back-movie-page");
-    }
+    setFocus("next-episode-player__0");
+    const interval = setInterval(() => {
+      counter++;
+    }, 1000);
   }, []);
   const onSubtitleTrackSet = (sub) => {
-    console.log(sub);
+    // console.log(sub);
   };
 
   // console.log(nextEpisodeTitle);
@@ -39,10 +46,9 @@ const NextEpisodeMenu = ({ nextEpisodeTitle, nextEpisodeUid, currentUid }) => {
         className="next-episode-menu u500"
         style={{ background: focused ? "red" : "" }}
       >
-        <div style={{ position: "relative", height: "100%" }}>
-          {/* <div className="next-episode-menu-bg" /> */}
-          <div className="next-episode-menu-content">
-            <ul style={{ listStyle: "none" }} ref={ref}>
+        {/* <div className="next-episode-menu-bg" /> */}
+
+        {/* <ul style={{ listStyle: "none" }} ref={ref}>
               {nextEpisodeUid && nextEpisodeTitle && (
                 <NextEpisodesItem
                   title="قسمت بعدی"
@@ -63,9 +69,12 @@ const NextEpisodeMenu = ({ nextEpisodeTitle, nextEpisodeUid, currentUid }) => {
                 currentUid={currentUid}
                 focuskeey="replay"
               />
-            </ul>
-          </div>
-        </div>
+            </ul> */}
+        <NextEpisodesExit onEnterPress={onclose} />
+        <NextEpisodesItem
+          nextUid={nextEpisodeUid}
+          onCounterFinish={onCounterFinish}
+        />
       </div>
     </FocusContext.Provider>
   );

@@ -9,19 +9,21 @@ import {
   getCurrentFocusKey,
 } from "@noriginmedia/norigin-spatial-navigation";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import MovieSearch from "../Movie/MovieSearch.jsx";
 
 import Keyboard from "../Keyboard/Keyboard.jsx";
 import SearchInput from "./SearchInput.jsx";
+import KeyboardWithCaretFake from "../Keyboard/KeyBoardWithCaret.jsx";
 
 function Search() {
+  const location = useLocation();
   const navigate = useNavigate();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [data, setData] = useState(null);
-  const [isShowKeyboard, setIsShowKeyboard] = useState(true);
+  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const jwt = localStorage.getItem("jwt");
 
   const [curretFocusedMovie, setCurretFocusedMovie] = useState("");
@@ -34,10 +36,13 @@ function Search() {
     localStorage.removeItem("lastSeasonFocus_parent_new");
     localStorage.removeItem("lastSeasonFocus_season_part");
     window.addEventListener("keydown", keyHandler);
+
     setData(JSON.parse(localStorage.getItem("searchResult")));
     if (localStorage.getItem("searchQuery"))
       setSearchQuery(localStorage.getItem("searchQuery"));
-    return () => window.removeEventListener("keydown", keyHandler);
+    return () => {
+      window.removeEventListener("keydown", keyHandler);
+    };
   }, []);
 
   // useEffect(() => {
@@ -49,17 +54,29 @@ function Search() {
   };
   const keyHandler = (key) => {
     // check if keycode is the return button on the remote and the remove button on your keyboard
-    if (key.keyCode === 10009 || key.keyCode === 8) {
+    if (key.keyCode === 10009 || key.keyCode === 8 || key.keyCode === 461) {
       localStorage.removeItem("searchQuery");
       localStorage.removeItem("searchResult");
-      navigate(-1);
+      if (location.pathname !== "/player") navigate(-1);
     }
   };
 
   const getData = async (querry, jwtt) => {
     try {
+      const userAgent = {
+        os: "WebOs",
+        an: "Filimo",
+        vn: "1.00",
+      };
       const res = await fetch(
-        `https://www.televika.com/api/fa/v1/movie/movie/list/tagid/1000300/text/${querry}?json_type=simple`
+        `https://www.filimo.com/api/fa/v1/movie/movie/list/tagid/1000300/text/${querry}?devicetype=react_tizen&json_type=simple`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+            UserAgent: JSON.stringify(userAgent),
+          },
+        }
       );
       const blocks = await res?.json();
       localStorage.setItem(
@@ -84,8 +101,10 @@ function Search() {
     }
   };
 
-  const handleKeyDown = () => {
-    getData(searchQuery, jwt);
+  const handleKeyDown = (value) => {
+    console.log(value);
+    if (!value) return;
+    getData(value, jwt);
   };
 
   return (
@@ -95,13 +114,25 @@ function Search() {
         overflowX: "auto",
         display: "flex",
         flexDirection: "column",
-        paddingRight: "30px",
-        paddingBottom: "50px",
+        paddingTop: "2rem",
+        paddingRight: "1.5rem",
+        paddingBottom: "4rem",
       }}
     >
-      <SearchInput onEnter={handleKeyDown} searchQuery={searchQuery} />
+      {/* <SearchInput
+        onKeyboradEnter={() => {
+          setIsShowKeyboard(!isShowKeyboard);
+        }}
+        onEnter={handleKeyDown}
+        searchQuery={searchQuery}
+        onInputFocus={() => {
+          setIsShowKeyboard(false);
+        }}
+      /> */}
 
-      {isShowKeyboard && <Keyboard keybordValue={handleKeybordBtn} />}
+      <KeyboardWithCaretFake onEnter={handleKeyDown} />
+
+      {/* {isShowKeyboard && <Keyboard keybordValue={handleKeybordBtn} />} */}
 
       {/* {data ? (
         <div className="result">

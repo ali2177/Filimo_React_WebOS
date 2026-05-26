@@ -1,0 +1,35 @@
+.skip-intro-btn {
+  position: absolute;
+  bottom: 8rem;
+  left: 4rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  direction: rtl;
+  background: rgba(255, 255, 255, 0.92);
+  color: #000000;
+  border-radius: 50rem;
+  padding: 0.85rem 2.45rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  z-index: 15;
+  border: none;
+  outline: none;
+  transition:
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.skip-intro-btn > * + * {
+  margin-right: 0.4rem;
+}
+
+.skip-intro-icon {
+  font-size: 0.65rem;
+}
+
+.skip-intro-btn-focused {
+  background: #ffffff;
+  box-shadow: 0 0 0 0.2rem #ffffff88;
+}

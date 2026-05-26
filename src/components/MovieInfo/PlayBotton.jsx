@@ -11,10 +11,12 @@ import {
   getCurrentFocusKey,
 } from "@noriginmedia/norigin-spatial-navigation";
 
-const PlayBotton = ({ data, onFocus, onEnterPress }) => {
+const PlayBotton = ({ data, onFocus, onAction }) => {
   const { ref, focused, focusSelf, focusKey } = useFocusable({
     onFocus,
-    onEnterPress,
+    onEnterPress: () => {
+      onAction();
+    },
     focusKey: "paly-btn",
   });
 
@@ -35,8 +37,13 @@ const PlayBotton = ({ data, onFocus, onEnterPress }) => {
       <div
         ref={ref}
         className={focused ? "btn-play btn-play-focus u500" : "btn-play u500"}
+        onMouseEnter={() => {
+          setFocus(focusKey);
+        }}
+        onClick={onAction}
       >
         <svg
+          className="btn-play-svg"
           xmlns="http://www.w3.org/2000/svg"
           width="32"
           height="32"

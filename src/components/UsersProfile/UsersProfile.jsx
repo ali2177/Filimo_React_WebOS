@@ -9,11 +9,20 @@ import {
   setFocus,
   getCurrentFocusKey,
 } from "@noriginmedia/norigin-spatial-navigation";
+import { useNavigate, useLocation } from "react-router-dom";
 import Loader from "../Loader/Loader";
 import User from "./User";
+import NetworkError from "../NetworkError/NetworkError";
 
 const UsersProfile = () => {
-  const { ref, focusKey, focusSelf, focused } = useFocusable();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { ref, focusKey, focusSelf, focused } = useFocusable({
+    focusable: true,
+    trackChildren: true,
+    isFocusBoundary: true,
+    focusBoundaryDirections: ["left", "right", "up", "down"],
+  });
   const [jwtToken, setJwtToken] = useState(null);
   const [jwtSub, setJwtSub] = useState(null);
   const { data, error, isFetching } = useGetUsersProfileQuery({ jwtSub });
@@ -25,11 +34,17 @@ const UsersProfile = () => {
   }
 
   useEffect(() => {
+    window.addEventListener("keydown", keyHandler);
+    return () => {
+      window.removeEventListener("keydown", keyHandler);
+    };
+  }, []);
+  useEffect(() => {
     if (jwt) {
       setJwtSub(decodeJwtToken(jwt));
     }
 
-    console.log(decodeJwtToken(jwt));
+    // console.log(decodeJwtToken(jwt));
 
     // if (jwt) {
     //   try {
@@ -41,6 +56,16 @@ const UsersProfile = () => {
     //   }
     // }
   }, [jwt]);
+
+  const keyHandler = (key) => {
+    // check if keycode is the return button on the remote and the remove button on your keyboard
+    if (key.keyCode === 10009 || key.keyCode === 8 || key.keyCode === 461) {
+      localStorage.removeItem("searchQuery");
+      localStorage.removeItem("searchResult");
+      if (location.pathname !== "/player") navigate(-1);
+    }
+  };
+
   if (error) return <NetworkError />;
 
   if (isFetching) return <Loader />;
@@ -54,9 +79,9 @@ const UsersProfile = () => {
           <p className="users-prfile-content-header u700">
             چه کسی تماشا می کند ؟
           </p>
-          <div className="users-prfile-wrraper">
-            {data?.data.map((user) => (
-              <User jwtSub={jwtSub} user={user} />
+          <div ref={ref} className="users-prfile-wrraper">
+            {data?.data.map((user, index) => (
+              <User index={index} jwtSub={jwtSub} user={user} />
             ))}
           </div>
         </div>

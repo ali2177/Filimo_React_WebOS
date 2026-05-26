@@ -1,0 +1,125 @@
+/* ── Preview thumbnail ───────────────────────────────────── */
+
+.seekbar-preview {
+  position: absolute;
+  bottom: calc(100% + 0.6rem);
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.seekbar-preview-canvas {
+  width: 8rem;
+  height: 4.5rem;
+  border-radius: 0.3rem;
+  border: 0.1rem solid rgba(255, 255, 255, 0.5);
+  display: block;
+  background: #2a2a2a;
+}
+
+.seekbar-preview-placeholder {
+  background: #3a3a3a;
+}
+
+.seekbar-preview-time {
+  margin-top: 0.2rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+/* ── Preview marker on the bar ───────────────────────────── */
+
+.progress-preview-marker {
+  position: absolute;
+  top: 50%;
+  width: 0.15rem;
+  height: 0.9rem;
+  background: rgba(255, 255, 255, 0.6);
+  transform: translate(-50%, -50%);
+  border-radius: 0.1rem;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* ── Progress bar wrapper ────────────────────────────────── */
+
+.progress-bar-wrapper {
+  position: relative;
+  width: 100%;
+  margin-bottom: 1.2rem;
+}
+
+.seekbar-conteoller-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  color: var(--Dark-Mode-Opacity-of-Neutral-White, #fff);
+  font-size: 1.4rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 2rem;
+}
+
+.row-seekbar {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.progress-thumb {
+  position: absolute;
+  top: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+  background-color: #fff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+
+.progress-bar-container:hover .progress-thumb {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.progress-thumb-active {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.progress-bar-container {
+  flex: 1;
+  height: 0.3rem;
+  background-color: #444;
+  border-radius: 0.15rem;
+  position: relative;
+  cursor: pointer;
+}
+
+.progress-buffered {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background-color: #777;
+  border-radius: 0.15rem;
+}
+
+.progress-played {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background-color: #fff;
+  border-radius: 0.15rem;
+  transform-origin: left center;
+  transition: transform 0.1s linear;
+}

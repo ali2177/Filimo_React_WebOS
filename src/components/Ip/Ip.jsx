@@ -11,11 +11,11 @@ const Ip = () => {
       const res = await fetch(`https://api.ipify.org?format=json`);
       const blocks = await res?.json();
       setData(blocks);
-      console.log(blocks);
+      // console.log(blocks);
       setIsLoading(false);
     } catch (e) {
       setError(e);
-      console.log(e);
+      // console.log(e);
     }
   };
 

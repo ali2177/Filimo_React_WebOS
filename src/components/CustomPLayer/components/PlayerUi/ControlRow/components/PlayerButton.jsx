@@ -1,15 +1,11 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 
-import { useNavigate, Link, useNavigation } from "react-router-dom";
 import {
-  FocusableComponentLayout,
   FocusContext,
-  FocusDetails,
-  KeyPressDetails,
   useFocusable,
   setFocus,
-  getCurrentFocusKey,
 } from "@noriginmedia/norigin-spatial-navigation";
+import { usePlayerContext } from "../../../../context/PlayerContext";
 
 import "./PlayerButton.css";
 
@@ -20,16 +16,25 @@ const PLayerButton = ({
   handleAction,
   children,
 }) => {
+  const { showSkipIntro } = usePlayerContext();
+
   const { ref, focused, focusSelf, focusKey } = useFocusable({
     onFocus,
+    onArrowPress: (e) => {
+      if (e === "down") {
+        setFocus("seekbar");
+        return false;
+      }
+      if (e === "up" && showSkipIntro) {
+        setFocus("skip-intro-ui");
+        return false;
+      }
+    },
     onEnterPress: () => {
-      console.log("here pressed");
       handleAction();
     },
     focusKey: focuskey,
   });
-
-  const navigate = useNavigate();
 
   // useEffect(() => {
   //   console.log(focusKey);

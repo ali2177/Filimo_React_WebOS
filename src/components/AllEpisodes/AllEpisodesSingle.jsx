@@ -46,6 +46,8 @@ const MoreSingle = () => {
   }, [movieDetail]);
   useEffect(() => {
     setFocus("movieSearch_0");
+    localStorage.removeItem("lastFocusActor");
+    localStorage.removeItem("lastFocusCrew");
 
     // focusSelf();
   }, []);
@@ -57,9 +59,9 @@ const MoreSingle = () => {
 
   const keyHandler = (key) => {
     // check if keycode is the return button on the remote and the remove button on your keyboard
-    if (key.keyCode === 10009 || key.keyCode === 8) {
+    if (key.keyCode === 10009 || key.keyCode === 8 || key.keyCode === 461) {
       // localStorage.removeItem("moreSingle");
-      navigate(-1);
+      if (location.pathname !== "/player") navigate(-1);
     }
   };
 
@@ -74,8 +76,9 @@ const MoreSingle = () => {
     <FocusContext.Provider value={focusKey}>
       <div
         style={{
-          paddingRight: "70px",
-          paddingTop: "100px",
+          width: "100%",
+          paddingRight: "3.5rem",
+          paddingTop: "5.5rem",
           background:
             "linear-gradient(270deg, #151515 0%, rgba(17, 17, 17, 0.75) 50.79%, rgba(12, 12, 12, 0) 100%), linear-gradient(180deg, rgba(21, 21, 21, 0) 67.35%, #151515 100%)",
         }}

@@ -128,7 +128,6 @@ const ContentCatRow = ({
         ref={ref}
         style={{ marginBottom: "50px" }}
       >
-        <h3 className="u700">{title}</h3>
         <div className="contentScrollingWrapper" ref={scrollingRef}>
           <div className="contentRowScrollingContent">
             {movies.slice(0, 6).map((movie, i) => (
@@ -143,15 +142,17 @@ const ContentCatRow = ({
                 />
               </div>
             ))}
-            <MoreItem
-              tag_id={row}
-              onFocus={() => onAssetFocus()}
-              onEnterPress={handleMoreItemInterPress}
-              movies={movies}
-              focusKeey={`MoreCat_${index}`}
-              type="moreCat"
-              linkText={linkText}
-            />
+            {movies.length > 6 && (
+              <MoreItem
+                tag_id={row}
+                onFocus={() => onAssetFocus()}
+                onEnterPress={handleMoreItemInterPress}
+                movies={movies}
+                focusKeey={`MoreCat_${index}`}
+                type="moreCat"
+                linkText={linkText}
+              />
+            )}
           </div>
         </div>
 

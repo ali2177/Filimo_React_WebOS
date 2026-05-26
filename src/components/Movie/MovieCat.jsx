@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { Focusable } from "react-js-spatial-navigation";
 
 import { useNavigate, Link, useLocation } from "react-router-dom";
@@ -10,15 +10,18 @@ import {
 } from "@noriginmedia/norigin-spatial-navigation";
 
 function MovieCat({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
+  const handleAction = () => {
+    localStorage.setItem("lastFocusCat", focusKeey);
+
+    navigate(`/movie/${movie.uid}`);
+  };
   const location = useLocation("");
   const { ref, focused, focusSelf, focusKey } = useFocusable({
     onFocus: () => {
       handleScrolling();
     },
     onEnterPress: () => {
-      localStorage.setItem("lastFocusCat", focusKeey);
-
-      navigate(`/movie/${movie.uid}`);
+      handleAction();
     },
     focusable: true,
     trackChildren: true,
@@ -27,6 +30,7 @@ function MovieCat({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
     preferredChildFocusKey: null,
     focusKey: focusKeey,
   });
+  const [isImageLoaded, setIsImageLoaded] = useState(true);
   const myRef = useRef();
   const navigate = useNavigate();
 
@@ -35,16 +39,14 @@ function MovieCat({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
     movieFocus(movie);
   };
   const handleScrolling = () => {
-    myRef.current.scrollIntoView({
-      block: "center",
-    });
+    setTimeout(() => {
+      if (localStorage.getItem("mode") === "KeyboardMode") {
+        myRef?.current?.scrollIntoView({
+          block: "center",
+        });
+      }
+    }, 10);
   };
-  useEffect(() => {
-    console.log(movie);
-    if (movie.badge.hear) {
-      console.log(movie.badge.hear);
-    }
-  }, [movie]);
 
   return (
     <div
@@ -61,22 +63,68 @@ function MovieCat({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
         }}
       > */}
 
-      <Link ref={myRef} className="swiper-link" to={`/movie/${movie.uid}`}>
+      <section ref={myRef} className="swiper-link">
         {movie.movie_img_m ? (
-          <img
-            src={movie.movie_img_m}
-            alt={movie.movie_title_en}
-            className="swiper-image"
-          />
+          <>
+            {isImageLoaded ? (
+              <img
+                src={movie.movie_img_m}
+                alt={movie.movie_title_en}
+                className="swiper-image"
+                onError={() => {
+                  setIsImageLoaded(false);
+                }}
+                onClick={handleAction}
+                onMouseEnter={() => {
+                  setFocus(focusKey);
+                }}
+              />
+            ) : (
+              <div
+                style={{
+                  background:
+                    "linear-gradient(180deg, #0c0c0c 0%, #151515 70.04%)",
+                }}
+                className="swiper-image"
+                onClick={handleAction}
+                onMouseEnter={() => {
+                  setFocus(focusKey);
+                }}
+              />
+            )}
+          </>
         ) : (
-          <img
-            src={movie.pic.movie_img_m}
-            alt={movie.movie_title_en}
-            className="swiper-image"
-          />
+          <>
+            {isImageLoaded ? (
+              <img
+                src={movie.pic.movie_img_m}
+                alt={movie.movie_title_en}
+                className="swiper-image"
+                onError={() => {
+                  setIsImageLoaded(false);
+                }}
+                onClick={handleAction}
+                onMouseEnter={() => {
+                  setFocus(focusKey);
+                }}
+              />
+            ) : (
+              <div
+                style={{
+                  background:
+                    "linear-gradient(180deg, #0c0c0c 0%, #151515 70.04%)",
+                }}
+                className="swiper-image"
+                onClick={handleAction}
+                onMouseEnter={() => {
+                  setFocus(focusKey);
+                }}
+              />
+            )}
+          </>
         )}
         <h8 className="movie-title u500">{movie.movie_title}</h8>
-      </Link>
+      </section>
       {/* </Focusable> */}
     </div>
   );

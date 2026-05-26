@@ -39,12 +39,12 @@ function Actors({ actorsRow }) {
         ref={ref}
         className="recommendation"
         style={{
-          marginRight: "40px",
+          marginRight: "1.7rem",
           marginBottom: "0px",
         }}
         onFocus={handleScrolling}
       >
-        <h3 className="u700" style={{ marginTop: "50px" }}>
+        <h3 className="u700" style={{ marginTop: "2.5rem" }}>
           بازیگران
         </h3>
 
