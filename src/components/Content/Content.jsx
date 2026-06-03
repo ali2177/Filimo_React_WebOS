@@ -4,7 +4,7 @@ import gradiant from "../../assets/images/Rectangle.svg";
 import testLogo from "../../assets/genres/testlogo.svg";
 import calender from "../../assets/images/calender-green.svg";
 
-const Content = ({ data, curretFocusedMovie, type }) => {
+const Content = ({ data, currentFocusedMovie, type }) => {
   const convertToFarsi = (number) => {
     const farsiNumbers = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
     return String(number)
@@ -14,9 +14,9 @@ const Content = ({ data, curretFocusedMovie, type }) => {
   };
   useEffect(() => {
     // movieSet();
-    // console.log(curretFocusedMovie);
-  }, [curretFocusedMovie]);
-  if (curretFocusedMovie === null || !curretFocusedMovie?.cover)
+    // console.log(currentFocusedMovie);
+  }, [currentFocusedMovie]);
+  if (currentFocusedMovie === null || !currentFocusedMovie?.cover)
     return (
       <div className="content">
         <div className="gradiant"></div>
@@ -25,13 +25,13 @@ const Content = ({ data, curretFocusedMovie, type }) => {
           <h1 className="u700">{data[0].movies.data[0]?.movie_title}</h1>
           <Badge movie={data[0].movies.data[0]} />
           <p className="u400">{data[0].movies.data[0]?.descr?.slice(0, 200)}</p> */}
-        {/* {curretFocusedMovie?.serial.enable === true ? (
+        {/* {currentFocusedMovie?.serial.enable === true ? (
           <div className="calender">
             <img src={calender} />
-            <span className="u500">{curretFocusedMovie?.serial.season_id}</span>
+            <span className="u500">{currentFocusedMovie?.serial.season_id}</span>
             <span className="u500">فصل،</span>
             <span className="u500">
-              {curretFocusedMovie?.serial.serial_part}
+              {currentFocusedMovie?.serial.serial_part}
             </span>
             <span className="u500">قسمت</span>
           </div>
@@ -44,19 +44,19 @@ const Content = ({ data, curretFocusedMovie, type }) => {
   //   return (
   //             <div   className='content'>
   //                     <div className='gradiant'></div>
-  //                     <img  className='content-poster' src={curretFocusedMovie ?  curretFocusedMovie?.pic.movie_img_b : data.data[0].movies.data[0].pic.movie_img_b} />
+  //                     <img  className='content-poster' src={currentFocusedMovie ?  currentFocusedMovie?.pic.movie_img_b : data.data[0].movies.data[0].pic.movie_img_b} />
   //                     <div  className='content-text'>
 
-  //                       <h1 className='u700' >{ curretFocusedMovie ? curretFocusedMovie?.movie_title : data.data[0].movies.data[0]?.movie_title }</h1>
-  //                       <Badge  movie={curretFocusedMovie ? curretFocusedMovie : data.data[0].movies.data[0] } />
-  //                       <p className='u400'>{curretFocusedMovie ? curretFocusedMovie?.descr.slice(0,200) : data.data[0].movies.data[0]?.descr.slice(0,200)}...</p>
-  //                       {curretFocusedMovie?.serial.enable===true ?
+  //                       <h1 className='u700' >{ currentFocusedMovie ? currentFocusedMovie?.movie_title : data.data[0].movies.data[0]?.movie_title }</h1>
+  //                       <Badge  movie={currentFocusedMovie ? currentFocusedMovie : data.data[0].movies.data[0] } />
+  //                       <p className='u400'>{currentFocusedMovie ? currentFocusedMovie?.descr.slice(0,200) : data.data[0].movies.data[0]?.descr.slice(0,200)}...</p>
+  //                       {currentFocusedMovie?.serial.enable===true ?
 
   //                         <div className='calender' >
   //                           <img src={calender} />
-  //                           <span className='u500'>{curretFocusedMovie?.serial.season_id}</span>
+  //                           <span className='u500'>{currentFocusedMovie?.serial.season_id}</span>
   //                           <span className='u500'>فصل،</span>
-  //                           <span className='u500'>{curretFocusedMovie?.serial.serial_part}</span>
+  //                           <span className='u500'>{currentFocusedMovie?.serial.serial_part}</span>
   //                           <span className='u500'>قسمت</span>
   //                         </div>
   //                         : null
@@ -71,20 +71,20 @@ const Content = ({ data, curretFocusedMovie, type }) => {
       <div className="gradiant"></div>
       <img
         className="content-poster"
-        src={curretFocusedMovie?.cover_data?.horizontal}
+        src={currentFocusedMovie?.cover_data?.horizontal}
       />
       <div className="content-text">
         <h1 className="content-text-header u700">
-          {curretFocusedMovie?.movie_title}
+          {currentFocusedMovie?.movie_title}
         </h1>
-        <Badge movie={curretFocusedMovie} />
+        <Badge movie={currentFocusedMovie} />
         <p className="content-text-p u400">
-          {curretFocusedMovie?.descr?.slice(0, 200)}{" "}
-          {curretFocusedMovie?.descr?.length >= 200 ? "..." : null}
+          {currentFocusedMovie?.descr?.slice(0, 200)}{" "}
+          {currentFocusedMovie?.descr?.length >= 200 ? "..." : null}
         </p>
-        {curretFocusedMovie?.serial.enable === true ? (
+        {currentFocusedMovie?.serial.enable === true ? (
           <>
-            {curretFocusedMovie?.serial.season_id !== "0" ? (
+            {currentFocusedMovie?.serial.season_id !== "0" ? (
               <div className="calender">
                 <svg
                   className="calender-logo"
@@ -103,12 +103,12 @@ const Content = ({ data, curretFocusedMovie, type }) => {
 
                 <span className="calender-text u500">فصل</span>
                 <span className="calender-text u500">
-                  {convertToFarsi(curretFocusedMovie?.serial.season_id)} ,
+                  {convertToFarsi(currentFocusedMovie?.serial.season_id)} ,
                 </span>
 
                 <span className="calender-text u500">قسمت</span>
                 <span className="calender-text u500">
-                  {convertToFarsi(curretFocusedMovie?.serial.serial_part)}
+                  {convertToFarsi(currentFocusedMovie?.serial.serial_part)}
                 </span>
               </div>
             ) : null}
@@ -125,35 +125,35 @@ const Content = ({ data, curretFocusedMovie, type }) => {
   //       <img
   //         className="content-poster"
   //         src={
-  //           curretFocusedMovie
-  //             ? curretFocusedMovie?.pic.movie_img_b
+  //           currentFocusedMovie
+  //             ? currentFocusedMovie?.pic.movie_img_b
   //             : data[0].movies.data[0].pic.movie_img_b
   //         }
   //       />
   //       <div className="content-text">
   //         <h1 className="u700">
-  //           {curretFocusedMovie
-  //             ? curretFocusedMovie?.movie_title
+  //           {currentFocusedMovie
+  //             ? currentFocusedMovie?.movie_title
   //             : data[0].movies.data[0]?.movie_title}
   //         </h1>
   //         <Badge
   //           movie={
-  //             curretFocusedMovie ? curretFocusedMovie : data[0].movies.data[0]
+  //             currentFocusedMovie ? currentFocusedMovie : data[0].movies.data[0]
   //           }
   //         />
   //         <p className="u400">
-  //           {curretFocusedMovie
-  //             ? curretFocusedMovie?.descr?.slice(0, 200)
+  //           {currentFocusedMovie
+  //             ? currentFocusedMovie?.descr?.slice(0, 200)
   //             : data[0].movies.data[0]?.descr?.slice(0, 200)}
   //           ...
   //         </p>
-  //         {curretFocusedMovie?.serial.enable === true &&
-  //         curretFocusedMovie?.serial.season_id !== "0" ? (
+  //         {currentFocusedMovie?.serial.enable === true &&
+  //         currentFocusedMovie?.serial.season_id !== "0" ? (
   //           <div className="calender">
   //             <img src={calender} />
-  //             <span>{curretFocusedMovie?.serial.season_id}</span>
+  //             <span>{currentFocusedMovie?.serial.season_id}</span>
   //             <span>فصل،</span>
-  //             <span>{curretFocusedMovie?.serial.serial_part}</span>
+  //             <span>{currentFocusedMovie?.serial.serial_part}</span>
   //             <span>قسمت</span>
   //           </div>
   //         ) : null}
@@ -169,35 +169,35 @@ const Content = ({ data, curretFocusedMovie, type }) => {
   //       <img
   //         className="content-poster"
   //         src={
-  //           curretFocusedMovie
-  //             ? curretFocusedMovie?.pic.movie_img_b
+  //           currentFocusedMovie
+  //             ? currentFocusedMovie?.pic.movie_img_b
   //             : data[2].movies.data[0].pic.movie_img_b
   //         }
   //       />
   //       <div className="content-text">
   //         <h1 className="u700">
-  //           {curretFocusedMovie
-  //             ? curretFocusedMovie?.movie_title
+  //           {currentFocusedMovie
+  //             ? currentFocusedMovie?.movie_title
   //             : data[0].movies.data[0]?.movie_title}
   //         </h1>
   //         <Badge
   //           movie={
-  //             curretFocusedMovie ? curretFocusedMovie : data[0].movies.data[0]
+  //             currentFocusedMovie ? currentFocusedMovie : data[0].movies.data[0]
   //           }
   //         />
   //         <p className="u400">
-  //           {curretFocusedMovie
-  //             ? curretFocusedMovie?.descr?.slice(0, 200)
+  //           {currentFocusedMovie
+  //             ? currentFocusedMovie?.descr?.slice(0, 200)
   //             : data[0].movies.data[0]?.descr?.slice(0, 200)}
   //           ...
   //         </p>
-  //         {curretFocusedMovie?.serial.enable === true &&
-  //         curretFocusedMovie?.serial.season_id !== "0" ? (
+  //         {currentFocusedMovie?.serial.enable === true &&
+  //         currentFocusedMovie?.serial.season_id !== "0" ? (
   //           <div className="calender">
   //             <img src={calender} />
-  //             <span>{curretFocusedMovie?.serial.season_id}</span>
+  //             <span>{currentFocusedMovie?.serial.season_id}</span>
   //             <span>فصل،</span>
-  //             <span>{curretFocusedMovie?.serial.serial_part}</span>
+  //             <span>{currentFocusedMovie?.serial.serial_part}</span>
   //             <span>قسمت</span>
   //           </div>
   //         ) : null}
@@ -213,23 +213,23 @@ const Content = ({ data, curretFocusedMovie, type }) => {
   //       <img
   //         className="content-poster"
   //         src={
-  //           curretFocusedMovie
-  //             ? curretFocusedMovie?.pic.movie_img_b
+  //           currentFocusedMovie
+  //             ? currentFocusedMovie?.pic.movie_img_b
   //             : data[0].movies.data[0].pic.movie_img_b
   //         }
   //       />
   //       <div className="content-text">
   //         <h1 className="u700">
-  //           {curretFocusedMovie
-  //             ? curretFocusedMovie?.movie_title
+  //           {currentFocusedMovie
+  //             ? currentFocusedMovie?.movie_title
   //             : data[0].movies.data[0]?.movie_title}
   //         </h1>
   //         <Badge
   //           movie={
-  //             curretFocusedMovie ? curretFocusedMovie : data[0].movies.data[0]
+  //             currentFocusedMovie ? currentFocusedMovie : data[0].movies.data[0]
   //           }
   //         />
-  //         {/* <p>{curretFocusedMovie ? curretFocusedMovie?.descr.slice(0,200) : data.data[3].movies.data[0]?.descr.slice(0,200)}...</p> */}
+  //         {/* <p>{currentFocusedMovie ? currentFocusedMovie?.descr.slice(0,200) : data.data[3].movies.data[0]?.descr.slice(0,200)}...</p> */}
   //       </div>
   //     </div>
   //   );
@@ -241,30 +241,30 @@ const Content = ({ data, curretFocusedMovie, type }) => {
   //       <img
   //         className="content-poster"
   //         src={
-  //           curretFocusedMovie
-  //             ? curretFocusedMovie?.pic.movie_img_b
+  //           currentFocusedMovie
+  //             ? currentFocusedMovie?.pic.movie_img_b
   //             : data[0].movies.data[0].pic.movie_img_b
   //         }
   //       />
   //       <div className="content-text">
   //         <h1 className="u700">
-  //           {curretFocusedMovie
-  //             ? curretFocusedMovie?.movie_title
+  //           {currentFocusedMovie
+  //             ? currentFocusedMovie?.movie_title
   //             : data[0].movies.data[0]?.movie_title}
   //         </h1>
   //         <Badge
   //           movie={
-  //             curretFocusedMovie ? curretFocusedMovie : data[0].movies.data[0]
+  //             currentFocusedMovie ? currentFocusedMovie : data[0].movies.data[0]
   //           }
   //         />
-  //         {/* <p>{curretFocusedMovie ? curretFocusedMovie?.descr.slice(0,200) : data.data[1].movies.data[0]?.descr.slice(0,200)}...</p> */}
-  //         {curretFocusedMovie?.serial.enable === true &&
-  //         curretFocusedMovie?.serial.season_id !== "0" ? (
+  //         {/* <p>{currentFocusedMovie ? currentFocusedMovie?.descr.slice(0,200) : data.data[1].movies.data[0]?.descr.slice(0,200)}...</p> */}
+  //         {currentFocusedMovie?.serial.enable === true &&
+  //         currentFocusedMovie?.serial.season_id !== "0" ? (
   //           <div className="calender">
   //             <img src={calender} />
-  //             <span>{curretFocusedMovie?.serial.season_id}</span>
+  //             <span>{currentFocusedMovie?.serial.season_id}</span>
   //             <span>فصل،</span>
-  //             <span>{curretFocusedMovie?.serial.serial_part}</span>
+  //             <span>{currentFocusedMovie?.serial.serial_part}</span>
   //             <span>قسمت</span>
   //           </div>
   //         ) : null}
@@ -285,34 +285,34 @@ const Content = ({ data, curretFocusedMovie, type }) => {
   //       <img
   //         className="content-poster"
   //         src={
-  //           curretFocusedMovie
-  //             ? curretFocusedMovie?.pic.movie_img_b
+  //           currentFocusedMovie
+  //             ? currentFocusedMovie?.pic.movie_img_b
   //             : data[0].movies.data[0].pic.movie_img_b
   //         }
   //       />
   //       <div className="content-text">
   //         <h1 className="u700">
-  //           {curretFocusedMovie
-  //             ? curretFocusedMovie?.movie_title
+  //           {currentFocusedMovie
+  //             ? currentFocusedMovie?.movie_title
   //             : data[0].movies.data[0]?.movie_title}
   //         </h1>
   //         <Badge
   //           movie={
-  //             curretFocusedMovie ? curretFocusedMovie : data[0].movies.data[0]
+  //             currentFocusedMovie ? currentFocusedMovie : data[0].movies.data[0]
   //           }
   //         />
   //         <p className="u400">
-  //           {curretFocusedMovie
-  //             ? curretFocusedMovie?.descr?.slice(0, 200)
+  //           {currentFocusedMovie
+  //             ? currentFocusedMovie?.descr?.slice(0, 200)
   //             : data[0].movies.data[0]?.descr?.slice(0, 200)}
   //           ...
   //         </p>
-  //         {curretFocusedMovie?.serial.enable === true ? (
+  //         {currentFocusedMovie?.serial.enable === true ? (
   //           <div className="calender">
   //             <img src={calender} />
-  //             <span>{curretFocusedMovie?.serial.season_id}</span>
+  //             <span>{currentFocusedMovie?.serial.season_id}</span>
   //             <span>فصل،</span>
-  //             <span>{curretFocusedMovie?.serial.serial_part}</span>
+  //             <span>{currentFocusedMovie?.serial.serial_part}</span>
   //             <span>قسمت</span>
   //           </div>
   //         ) : null}
