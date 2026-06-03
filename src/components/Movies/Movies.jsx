@@ -100,7 +100,7 @@ function Movies({ isLogin }) {
 
   const pageType = useMemo(
     () => getPageType(location.pathname),
-    [location.pathname]
+    [location.pathname],
   );
   const pageConfig = PAGE_TYPE_CONFIG[pageType];
 
@@ -109,6 +109,12 @@ function Movies({ isLogin }) {
   const [showExitModal, setShowExitModal] = useState(false);
   const [showPoster, setShowPoster] = useState(true);
   const [isNewDataLoading, setIsNewDataLoading] = useState(false);
+
+  const { data, error, isFetching } = useGetMoviesQuery({
+    tag_id,
+    other_data,
+    jwt,
+  });
 
   const myRef = useRef(null);
   const scrollRef = useRef(null);
@@ -119,12 +125,6 @@ function Movies({ isLogin }) {
   const mountedRef = useRef(true);
   const isFetchingRef = useRef(isFetching);
 
-  const { data, error, isFetching } = useGetMoviesQuery({
-    tag_id,
-    other_data,
-    jwt,
-  });
-
   const filteredRows = useMemo(() => {
     if (!movies?.data) return [];
 
@@ -132,7 +132,7 @@ function Movies({ isLogin }) {
       (item) =>
         (item.output_type === "movie" || item.output_type === "livetv") &&
         item.link_text !== null &&
-        item.link_text !== ""
+        item.link_text !== "",
     );
   }, [movies]);
 
@@ -171,7 +171,7 @@ function Movies({ isLogin }) {
         }
       }
     },
-    [isKid]
+    [isKid],
   );
 
   const keyHandler = useCallback(
@@ -205,7 +205,7 @@ function Movies({ isLogin }) {
         navigate(-1);
       }
     },
-    [armBack, isBackKey, location.pathname, navigate, showExitModal]
+    [armBack, isBackKey, location.pathname, navigate, showExitModal],
   );
 
   const persistMoviesToStorage = useCallback(
@@ -213,7 +213,7 @@ function Movies({ isLogin }) {
       if (!pageConfig) return;
       localStorage.setItem(pageConfig.cacheKey, JSON.stringify(nextMovies));
     },
-    [pageConfig]
+    [pageConfig],
   );
 
   const handlePaginationResult = useCallback(
@@ -230,7 +230,7 @@ function Movies({ isLogin }) {
         if (pageConfig) {
           localStorage.setItem(
             pageConfig.focusRowBeforeReloadKey,
-            localStorage.getItem("lastFocusRow") || ""
+            localStorage.getItem("lastFocusRow") || "",
           );
           persistMoviesToStorage(nextMovies);
         }
@@ -238,7 +238,7 @@ function Movies({ isLogin }) {
         return nextMovies;
       });
     },
-    [pageConfig, persistMoviesToStorage]
+    [pageConfig, persistMoviesToStorage],
   );
 
   const lastMovieElement = useCallback(
@@ -283,7 +283,7 @@ function Movies({ isLogin }) {
 
       observer.current.observe(node);
     },
-    [handlePaginationResult, isNewDataLoading, jwt, movies]
+    [handlePaginationResult, isNewDataLoading, jwt, movies],
   );
 
   useEffect(() => {
@@ -322,8 +322,8 @@ function Movies({ isLogin }) {
       setCurrentFocusedMovie(
         data.data.filter(
           (item) =>
-            item.output_type === "movie" || item.output_type === "livetv"
-        )[0]?.movies?.data[0]
+            item.output_type === "movie" || item.output_type === "livetv",
+        )[0]?.movies?.data[0],
       );
     }
   }, [data, pageConfig]);
