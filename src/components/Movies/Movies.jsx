@@ -104,7 +104,6 @@ function Movies({ isLogin }) {
   );
   const pageConfig = PAGE_TYPE_CONFIG[pageType];
 
-  const [scrolling, setScrolling] = useState(false);
   const [curretFocusedMovie, setCurretFocusedMovie] = useState(null);
   const [movies, setMovies] = useState(null);
   const [showExitModal, setShowExitModal] = useState(false);
@@ -433,7 +432,7 @@ function Movies({ isLogin }) {
   }
 
   return (
-    <main className={scrolling ? "main no-pointer" : "main"}>
+    <main className="main">
       {showExitModal && (
         <Snackbar
           onExit={() => {
