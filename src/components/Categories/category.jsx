@@ -8,13 +8,16 @@ import { useNavigate } from "react-router-dom";
 const Category = ({ image, title, focusKeey, tag_id }) => {
   const navigate = useNavigate();
   const myRef = useRef(null);
-  const { ref, focused } = useFocusable({
+  const handleAction = () => {
+    localStorage.setItem("lastCatFocus", focusKeey);
+    navigate(`/morecategory/${tag_id}`);
+  };
+  const { ref, focused, focusKey } = useFocusable({
     onFocus: () => {
       handleScrolling();
     },
     onEnterPress: () => {
-      localStorage.setItem("lastCatFocus", focusKeey);
-      navigate(`/morecategory/${tag_id}`);
+      handleAction();
     },
     focusable: true,
     trackChildren: true,
@@ -31,18 +34,29 @@ const Category = ({ image, title, focusKeey, tag_id }) => {
     }
   }, []);
   const handleScrolling = () => {
-    myRef.current.scrollIntoView({
-      block: "center",
-    });
+    setTimeout(() => {
+      if (localStorage.getItem("mode") === "KeyboardMode") {
+        myRef?.current?.scrollIntoView({
+          block: "center",
+        });
+      }
+    }, 10);
   };
   return (
-    <div ref={ref} className={focused ? "cat-focus" : "cat-not-focus"}>
+    <div
+      onClick={handleAction}
+      onMouseEnter={() => {
+        setFocus(focusKey);
+      }}
+      ref={ref}
+      className={focused ? "cat-focus" : "cat-not-focus"}
+    >
       <div className="categorie">
         <div className="categorie-back">
           <div className="categorie-front"></div>
           <img ref={myRef} src={image} />
         </div>
-        <h4 className="u500">{title}</h4>
+        <h4 className="categorie-title u500">{title}</h4>
       </div>
     </div>
   );

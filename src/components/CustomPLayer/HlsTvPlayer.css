@@ -1,0 +1,112 @@
+/* HlsTvPlayer.css */
+.player-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background-color: #000;
+}
+
+.subtitle-overlay {
+  position: absolute;
+  bottom: 4rem;
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  text-shadow: 0.1rem 0.1rem 0.25rem #000;
+  font-size: 1.2rem;
+  z-index: 1;
+}
+
+.subtitle-overlay.preview {
+  z-index: 1000000;
+}
+
+.controls-wrapper {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  transition: opacity 0.3s;
+}
+
+.controls-wrapper > * + * {
+  margin-top: 0.5rem;
+}
+
+.controls-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.control-row-section {
+  display: flex;
+  align-items: center;
+}
+
+.control-row-section > * + * {
+  margin-left: 0.5rem;
+}
+
+/* ── Buffering spinner ───────────────────────────────────────── */
+
+.player-buffering-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.player-spinner {
+  width: 3rem;
+  height: 3rem;
+  border: 0.28rem solid rgba(255, 255, 255, 0.25);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: player-spin 0.75s linear infinite;
+}
+
+@keyframes player-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── Error overlay ───────────────────────────────────────────── */
+
+.player-error-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.75);
+  color: #ffffff;
+  direction: rtl;
+  pointer-events: none;
+}
+
+.player-error-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.85;
+}
+
+.player-error-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 0 0.4rem;
+}
+
+.player-error-subtitle {
+  font-size: 0.85rem;
+  opacity: 0.6;
+  margin: 0;
+}

@@ -1,0 +1,27 @@
+.Info-row {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  direction: rtl;
+  align-items: center;
+}
+
+.Info-row-titles {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.Info-row-titles > * + * {
+  margin-top: 0.4rem;
+}
+
+.main-title {
+  padding: 0 !important;
+  font-size: 1.5rem;
+}
+
+.main-Subtitle {
+  padding: 0 !important;
+  font-size: 1.2rem;
+}

@@ -11,15 +11,19 @@ import {
   getCurrentFocusKey,
 } from "@noriginmedia/norigin-spatial-navigation";
 
-const RecommBtn = ({ movieRow, onFocus, linkText, uid }) => {
+const RecommBtn = ({ onFocus, linkText, uid }) => {
+  const handleAction = () => {
+    // console.log(focusKey);
+    localStorage.setItem("recommBtn", "recomm-btn");
+    localStorage.removeItem("seasonBtn");
+    localStorage.removeItem("moreBtn");
+    // localStorage.setItem("moreSingle", JSON.stringify(movieRow));
+    navigate(`/morereccom/${uid}`);
+  };
   const { ref, focused, focusSelf, focusKey } = useFocusable({
     onFocus,
     onEnterPress: () => {
-      console.log(focusKey);
-      localStorage.setItem("recommBtn", "recomm-btn");
-      localStorage.removeItem("seasonBtn");
-      localStorage.setItem("moreSingle", JSON.stringify(movieRow));
-      navigate(`/moreSingle/${linkText}/${uid}`);
+      handleAction();
     },
     focusKey: "recomm-btn",
   });
@@ -41,6 +45,10 @@ const RecommBtn = ({ movieRow, onFocus, linkText, uid }) => {
       <div
         ref={ref}
         className={focused ? "btn-ctrl btn-play-focus u500" : "btn-ctrl u500"}
+        onMouseEnter={() => {
+          setFocus(focusKey);
+        }}
+        onClick={handleAction}
       >
         فیلم های پیشنهادی
       </div>

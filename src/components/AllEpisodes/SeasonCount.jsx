@@ -13,17 +13,16 @@ const SeasonCount = ({ data, onEnterPress }) => {
   return (
     <FocusContext.Provider value={focusKey}>
       <div className="season-count">
-        <div style={{ width: "400px" }}>
-          {data.data.map((season) => (
-            <Season
-              title={season.link_text}
-              count={season.movies.data.length}
-              onEnterPress={() => {
-                onEnterPress(season);
-              }}
-            />
-          ))}
-        </div>
+        {data.data.map((season, index) => (
+          <Season
+            title={season.link_text}
+            count={season.movies.data.length}
+            onEnterPress={() => {
+              onEnterPress(season);
+            }}
+            focusKeey={`Season_${index}`}
+          />
+        ))}
       </div>
     </FocusContext.Provider>
   );

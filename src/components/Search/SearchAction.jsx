@@ -13,7 +13,8 @@ const SearchAction = ({ searchQuery, onEnterPress }) => {
     focusable: true,
     trackChildren: true,
     autoRestoreFocus: true,
-    isFocusBoundary: false,
+    isFocusBoundary: true,
+    focusBoundaryDirections: ["right", "left", "up"],
     preferredChildFocusKey: null,
     focusKey: "search-btn",
   });
@@ -26,8 +27,19 @@ const SearchAction = ({ searchQuery, onEnterPress }) => {
 
   const getData = async (querry, jwtt) => {
     try {
+      const userAgent = {
+        os: "WebOs",
+        an: "Filimo",
+        vn: "1.00",
+      };
       const res = await fetch(
-        `https://www.televika.com/api/fa/v1/movie/movie/list/tagid/1000300/text/${querry}?json_type=simple`
+        `https://www.filimo.com/api/fa/v1/movie/movie/list/tagid/1000300/text/${querry}?json_type=simple`,
+        {
+          method: "GET",
+          headers: {
+            UserAgent: JSON.stringify(userAgent),
+          },
+        }
       );
       const blocks = await res?.json();
       localStorage.setItem("searchResult", JSON.stringify(blocks));
@@ -42,8 +54,12 @@ const SearchAction = ({ searchQuery, onEnterPress }) => {
       className={
         focused ? "search-action search-action-focus" : "search-action"
       }
+      onMouseEnter={() => {
+        setFocus(focusKey);
+      }}
+      onClick={onEnterPress}
     >
-      <img src={searchsvg} style={{ width: "40px" }} />
+      <img src={searchsvg} style={{ width: "2.1rem" }} />
     </div>
   );
 };

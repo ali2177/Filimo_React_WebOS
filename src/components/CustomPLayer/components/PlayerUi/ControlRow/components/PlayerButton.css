@@ -1,0 +1,46 @@
+.player-btn-icon-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quality-badge {
+  position: absolute;
+  top: -0.7rem;
+  right: -0.9rem;
+  background: #ffffff;
+  color: #000000;
+  font-size: 0.5rem;
+  font-weight: 700;
+  padding: 0.1rem 0.25rem;
+  border-radius: 0.2rem;
+  line-height: 1.4;
+  letter-spacing: 0.025rem;
+  pointer-events: none;
+}
+
+.Player-button {
+  display: flex;
+  padding: 1.2rem;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50rem;
+  background: var(--light-mode-opacity-of-neutral-black-50, rgba(4, 4, 4, 0.5));
+  backdrop-filter: blur(6px);
+}
+
+.Player-button svg {
+  width: 2rem;
+  height: 2rem;
+  fill: var(--Dark-Mode-Opacity-of-Neutral-White, #fff);
+}
+
+.Player-button-focus {
+  border-radius: 50rem;
+  background: var(--Dark-Mode-Opacity-of-Neutral-White, #fff);
+}
+
+.Player-button-focus svg {
+  fill: var(--Light-Mode-Opacity-of-Neutral-Black, #040404);
+}

@@ -12,7 +12,7 @@ const ExitModal = ({ show, onExit }) => {
         <div class="flex">
           <div class={show ? "modal active" : "modal"}>
             <Focusable onClickEnter={exitButtonHandler} className={"close"}>
-              <span>&#43;</span>
+              <span>43</span>
             </Focusable>
 
             <div class="m-content u700">

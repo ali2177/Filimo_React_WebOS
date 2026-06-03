@@ -13,6 +13,7 @@ import "swiper/css/navigation";
 const Crews = ({ crewRow }) => {
   const myRef = useRef(null);
   const navigate = useNavigate();
+  // console.log(crewRow);
   const handleScrolling = () => {
     myRef.current.scrollIntoView({
       block: "center",
@@ -25,10 +26,10 @@ const Crews = ({ crewRow }) => {
     <div
       ref={myRef}
       className="recommendation"
-      style={{ marginRight: "40px" }}
+      style={{ marginRight: "1.3rem" }}
       onFocus={handleScrolling}
     >
-      <h3 className="u700" style={{ marginTop: "108px" }}>
+      <h3 className="u700" style={{ marginTop: "5.2rem" }}>
         عوامل
       </h3>
 

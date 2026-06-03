@@ -6,19 +6,27 @@ import { useGetLoginCodeQuery } from "../../services/TMDB";
 import link from "../../assets/images/link.svg";
 import linkLogin from "../../assets/images/linkLogin.svg";
 import Code from "../Code/Code";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import NetworkError from "../NetworkError/NetworkError";
 import Loader from "../Loader/Loader";
+import { useAuth } from "../AuthProvider";
+import { useOnlineStatus } from "../App";
 const Loogin = () => {
+  const { jwt, setJwt } = useAuth();
+  const { isOnline } = useOnlineStatus();
+  const location = useLocation();
   const navigate = useNavigate();
   const ref = useRef(null);
+  const [userData, setUserData] = useState();
   const [code, setCode] = useState("");
   const [data, setData] = useState();
   const [error, setError] = useState();
   const [isLoading, setIsLoading] = useState();
   //call for generating log in code
-  let jwt;
+  // let jwt;
   let dataSet;
+
+  let intervalCall;
 
   //clear local storage
   useEffect(() => {
@@ -32,16 +40,45 @@ const Loogin = () => {
     localStorage.removeItem("username");
     return () => window.removeEventListener("keydown", keyHandler);
   }, []);
+  useEffect(() => {
+    if (jwt && userData) {
+      clearInterval(intervalCall);
+      localStorage.setItem("jwt", userData.jwt);
+      localStorage.setItem("display_name", userData.display_name);
+      localStorage.setItem("email", userData.email);
+      localStorage.setItem("mobile_number", userData.mobile_number);
+      localStorage.setItem("name", userData.name);
+      localStorage.setItem("username", userData.username);
+      localStorage.removeItem("lastdataloaded");
+      if (location.pathname !== "/player") navigate(-1);
+    }
+  }, [jwt, userData]);
 
   //recive user data and check if log in
   const getData = async () => {
     try {
+      const userAgent = {
+        os: "WebOs",
+        an: "Filimo",
+        vn: "1.00",
+      };
       const res = await fetch(
-        `https://www.televika.com/api/fa/v1/user/Authenticate/sync_account_verify/code/${code}/ref_type/tv`
+        `https://www.filimo.com/api/fa/v1/user/Authenticate/sync_account_verify/code/${code}/ref_type/tv`,
+        {
+          headers: {
+            UserAgent: JSON.stringify(userAgent),
+          },
+        }
       );
       const blocks = await res?.json();
-      jwt = blocks.data.attributes.jwt;
-      dataSet = blocks.data.attributes;
+      if (blocks.data.attributes.jwt) {
+        setUserData(blocks.data.attributes);
+        setJwt(blocks.data.attributes.jwt);
+        clearInterval(intervalCall);
+      }
+      // jwt = blocks.data.attributes.jwt;
+      // console.log(blocks);
+      // dataSet = blocks.data.attributes;
     } catch (e) {
       setError(e);
       console.log(e);
@@ -51,8 +88,18 @@ const Loogin = () => {
   const getLoginCode = async () => {
     try {
       setIsLoading(true);
+      const userAgent = {
+        os: "WebOs",
+        an: "Filimo",
+        vn: "1.00",
+      };
       const res = await fetch(
-        `https://www.televika.com/api/fa/v1/user/Authenticate/get_verify_code?ref_type=tv`
+        `https://www.filimo.com/api/fa/v1/user/Authenticate/get_verify_code?ref_type=tv&devicetype=react_tizen      `,
+        {
+          headers: {
+            UserAgent: JSON.stringify(userAgent),
+          },
+        }
       );
       const blocks = await res?.json();
       setData(blocks);
@@ -66,19 +113,8 @@ const Loogin = () => {
 
   //start timer when code is generated and wait for user to login
   useEffect(() => {
-    const intervalCall = setInterval(() => {
+    intervalCall = setInterval(() => {
       getData();
-      if (jwt) {
-        clearInterval(intervalCall);
-        localStorage.setItem("jwt", dataSet.jwt);
-        localStorage.setItem("display_name", dataSet.display_name);
-        localStorage.setItem("email", dataSet.email);
-        localStorage.setItem("mobile_number", dataSet.mobile_number);
-        localStorage.setItem("name", dataSet.name);
-        localStorage.setItem("username", dataSet.username);
-        localStorage.removeItem("lastdataloaded");
-        navigate(-1);
-      }
     }, 1000);
     return () => {
       // clean up
@@ -94,16 +130,16 @@ const Loogin = () => {
   };
   const keyHandler = (key) => {
     // check if keycode is the return button on the remote and the remove button on your keyboard
-    if (key.keyCode === 10009 || key.keyCode === 8) {
-      navigate(-1);
+    if (key.keyCode === 10009 || key.keyCode === 8 || key.keyCode === 461) {
+      if (location.pathname !== "/player") navigate(-1);
     }
   };
 
-  if (error) return <NetworkError />;
-
   if (isLoading) return <Loader />;
 
-  if (!code) return <NetworkError />;
+  if (error) return <NetworkError errorText="مشکلی پیش آمده است !" />;
+
+  if (!code) return <NetworkError errorText="مشکلی پیش آمده است !" />;
 
   return (
     <div className="login-content">
@@ -142,7 +178,7 @@ const Loogin = () => {
             </span>
             <Focusable>
               <div className="link-login">
-                <span className="u500">televika.com/activate</span>
+                <span className="u500">filimo.com/activate</span>
                 <img src={linkLogin} />
               </div>
             </Focusable>

@@ -24,6 +24,12 @@ const ActionBtn = ({ onFocus, onEnter, type }) => {
           : "keyboard-btn-action u700"
       }
       ref={ref}
+      onMouseEnter={() => {
+        setFocus(focusKey);
+      }}
+      onClick={() => {
+        onEnter(type);
+      }}
     >
       {type}
     </div>

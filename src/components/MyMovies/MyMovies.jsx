@@ -16,8 +16,8 @@ const MyMovies = ({ isLogin }) => {
   }, []);
   const keyHandler = (key) => {
     // check if keycode is the return button on the remote and the remove button on your keyboard
-    if (key.keyCode === 10009 || key.keyCode === 8) {
-      navigate(-1);
+    if (key.keyCode === 10009 || key.keyCode === 8 || key.keyCode === 461) {
+      if (location.pathname !== "/player") navigate(-1);
     }
   };
 

@@ -11,13 +11,13 @@ const Code = ({ code }) => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            width: "70px",
-            height: "65.33px",
+            width: "3.6rem",
+            height: "3.3rem",
             background: "rgba(255, 255, 255, 0.12)",
-            borderRadius: "8px",
-            fontSize: "40px",
+            borderRadius: "0.6rem",
+            fontSize: "2rem",
             fontWeight: "500",
-            marginLeft: "20px",
+            marginLeft: "1.1rem",
           }}
         >
           {item}

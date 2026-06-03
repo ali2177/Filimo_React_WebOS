@@ -55,7 +55,11 @@ function Badge({ movie }) {
         <div>
           {movie?.countries.map((cont, index) => (
             <>
-              <span key={index} style={{ marginLeft: "10px" }} className="u500">
+              <span
+                key={index}
+                style={{ marginLeft: "0.4rem" }}
+                className="u500"
+              >
                 {cont.country}
               </span>
               <img className="dot" src={dot} />

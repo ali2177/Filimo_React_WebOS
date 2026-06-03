@@ -14,19 +14,24 @@ const CrewSolo = ({ actor, onFocus, onEnterPress, name, focusKeey }) => {
     focusKey: focusKeey,
   });
   return (
-    <Link className="swiper-link" to={`/`}>
+    <Link className="swiper-link" to={`/actor/${name}`}>
       <img
         ref={ref}
         style={{
-          border: focused ? "2px solid red" : "none",
+          border: focused ? "0.22rem solid red" : "none",
         }}
         src={actor.profile[0].profile_image}
         alt={actor.profile[0].name_en}
         className="actor-image"
       />
 
-      <h8 className="movie-title u700">{actor.profile[0].name}</h8>
-      <h8 className="movie-title u700">{actor.post_info.title}</h8>
+      <h6 className="movie-title u700">
+        {" "}
+        {actor.profile[0].name.length > 20
+          ? actor.profile[0].name.slice(0, 15)
+          : actor.profile[0].name}
+      </h6>
+      <h6 className="movie-title u700">{actor.post_info.title}</h6>
     </Link>
   );
 };

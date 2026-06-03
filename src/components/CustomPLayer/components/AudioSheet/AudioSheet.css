@@ -1,0 +1,82 @@
+.audio-sheet {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+
+.as-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 1.7rem;
+}
+
+.as-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fff;
+  text-align: right;
+  line-height: 1.7rem;
+}
+
+/* ── List ────────────────────────────────────────────────── */
+
+.as-list {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Row ─────────────────────────────────────────────────── */
+
+.as-row {
+  border-radius: 0.7rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.82rem 1.23rem;
+  cursor: pointer;
+  outline: none;
+  margin-bottom: 1rem;
+}
+
+.as-row-focused {
+  background: var(--Dark-Mode-Opacity-of-Neutral-White, #fff) !important;
+  backdrop-filter: blur(20px);
+}
+
+.as-row-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  text-align: right;
+  line-height: 2.1rem;
+}
+
+.as-row-icon {
+  font-size: 0.9rem;
+  color: #151515;
+  min-width: 1.2rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* When focused, flip text and icon to dark */
+
+.as-row-focused .as-row-label {
+  color: #000000;
+}
+
+.as-row-focused .as-row-icon {
+  color: #333333;
+}
+
+.as-row-icon svg path {
+  fill: #ffffff;
+}
+
+.as-row-focused .as-row-icon svg path {
+  fill: #000000;
+}

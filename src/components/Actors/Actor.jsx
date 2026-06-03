@@ -14,19 +14,22 @@ const Actor = ({ actor, onFocus, onEnterPress, focusKeey, name }) => {
     isFocusBoundary: false,
     focusKey: focusKeey,
   });
+
   return (
-    <Link className="swiper-link" to={`/`}>
+    <Link className="swiper-link" to={`/actor/${name}`}>
       <img
         ref={ref}
         style={{
-          border: focused ? "2px solid red" : "none",
+          border: focused ? "0.25rem solid red" : "none",
         }}
         src={actor.profile_image}
         alt={actor.name_en}
         className="actor-image"
       />
 
-      <h8 className="movie-title u700">{actor.name}</h8>
+      <h8 className="movie-title u700">
+        {actor.name.length > 20 ? actor.name.slice(0, 15) : actor.name}
+      </h8>
     </Link>
   );
 };

@@ -97,21 +97,23 @@ const ContentCrewRow = ({
       <div
         ref={ref}
         className="contentRowWrapper"
-        style={{ marginBottom: "100px" }}
+        style={{ marginBottom: "2rem" }}
       >
-        <h3 className="u700">{title}</h3>
         <div className="contentScrollingWrapper" ref={scrollingRef}>
           <div className="contentRowScrollingContent">
             {movies.slice(0, 8).map((movie, i) => (
               // <div ref={myRef}>
-              <div>
+              <div id="main-page-movie">
                 {type === "crew" ? (
                   <CrewSolo
+                    key={movie}
                     actor={movie}
                     // onFocus={() => onAssetFocus(i, movie)}
                     onEnterPress={() => handleInterPress(movie)}
                     focusKeey={`Crew__${i}`}
-                    name={movie.profile[0].name_en}
+                    name={
+                      movie.profile[0].name_en ? movie.profile[0].name_en : "-1"
+                    }
                   />
                 ) : (
                   <Actor
@@ -119,7 +121,7 @@ const ContentCrewRow = ({
                     // onFocus={() => onAssetFocus(i, movie)}
                     onEnterPress={() => handleInterPress(movie)}
                     focusKeey={`Actor__${i}`}
-                    name={movie.name_en}
+                    name={movie.name_en ? movie.name_en : movie.name_fa}
                   />
                 )}
               </div>

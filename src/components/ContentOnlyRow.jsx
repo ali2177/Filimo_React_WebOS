@@ -120,7 +120,7 @@ const ContentOnlyRow = ({
   //   setFocus("sn:focusable-item-23");
   //   //handleScrolling();
   // }, [setFocus, focusKey, focused]);
-  console.log(movies);
+  // console.log(movies);
   return (
     <FocusContext.Provider value={focusKey}>
       <div

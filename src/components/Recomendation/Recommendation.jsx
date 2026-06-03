@@ -41,7 +41,7 @@ const Recommendation = ({ movieRow, rowId }) => {
   //     setCurretFocusedMovie(movieUid);
   //   }
   useEffect(() => {
-    console.log(location);
+    // console.log(location);
     localStorage.removeItem("seasonBtn");
     localStorage.removeItem("lastSeasonFocus");
   }, [location]);

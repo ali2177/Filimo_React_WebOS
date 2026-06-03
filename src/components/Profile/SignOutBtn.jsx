@@ -23,9 +23,26 @@ const SignOutBtn = ({ onFocus, jwt }) => {
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
+    localStorage.removeItem("lastdataloaded");
+    setTimeout(() => {
+      localStorage.removeItem("lastdataloaded");
+    }, 2000);
+    localStorage.removeItem("lastdataloadedIran");
+    localStorage.removeItem("lastFocusRowMoviesBeforeReload");
+    localStorage.removeItem("lastFocusRowIranBeforeReload");
+    localStorage.removeItem("lastdataloadedMovies");
+    localStorage.removeItem("lastFocusRow");
+    localStorage.removeItem("lastMovieFocus");
+    localStorage.removeItem("MenuData");
+    const userAgent = {
+      os: "WebOs",
+      an: "Filimo",
+      vn: "1.00",
+    };
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${jwt}`);
     myHeaders.append("Cookie", "activeAbTests=null");
+    myHeaders.append("UserAgent", JSON.stringify(userAgent));
 
     const requestOptions = {
       method: "GET",
@@ -34,14 +51,13 @@ const SignOutBtn = ({ onFocus, jwt }) => {
     };
 
     fetch(
-      "https://www.televika.com/api/fa/v1/user/Authenticate/signout",
+      "https://www.filimo.com/api/fa/v1/user/Authenticate/signout",
       requestOptions
     )
       .then((response) => response.text())
       .then((result) => console.log(result))
       .catch((error) => console.error(error));
 
-    localStorage.removeItem("lastdataloaded");
     navigate("/");
   };
 
@@ -49,8 +65,12 @@ const SignOutBtn = ({ onFocus, jwt }) => {
     <div
       ref={ref}
       className={focused ? "btn-back u700 btn-back-focus" : "btn-back u700"}
+      onMouseEnter={() => {
+        setFocus(focusKey);
+      }}
+      onClick={handleSignOut}
     >
-      <p className="u700">خروج از حساب کاربری</p>
+      خروج از حساب کاربری
     </div>
   );
 };
