@@ -1,28 +1,28 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 
-const Home            = React.lazy(() => import('../components/Home/Home'));
-const MovieInfo       = React.lazy(() => import('../components/MovieInfo/MovieInfo'));
-const MoreMovies      = React.lazy(() => import('../components/MoreMovies/MoreMovies'));
-const MoreSingle      = React.lazy(() => import('../components/AllEpisodes/AllEpisodesSingle'));
-const MoreMovieSingle = React.lazy(() => import('../components/MoreMovies/MoreMovieSingle'));
-const UsersProfileCode = React.lazy(() => import('../components/UsersProfile/UsersProfileCode'));
-const MoreMovieWeb    = React.lazy(() => import('../components/MoreMovies/MoreMovieWebsevice'));
-const MoreReccom      = React.lazy(() => import('../components/MoreReccom/MoreReccom'));
-const MoreDetail      = React.lazy(() => import('../components/MovieInfo/MoreDetail/MoreDetail'));
-const MoreCategory    = React.lazy(() => import('../components/MoreCategory/MoreCategory'));
-const Crew            = React.lazy(() => import('../components/Crew/Crew'));
-const AllEpisodes     = React.lazy(() => import('../components/AllEpisodes/AllEpisodes'));
-const Profile         = React.lazy(() => import('../components/Profile/Profile'));
-const TvPlayer        = React.lazy(() => import('../components/Player/TvPlayer'));
-const LivePlayer      = React.lazy(() => import('../components/Player/LivePlayer'));
-const UsersProfile    = React.lazy(() => import('../components/UsersProfile/UsersProfile'));
-const Categories      = React.lazy(() => import('../components/Categories/Categories'));
-const Loogin          = React.lazy(() => import('../components/Login/Loogin'));
-const Search          = React.lazy(() => import('../components/Search/Search'));
-const SearchResult    = React.lazy(() => import('../components/Search/SearchResult'));
-const MyMovies        = React.lazy(() => import('../components/MyMovies/MyMovies'));
-const Ip              = React.lazy(() => import('../components/Ip/Ip'));
+const Home            = React.lazy(() => import('@containers/Home/Home'));
+const MovieInfo       = React.lazy(() => import('@containers/MovieInfo/MovieInfo'));
+const MoreMovies      = React.lazy(() => import('@containers/MoreMovies/MoreMovies'));
+const MoreSingle      = React.lazy(() => import('@containers/AllEpisodes/AllEpisodesSingle'));
+const MoreMovieSingle = React.lazy(() => import('@containers/MoreMovies/MoreMovieSingle'));
+const UsersProfileCode = React.lazy(() => import('@containers/UsersProfile/UsersProfileCode'));
+const MoreMovieWeb    = React.lazy(() => import('@containers/MoreMovies/MoreMovieWebsevice'));
+const MoreReccom      = React.lazy(() => import('@containers/MoreReccom/MoreReccom'));
+const MoreDetail      = React.lazy(() => import('@containers/MovieInfo/MoreDetail/MoreDetail'));
+const MoreCategory    = React.lazy(() => import('@containers/MoreCategory/MoreCategory'));
+const Crew            = React.lazy(() => import('@containers/Crew/Crew'));
+const AllEpisodes     = React.lazy(() => import('@containers/AllEpisodes/AllEpisodes'));
+const Profile         = React.lazy(() => import('@containers/Profile/Profile'));
+const TvPlayer        = React.lazy(() => import('@containers/Player/TvPlayer'));
+const LivePlayer      = React.lazy(() => import('@containers/Player/LivePlayer'));
+const UsersProfile    = React.lazy(() => import('@containers/UsersProfile/UsersProfile'));
+const Categories      = React.lazy(() => import('@containers/Categories/Categories'));
+const Loogin          = React.lazy(() => import('@containers/Login/Loogin'));
+const Search          = React.lazy(() => import('@containers/Search/Search'));
+const SearchResult    = React.lazy(() => import('@containers/Search/SearchResult'));
+const MyMovies        = React.lazy(() => import('@containers/MyMovies/MyMovies'));
+const Ip              = React.lazy(() => import('@containers/Ip/Ip'));
 
 function AppRoutes({ isLogin }) {
   return (

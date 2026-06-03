@@ -1,7 +1,14 @@
 ::-webkit-scrollbar {
-    width: 7px;
+    width: 0;
+    display: none;
 }
 
 * {
     text-decoration: none;
+}
+
+body, html {
+    background-color: #151515;
+    margin: 0;
+    padding: 0;
 }

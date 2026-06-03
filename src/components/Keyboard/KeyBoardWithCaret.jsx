@@ -10,8 +10,8 @@ import {
   getCurrentFocusKey,
 } from "@noriginmedia/norigin-spatial-navigation";
 import Keyboard from "./Keyboard";
-import SearchAction from "../Search/SearchAction";
-import KeyBoardBtn from "../Search/KeyBoardBtn";
+import SearchAction from "@containers/Search/SearchAction";
+import KeyBoardBtn from "@containers/Search/KeyBoardBtn";
 import FakeInput from "./FakeInput";
 /* Custom display box with a blinking caret that you can click to reposition */
 
