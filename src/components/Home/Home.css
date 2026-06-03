@@ -1,3 +1,20 @@
+.home-scroll-container {
+  overflow: hidden;
+  overflow-y: scroll;
+  height: 100vh;
+}
+
+.home-rows-wrapper {
+  padding-top: 1.44rem;
+  margin-right: 1.54rem;
+  position: relative;
+  z-index: 999999;
+}
+
+.home-rows-wrapper--kids {
+  padding-top: 1.54rem;
+}
+
 @media only screen and (min-device-width: 720px) {
   .main-rows {
     margin-top: 32rem !important;

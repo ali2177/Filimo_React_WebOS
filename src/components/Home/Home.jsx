@@ -1,99 +1,23 @@
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  useRef,
-  useMemo,
-} from "react";
+import React, { useState, useCallback, useRef, useMemo, useEffect } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import { useGetMoviesQuery } from "../../services/TMDB";
 import Content from "../Content/Content";
 import NetworkError from "../NetworkError/NetworkError";
 import Loader from "../Loader/Loader";
 import Snackbar from "../Snackbar/Snackbar";
 import { useAuth } from "../AuthProvider";
 import { useOnlineStatus } from "../App";
-import {
-  useFocusable,
-  setFocus,
-  getCurrentFocusKey,
-} from "@noriginmedia/norigin-spatial-navigation";
+import { useFocusable, setFocus } from "@noriginmedia/norigin-spatial-navigation";
 import ContentRow from "../ContentRow";
+import { getPageType, PAGE_TYPE_CONFIG } from "./homeUtils";
+import { useBackNavigation } from "./hooks/useBackNavigation";
+import { useHomeMovies } from "./hooks/useHomeMovies";
+import { useFocusInit } from "./hooks/useFocusInit";
 import "./Home.css";
-
-const STORAGE_KEYS_TO_CLEAR_ON_ENTER = [
-  "searchQuery",
-  "searchResult",
-  "level",
-  "lastCatFocus",
-  "lastFocusMore",
-  "last",
-  "lastFocusActor",
-  "lastFocusCrew",
-  "lastFocusRecomm",
-  "lastFocusCat",
-  "lastFocusMoreMovie_level__1",
-  "lastFocusMoreMovie_level__2",
-  "lastFocusMore_level__1",
-  "lastFocusMore_level__2",
-  "seasonBtn",
-  "recommBtn",
-  "moreBtn",
-  "lastSeasonFocus",
-  "lastSeasonFocus_parent_new",
-  "lastSeasonFocus_season_part",
-  "movie_cast_time",
-  "movie_uid",
-  "fromAlert",
-];
-
-const PAGE_TYPE_CONFIG = {
-  home: {
-    cacheKey: "lastdataloaded",
-    focusRowBeforeReloadKey: "lastFocusRowBeforeReload",
-  },
-  series: {
-    cacheKey: "lastdataloadedSeries",
-    focusRowBeforeReloadKey: "lastFocusRowSeriesBeforeReload",
-  },
-  movie: {
-    cacheKey: "lastdataloadedMovies",
-    focusRowBeforeReloadKey: "lastFocusRowMoviesBeforeReload",
-  },
-  iran: {
-    cacheKey: "lastdataloadedIran",
-    focusRowBeforeReloadKey: "lastFocusRowIranBeforeReload",
-  },
-  kids: {
-    cacheKey: "lastdataloadedKids",
-    focusRowBeforeReloadKey: "lastFocusRowKidsBeforeReload",
-  },
-};
-
-function getPageType(pathname) {
-  if (pathname === "/") return "home";
-  if (pathname.includes("/series")) return "series";
-  if (pathname.includes("/movie")) return "movie";
-  if (pathname.includes("/iran")) return "iran";
-  if (pathname.includes("/kids")) return "kids";
-  return "other";
-}
-
-function safeParse(json) {
-  try {
-    return JSON.parse(json);
-  } catch {
-    return null;
-  }
-}
 
 function Home({ isLogin }) {
   const { jwt } = useAuth();
   const { isKid } = useOnlineStatus();
-  useFocusable({
-    forceFocus: false,
-    saveLastFocusedChild: false,
-  });
+  useFocusable({ forceFocus: false, saveLastFocusedChild: false });
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -106,59 +30,48 @@ function Home({ isLogin }) {
   const pageConfig = PAGE_TYPE_CONFIG[pageType];
 
   const [currentFocusedMovie, setCurrentFocusedMovie] = useState(null);
-  const [movies, setMovies] = useState(null);
-  const [showExitModal, setShowExitModal] = useState(false);
   const [showPoster, setShowPoster] = useState(true);
-  const [isNewDataLoading, setIsNewDataLoading] = useState(false);
-
-  const { data, error, isFetching } = useGetMoviesQuery({
-    tag_id,
-    other_data,
-    jwt,
-  });
 
   const myRef = useRef(null);
-  const scrollRef = useRef(null);
-  const observer = useRef(null);
-  const didInitFocusRef = useRef(false);
-  const backArmedRef = useRef(false);
-  const backTimerRef = useRef(null);
-  const mountedRef = useRef(true);
-  const isFetchingRef = useRef(isFetching);
 
-  const filteredRows = useMemo(() => {
-    if (!movies?.data) return [];
+  const { showExitModal, setShowExitModal, backArmedRef } = useBackNavigation({
+    location,
+    navigate,
+  });
 
-    return movies.data.filter(
-      (item) =>
-        (item.output_type === "movie" || item.output_type === "livetv") &&
-        item.link_text !== null &&
-        item.link_text !== "",
-    );
-  }, [movies]);
+  const {
+    movies,
+    data,
+    error,
+    isFetching,
+    lastMovieElement,
+    filteredRows,
+    posterRows,
+  } = useHomeMovies({ tag_id, other_data, jwt, pageConfig });
 
-  const posterRows = useMemo(() => {
-    if (!data?.data) return [];
-    return data.data.filter((item) => item.output_type === "movie");
+  const { scrollRef, onRowFocus } = useFocusInit({
+    movies,
+    data,
+    pageConfig,
+    pageType,
+    other_data,
+    location,
+  });
+
+  useEffect(() => {
+    if (data?.data) {
+      setCurrentFocusedMovie(
+        data.data.filter(
+          (item) =>
+            item.output_type === "movie" || item.output_type === "livetv",
+        )[0]?.movies?.data[0],
+      );
+    }
   }, [data]);
 
-  const isBackKey = useCallback((e) => {
-    return e.keyCode === 461 || e.keyCode === 8 || e.keyCode === 10009;
-  }, []);
-
-  const armBack = useCallback(() => {
-    backArmedRef.current = true;
-    clearTimeout(backTimerRef.current);
-    setShowExitModal(true);
-    // backTimerRef.current = setTimeout(() => {
-    //   backArmedRef.current = false;
-    //   setShowExitModal(false);
-    // }, 3000);
-  }, []);
-
-  const onRowFocus = useCallback(({ y }) => {
-    scrollRef.current?.scrollTo({ top: y, behavior: "smooth" });
-  }, []);
+  useEffect(() => {
+    setCurrentFocusedMovie(null);
+  }, [other_data]);
 
   const movieSet = useCallback(
     (movieUid, focusKeey) => {
@@ -174,218 +87,6 @@ function Home({ isLogin }) {
     },
     [isKid],
   );
-
-  const keyHandler = useCallback(
-    (e) => {
-      if (!isBackKey(e)) return;
-
-      e.preventDefault?.();
-      e.stopPropagation?.();
-
-      if (location.pathname === "/") {
-        const currentFocusKey = getCurrentFocusKey?.() || "";
-
-        if (!currentFocusKey.includes("menuItem_")) {
-          if (!showExitModal) {
-            setFocus("menuItem__0");
-            // armBack();
-            return;
-          }
-        }
-
-        if (!backArmedRef.current) {
-          armBack();
-          return;
-        }
-
-        window.close();
-        return;
-      }
-
-      if (location.pathname !== "/player") {
-        navigate(-1);
-      }
-    },
-    [armBack, isBackKey, location.pathname, navigate, showExitModal],
-  );
-
-  const persistMoviesToStorage = useCallback(
-    (nextMovies) => {
-      if (!pageConfig) return;
-      localStorage.setItem(pageConfig.cacheKey, JSON.stringify(nextMovies));
-    },
-    [pageConfig],
-  );
-
-  const handlePaginationResult = useCallback(
-    (result) => {
-      setMovies((prevMovies) => {
-        if (!prevMovies) return prevMovies;
-
-        const nextMovies = {
-          ...prevMovies,
-          links: result?.links,
-          data: [...prevMovies.data, ...result.data],
-        };
-
-        if (pageConfig) {
-          localStorage.setItem(
-            pageConfig.focusRowBeforeReloadKey,
-            localStorage.getItem("lastFocusRow") || "",
-          );
-          persistMoviesToStorage(nextMovies);
-        }
-
-        return nextMovies;
-      });
-    },
-    [pageConfig, persistMoviesToStorage],
-  );
-
-  const lastMovieElement = useCallback(
-    (node) => {
-      if (!node) return;
-
-      if (observer.current) {
-        observer.current.disconnect();
-      }
-
-      observer.current = new IntersectionObserver((entries) => {
-        if (!entries[0]?.isIntersecting) return;
-        if (!movies?.links?.forward) return;
-        if (isFetchingRef.current || isNewDataLoading) return;
-
-        const headers = new Headers();
-        if (jwt) {
-          headers.append("Authorization", `Bearer ${jwt}`);
-        }
-
-        const requestOptions = {
-          method: "GET",
-          redirect: "follow",
-          ...(jwt ? { headers } : {}),
-        };
-
-        setIsNewDataLoading(true);
-
-        fetch(`${movies.links.forward}`, requestOptions)
-          .then((response) => response.json())
-          .then((result) => {
-            if (!mountedRef.current) return;
-            handlePaginationResult(result);
-            setIsNewDataLoading(false);
-          })
-          .catch((fetchError) => {
-            if (!mountedRef.current) return;
-            console.log("error", fetchError);
-            setIsNewDataLoading(false);
-          });
-      });
-
-      observer.current.observe(node);
-    },
-    [handlePaginationResult, isNewDataLoading, jwt, movies],
-  );
-
-  useEffect(() => {
-    isFetchingRef.current = isFetching;
-  }, [isFetching]);
-
-  useEffect(() => {
-    STORAGE_KEYS_TO_CLEAR_ON_ENTER.forEach((key) => {
-      localStorage.removeItem(key);
-    });
-
-    window.addEventListener("keydown", keyHandler);
-    return () => {
-      window.removeEventListener("keydown", keyHandler);
-    };
-  }, [keyHandler, location.pathname]);
-
-  useEffect(() => {
-    didInitFocusRef.current = false;
-  }, [location.pathname, other_data]);
-
-  useEffect(() => {
-    if (!pageConfig) {
-      if (data) setMovies(data);
-      return;
-    }
-
-    const cached = safeParse(localStorage.getItem(pageConfig.cacheKey));
-    if (cached?.data) {
-      setMovies(cached);
-    } else if (data) {
-      setMovies(data);
-    }
-
-    if (data?.data) {
-      setCurrentFocusedMovie(
-        data.data.filter(
-          (item) =>
-            item.output_type === "movie" || item.output_type === "livetv",
-        )[0]?.movies?.data[0],
-      );
-    }
-  }, [data, pageConfig]);
-
-  useEffect(() => {
-    if (!movies?.data?.length) return;
-    if (didInitFocusRef.current) return;
-
-    didInitFocusRef.current = true;
-
-    const lastFocus = localStorage.getItem("lastFocus");
-    if (lastFocus) {
-      setFocus(lastFocus);
-      return;
-    }
-
-    if (pageConfig?.focusRowBeforeReloadKey) {
-      const savedRow = localStorage.getItem(pageConfig.focusRowBeforeReloadKey);
-      if (savedRow) {
-        setFocus(`${savedRow}__0`);
-        return;
-      }
-    }
-
-    if (pageType === "series") {
-      const lastMovieFocus = localStorage.getItem("lastMovieFocus");
-      if (lastMovieFocus) {
-        setFocus(lastMovieFocus);
-        return;
-      }
-    }
-
-    setFocus("MOVIE_0__0");
-  }, [data, movies, pageConfig, pageType]);
-
-  useEffect(() => {
-    setCurrentFocusedMovie(null);
-  }, [other_data]);
-
-  useEffect(() => {
-    const handleBlockingKeyDown = (e) => {
-      if (isNewDataLoading) {
-        e.stopPropagation();
-        e.preventDefault();
-      }
-    };
-
-    window.addEventListener("keydown", handleBlockingKeyDown, true);
-    return () => {
-      window.removeEventListener("keydown", handleBlockingKeyDown, true);
-    };
-  }, [isNewDataLoading]);
-
-  useEffect(() => {
-    mountedRef.current = true;
-    return () => {
-      mountedRef.current = false;
-      clearTimeout(backTimerRef.current);
-      observer.current?.disconnect();
-    };
-  }, []);
 
   const renderedRows = useMemo(() => {
     return filteredRows.map((movieItem, index) => {
@@ -420,17 +121,11 @@ function Home({ isLogin }) {
         </div>
       );
     });
-  }, [filteredRows, jwt, lastMovieElement, movieSet, onRowFocus]);
+  }, [filteredRows, jwt, lastMovieElement, movieSet, onRowFocus, scrollRef]);
 
-  if (error) {
-    return <NetworkError />;
-  }
-
+  if (error) return <NetworkError />;
   if (isFetching) return <Loader />;
-
-  if (!data?.data?.length) {
-    return <NetworkError />;
-  }
+  if (!data?.data?.length) return <NetworkError />;
 
   return (
     <main className="main">
@@ -444,14 +139,7 @@ function Home({ isLogin }) {
         />
       )}
 
-      <div
-        ref={scrollRef}
-        style={{
-          overflow: "hidden",
-          overflowY: "scroll",
-          height: "100vh",
-        }}
-      >
+      <div ref={scrollRef} className="home-scroll-container">
         {!isKid && location.pathname === "/" && showPoster && (
           <Content
             data={posterRows}
@@ -462,16 +150,14 @@ function Home({ isLogin }) {
         )}
 
         <div
-          className={
-            location.pathname === "/" && !isKid && showPoster ? "main-rows" : ""
-          }
+          className={[
+            "home-rows-wrapper",
+            isKid ? "home-rows-wrapper--kids" : "",
+            location.pathname === "/" && !isKid && showPoster ? "main-rows" : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
           ref={myRef}
-          style={{
-            paddingTop: isKid ? "1.54rem" : "1.44rem",
-            marginRight: "1.54rem",
-            position: "relative",
-            zIndex: "999999",
-          }}
         >
           {renderedRows}
         </div>
