@@ -2,7 +2,7 @@ import React, { useEffect, useState, createContext, useContext } from "react";
 import { Routes, Route, useLocation, useNavigation } from "react-router-dom";
 import useNetworkStatus from "../utils/useNetworkStatus";
 import {
-  Movies,
+  Home,
   Actors,
   MovieInfo,
   Navbar,
@@ -261,16 +261,16 @@ function App() {
               <Navbar isLogin={isLogin} hidden={!isShowMenu} />
               <Routes>
                 <Route exact path="/ipcheck" element={<Ip />} />
-                <Route exact path="/" element={<Movies isLogin={isLogin} />} />
+                <Route exact path="/" element={<Home isLogin={isLogin} />} />
                 <Route
                   exact
                   path="/movies/filter/:tag_id/:other_data"
-                  element={<Movies isLogin={isLogin} />}
+                  element={<Home isLogin={isLogin} />}
                 />
                 <Route
                   exact
                   path="/approved"
-                  element={<Movies isLogin={isLogin} />}
+                  element={<Home isLogin={isLogin} />}
                 />
                 <Route
                   exact

@@ -1,0 +1,5 @@
+@media only screen and (min-device-width: 720px) {
+  .main-rows {
+    margin-top: 32rem !important;
+  }
+}

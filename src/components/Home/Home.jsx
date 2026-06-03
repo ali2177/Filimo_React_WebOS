@@ -19,6 +19,7 @@ import {
   getCurrentFocusKey,
 } from "@noriginmedia/norigin-spatial-navigation";
 import ContentRow from "../ContentRow";
+import "./Home.css";
 
 const STORAGE_KEYS_TO_CLEAR_ON_ENTER = [
   "searchQuery",
@@ -86,7 +87,7 @@ function safeParse(json) {
   }
 }
 
-function Movies({ isLogin }) {
+function Home({ isLogin }) {
   const { jwt } = useAuth();
   const { isKid } = useOnlineStatus();
   useFocusable({
@@ -479,4 +480,4 @@ function Movies({ isLogin }) {
   );
 }
 
-export default Movies;
+export default Home;
