@@ -386,7 +386,7 @@ function Movies({ isLogin }) {
     };
   }, []);
 
-  const renderRows = () => {
+  const renderedRows = useMemo(() => {
     return filteredRows.map((movieItem, index) => {
       const isLastRow = index === filteredRows.length - 1;
       const rowKey =
@@ -419,7 +419,7 @@ function Movies({ isLogin }) {
         </div>
       );
     });
-  };
+  }, [filteredRows, jwt, lastMovieElement, movieSet, onRowFocus]);
 
   if (error) {
     return <NetworkError />;
@@ -472,7 +472,7 @@ function Movies({ isLogin }) {
             zIndex: "999999",
           }}
         >
-          {renderRows()}
+          {renderedRows}
         </div>
       </div>
     </main>
