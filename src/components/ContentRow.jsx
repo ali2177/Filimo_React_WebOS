@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   FocusContext,
@@ -32,9 +32,9 @@ const ContentRow = ({
   const location = useLocation();
   const navigate = useNavigate();
   const scrollingRef = useRef(null);
-  const movieFocusSet = (movie) => {
+  const movieFocusSet = useCallback((movie) => {
     movieFocused(movie);
-  };
+  }, [movieFocused]);
   // const onAssetFocus = (i, movie) => {
   //   movieFocusSet(movie);
 
@@ -146,4 +146,4 @@ const ContentRow = ({
   );
 };
 
-export default ContentRow;
+export default React.memo(ContentRow);
