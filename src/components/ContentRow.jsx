@@ -39,7 +39,6 @@ const ContentRow = ({
   const navigate = useNavigate();
   const scrollingRef = useRef(null);
   const myRef = useRef();
-  const [curentMovie, setCurentMovie] = useState(null);
   // const handleScrolling = () => {
   //   myRef.current.scrollIntoView({
   //     behavior: "smooth",
@@ -47,7 +46,6 @@ const ContentRow = ({
   //   });
   // };
   const movieFocusSet = (movie) => {
-    setCurentMovie(movie);
     movieFocused(movie);
   };
   // const onAssetFocus = (i, movie) => {
