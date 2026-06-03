@@ -1,14 +1,8 @@
-import React, { useRef, useEffect, useState } from "react";
-import { useNavigate, Link, useLocation } from "react-router-dom";
-import MovieList from "./MovieList/MovieList";
+import React, { useRef } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
-  FocusableComponentLayout,
   FocusContext,
-  FocusDetails,
-  KeyPressDetails,
   useFocusable,
-  setFocus,
-  getCurrentFocusKey,
 } from "@noriginmedia/norigin-spatial-navigation";
 
 import Movie from "./Movie/Movie";
@@ -27,7 +21,7 @@ const ContentRow = ({
   scrollRef,
 }) => {
   // const [scroll, setscroll] = useState(0);
-  const { ref, focusKey, focused, focusSelf } = useFocusable({
+  const { ref, focusKey } = useFocusable({
     onFocus,
     focusable: true,
     trackChildren: true,
@@ -38,13 +32,6 @@ const ContentRow = ({
   const location = useLocation();
   const navigate = useNavigate();
   const scrollingRef = useRef(null);
-  const myRef = useRef();
-  // const handleScrolling = () => {
-  //   myRef.current.scrollIntoView({
-  //     behavior: "smooth",
-  //     block: "center",
-  //   });
-  // };
   const movieFocusSet = (movie) => {
     movieFocused(movie);
   };
