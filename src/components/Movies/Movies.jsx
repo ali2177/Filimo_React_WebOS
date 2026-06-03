@@ -198,6 +198,7 @@ function Movies({ isLogin }) {
           return;
         }
 
+        window.close();
         return;
       }
 
