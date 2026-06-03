@@ -156,7 +156,7 @@ function Movies({ isLogin }) {
   }, []);
 
   const onRowFocus = useCallback(({ y }) => {
-    myRef.current?.scrollTo({ top: y });
+    scrollRef.current?.scrollTo({ top: y, behavior: "smooth" });
   }, []);
 
   const movieSet = useCallback(
