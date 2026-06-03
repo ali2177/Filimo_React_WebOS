@@ -119,6 +119,7 @@ function Movies({ isLogin }) {
   const backArmedRef = useRef(false);
   const backTimerRef = useRef(null);
   const mountedRef = useRef(true);
+  const isFetchingRef = useRef(isFetching);
 
   const { data, error, isFetching } = useGetMoviesQuery({
     tag_id,
@@ -243,7 +244,7 @@ function Movies({ isLogin }) {
 
   const lastMovieElement = useCallback(
     (node) => {
-      if (isFetching || !node) return;
+      if (!node) return;
 
       if (observer.current) {
         observer.current.disconnect();
@@ -252,7 +253,7 @@ function Movies({ isLogin }) {
       observer.current = new IntersectionObserver((entries) => {
         if (!entries[0]?.isIntersecting) return;
         if (!movies?.links?.forward) return;
-        if (isNewDataLoading) return;
+        if (isFetchingRef.current || isNewDataLoading) return;
 
         const headers = new Headers();
         if (jwt) {
@@ -283,8 +284,12 @@ function Movies({ isLogin }) {
 
       observer.current.observe(node);
     },
-    [handlePaginationResult, isFetching, isNewDataLoading, jwt, movies]
+    [handlePaginationResult, isNewDataLoading, jwt, movies]
   );
+
+  useEffect(() => {
+    isFetchingRef.current = isFetching;
+  }, [isFetching]);
 
   useEffect(() => {
     setPageLocation(location.pathname);
