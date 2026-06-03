@@ -118,6 +118,7 @@ function Movies({ isLogin }) {
   const didInitFocusRef = useRef(false);
   const backArmedRef = useRef(false);
   const backTimerRef = useRef(null);
+  const mountedRef = useRef(true);
 
   const { data, error, isFetching } = useGetMoviesQuery({
     tag_id,
@@ -269,10 +270,12 @@ function Movies({ isLogin }) {
         fetch(`${movies.links.forward}`, requestOptions)
           .then((response) => response.json())
           .then((result) => {
+            if (!mountedRef.current) return;
             handlePaginationResult(result);
             setIsNewDataLoading(false);
           })
           .catch((fetchError) => {
+            if (!mountedRef.current) return;
             console.log("error", fetchError);
             setIsNewDataLoading(false);
           });
@@ -373,7 +376,9 @@ function Movies({ isLogin }) {
   }, [isNewDataLoading]);
 
   useEffect(() => {
+    mountedRef.current = true;
     return () => {
+      mountedRef.current = false;
       clearTimeout(backTimerRef.current);
       observer.current?.disconnect();
     };
