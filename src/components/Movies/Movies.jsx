@@ -107,7 +107,6 @@ function Movies({ isLogin }) {
   const [scrolling, setScrolling] = useState(false);
   const [curretFocusedMovie, setCurretFocusedMovie] = useState(null);
   const [movies, setMovies] = useState(null);
-  const [pageLocation, setPageLocation] = useState();
   const [showExitModal, setShowExitModal] = useState(false);
   const [showPoster, setShowPoster] = useState(true);
   const [isNewDataLoading, setIsNewDataLoading] = useState(false);
@@ -292,8 +291,6 @@ function Movies({ isLogin }) {
   }, [isFetching]);
 
   useEffect(() => {
-    setPageLocation(location.pathname);
-
     STORAGE_KEYS_TO_CLEAR_ON_ENTER.forEach((key) => {
       localStorage.removeItem(key);
     });
@@ -454,7 +451,7 @@ function Movies({ isLogin }) {
           height: "100vh",
         }}
       >
-        {!isKid && pageLocation === "/" && showPoster && (
+        {!isKid && location.pathname === "/" && showPoster && (
           <Content
             data={posterRows}
             curretFocusedMovie={curretFocusedMovie}
@@ -465,7 +462,7 @@ function Movies({ isLogin }) {
 
         <div
           className={
-            pageLocation === "/" && !isKid && showPoster ? "main-rows" : ""
+            location.pathname === "/" && !isKid && showPoster ? "main-rows" : ""
           }
           ref={myRef}
           style={{
