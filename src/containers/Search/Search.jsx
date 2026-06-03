@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect, useMemo } from "react";
+import React, { useState, useRef, useEffect, useMemo, useCallback } from "react";
+import { useBackKey } from "@src/hooks/useBackKey";
 import {
   FocusableComponentLayout,
   FocusContext,
@@ -35,14 +36,9 @@ function Search() {
     localStorage.removeItem("lastRouteNotplayer");
     localStorage.removeItem("lastSeasonFocus_parent_new");
     localStorage.removeItem("lastSeasonFocus_season_part");
-    window.addEventListener("keydown", keyHandler);
-
     setData(JSON.parse(localStorage.getItem("searchResult")));
     if (localStorage.getItem("searchQuery"))
       setSearchQuery(localStorage.getItem("searchQuery"));
-    return () => {
-      window.removeEventListener("keydown", keyHandler);
-    };
   }, []);
 
   // useEffect(() => {
@@ -52,14 +48,13 @@ function Search() {
   const movieFocusSet = (movieUid) => {
     setCurretFocusedMovie(movieUid);
   };
-  const keyHandler = (key) => {
-    // check if keycode is the return button on the remote and the remove button on your keyboard
-    if (key.keyCode === 10009 || key.keyCode === 8 || key.keyCode === 461) {
-      localStorage.removeItem("searchQuery");
-      localStorage.removeItem("searchResult");
-      if (location.pathname !== "/player") navigate(-1);
-    }
-  };
+  const handleBack = useCallback(() => {
+    localStorage.removeItem("searchQuery");
+    localStorage.removeItem("searchResult");
+    if (location.pathname !== "/player") navigate(-1);
+  }, [location.pathname, navigate]);
+
+  useBackKey(handleBack);
 
   const getData = async (querry, jwtt) => {
     try {

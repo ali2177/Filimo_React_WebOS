@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
+import { useBackKey } from "@src/hooks/useBackKey";
 import { Focusable } from "react-js-spatial-navigation";
 import { useGetMyMovieQuery } from "../../services/TMDB";
 import MovieList from "@src/components/MovieList/MovieList";
@@ -10,16 +11,11 @@ import Loader from "@src/components/Loader/Loader";
 const MyMovies = ({ isLogin }) => {
   const navigate = useNavigate();
   let jwt = localStorage.getItem("jwt");
-  useEffect(() => {
-    window.addEventListener("keydown", keyHandler);
-    return () => window.removeEventListener("keydown", keyHandler);
-  }, []);
-  const keyHandler = (key) => {
-    // check if keycode is the return button on the remote and the remove button on your keyboard
-    if (key.keyCode === 10009 || key.keyCode === 8 || key.keyCode === 461) {
-      if (location.pathname !== "/player") navigate(-1);
-    }
-  };
+  const handleBack = useCallback(() => {
+    if (window.location.pathname !== "/player") navigate(-1);
+  }, [navigate]);
+
+  useBackKey(handleBack);
 
   const [curretFocusedMovie, setCurretFocusedMovie] = useState(null);
   const movieSet = (movieUid) => {

@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useBackKey } from "@src/hooks/useBackKey";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import MovieList from "@src/components/MovieList/MovieList";
 import { useGetAllEpisodesQuery } from "../../services/TMDB";
@@ -48,9 +49,7 @@ const AllEpisodes = () => {
     }, 2000);
     localStorage.removeItem("lastFocusActor");
     localStorage.removeItem("lastFocusCrew");
-    window.addEventListener("keydown", keyHandler);
     window.scrollTo({ top: 0 });
-    return () => window.removeEventListener("keydown", keyHandler);
   }, []);
   useEffect(() => {
     setCurretSeasonChosen(data?.data[data.data.length - 1]?.movies?.data);
@@ -70,12 +69,12 @@ const AllEpisodes = () => {
     };
   }, [isActiveSeasonFocus]);
 
-  const keyHandler = (key) => {
-    // check if keycode is the return button on the remote and the remove button on your keyboard
-    if (key.keyCode === 10009 || key.keyCode === 8 || key.keyCode === 461) {
-      if (location.pathname !== "/player") navigate(-1);
-    }
-  };
+  const handleBack = useCallback(() => {
+    if (location.pathname !== "/player") navigate(-1);
+  }, [location.pathname, navigate]);
+
+  useBackKey(handleBack);
+
   const HandleSeasonEnterPress = (season) => {
     // console.log(season.movies?.data[0]);
     localStorage.setItem(

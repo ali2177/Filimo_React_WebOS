@@ -3,16 +3,13 @@ import {
   setFocus,
   getCurrentFocusKey,
 } from "@noriginmedia/norigin-spatial-navigation";
+import { useBackKey } from "../../../hooks/useBackKey";
 import { STORAGE_KEYS_TO_CLEAR_ON_ENTER } from "../homeUtils";
 
 export function useBackNavigation({ location, navigate }) {
   const [showExitModal, setShowExitModal] = useState(false);
   const backArmedRef = useRef(false);
   const backTimerRef = useRef(null);
-
-  const isBackKey = useCallback((e) => {
-    return e.keyCode === 461 || e.keyCode === 8 || e.keyCode === 10009;
-  }, []);
 
   const armBack = useCallback(() => {
     backArmedRef.current = true;
@@ -22,8 +19,6 @@ export function useBackNavigation({ location, navigate }) {
 
   const keyHandler = useCallback(
     (e) => {
-      if (!isBackKey(e)) return;
-
       e.preventDefault?.();
       e.stopPropagation?.();
 
@@ -50,19 +45,16 @@ export function useBackNavigation({ location, navigate }) {
         navigate(-1);
       }
     },
-    [armBack, isBackKey, location.pathname, navigate, showExitModal],
+    [armBack, location.pathname, navigate, showExitModal],
   );
+
+  useBackKey(keyHandler);
 
   useEffect(() => {
     STORAGE_KEYS_TO_CLEAR_ON_ENTER.forEach((key) => {
       localStorage.removeItem(key);
     });
-
-    window.addEventListener("keydown", keyHandler);
-    return () => {
-      window.removeEventListener("keydown", keyHandler);
-    };
-  }, [keyHandler, location.pathname]);
+  }, [location.pathname]);
 
   useEffect(() => {
     return () => {

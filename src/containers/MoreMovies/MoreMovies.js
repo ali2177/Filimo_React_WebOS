@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useBackKey } from "@src/hooks/useBackKey";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Focusable } from "react-js-spatial-navigation";
 import { useGetMoreMoviesQuery } from "../../services/TMDB";
@@ -49,9 +50,7 @@ const MoreMovies = () => {
     localStorage.removeItem("last");
     localStorage.removeItem("lastFocusMoreMovie");
     localStorage.removeItem("lastFocusMore");
-    window.addEventListener("keydown", keyHandler);
     // window.scrollTo({ top: 0 });
-    return () => window.removeEventListener("keydown", keyHandler);
   }, []);
   useEffect(() => {
     setTimeout(() => {
@@ -298,22 +297,21 @@ const MoreMovies = () => {
     setCurretFocusedMovie(movieUid);
   };
 
-  const keyHandler = (key) => {
-    // check if keycode is the return button on the remote and the remove button on your keyboard
-    if (key.keyCode === 10009 || key.keyCode === 8 || key.keyCode === 461) {
-      if (localStorage.getItem("level") === "level__2") {
-        localStorage.removeItem("lastFocusMoreMovie_level__2");
-        localStorage.removeItem("lastFocusMore_level__2");
-      }
-      if (localStorage.getItem("level")) {
-        localStorage.setItem(
-          "level",
-          `level__${Number(localStorage.getItem("level").slice(7, 8)) - 1}`
-        );
-      }
-      if (location.pathname !== "/player") navigate(-1);
+  const handleBack = useCallback(() => {
+    if (localStorage.getItem("level") === "level__2") {
+      localStorage.removeItem("lastFocusMoreMovie_level__2");
+      localStorage.removeItem("lastFocusMore_level__2");
     }
-  };
+    if (localStorage.getItem("level")) {
+      localStorage.setItem(
+        "level",
+        `level__${Number(localStorage.getItem("level").slice(7, 8)) - 1}`
+      );
+    }
+    if (location.pathname !== "/player") navigate(-1);
+  }, [location.pathname, navigate]);
+
+  useBackKey(handleBack);
 
   useEffect(() => {
     // window.scrollTo(0, 0);

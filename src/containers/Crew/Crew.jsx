@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
+import { useBackKey } from "@src/hooks/useBackKey";
 import { useGetActorQuery } from "../../services/TMDB";
 import { Focusable } from "react-js-spatial-navigation";
 import { Link } from "react-router-dom";
@@ -40,10 +41,11 @@ const Crew = () => {
   const { data, error, isFetching } = useGetActorQuery(
     crew_name.replace(/%20/g, "-")
   );
-  useEffect(() => {
-    window.addEventListener("keydown", keyHandler);
-    return () => window.removeEventListener("keydown", keyHandler);
-  }, []);
+  const handleBack = useCallback(() => {
+    if (location.pathname !== "/player") navigate(-1);
+  }, [location.pathname, navigate]);
+
+  useBackKey(handleBack);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -58,12 +60,6 @@ const Crew = () => {
       window.removeEventListener("keydown", handleKeyDown, true);
     };
   }, [isFetching]);
-  const keyHandler = (key) => {
-    // check if keycode is the return button on the remote and the remove button on your keyboard
-    if (key.keyCode === 10009 || key.keyCode === 8 || key.keyCode === 461) {
-      if (location.pathname !== "/player") navigate(-1);
-    }
-  };
   const handleScrolling = () => {
     myRef.current.scrollIntoView({
       block: "center",

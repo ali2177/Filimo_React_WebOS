@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
+import { useBackKey } from "@src/hooks/useBackKey";
 import { Link, useParams, useLocation } from "react-router-dom";
 
 import {
@@ -65,8 +66,6 @@ function MovieInfo({ isLogin }) {
     // localStorage.removeItem("lastFocusRowBeforeReload");
     localStorage.removeItem("lastFocusRowSeriesBeforeReload");
 
-    window.addEventListener("keydown", keyHandler);
-    return () => window.removeEventListener("keydown", keyHandler);
   }, []);
   useEffect(() => {
     jwt = localStorage.getItem("jwt");
@@ -183,38 +182,26 @@ function MovieInfo({ isLogin }) {
     }
   }, [movieData]);
 
-  const keyHandler = (key) => {
-    // check if keycode is the return button on the remote and the remove button on your keyboard
-    if (key.keyCode === 10009 || key.keyCode === 8 || key.keyCode === 461) {
-      localStorage.removeItem("seasonBtn");
-      localStorage.removeItem("recommBtn");
-      localStorage.removeItem("moreBtn");
-      localStorage.removeItem("lastSeasonFocus");
-      localStorage.removeItem("lastSeasonFocus_parent_new");
-      localStorage.removeItem("lastSeasonFocus_season_part");
-      localStorage.removeItem("movie_cast_time");
-      localStorage.removeItem("movie_uid");
-      localStorage.removeItem("fromAlert");
-      window.scrollTo({ top: 0 });
-      // if (JSON.parse(localStorage.getItem("lastRouteNotplayer"))[0]) {
-      //   console.log(JSON.parse(localStorage.getItem("lastRouteNotplayer"))[1]);
-      //   if (localStorage.getItem("lastRoute") === "/player") {
-      //     navigate(JSON.parse(localStorage.getItem("lastRouteNotplayer"))[0]);
-
-      //     // localStorage.setItem("lastRouteNotplayer", location.pathname);
-      //   } else {
-      //     navigate(-1);
-      //   }
-      // }
-
-      if (localStorage.getItem("fromAlert") === "back") {
-        navigate("/");
-      } else {
-        key.preventDefault();
-        if (location.pathname !== "/player") navigate(-1);
-      }
+  const handleBack = useCallback((e) => {
+    localStorage.removeItem("seasonBtn");
+    localStorage.removeItem("recommBtn");
+    localStorage.removeItem("moreBtn");
+    localStorage.removeItem("lastSeasonFocus");
+    localStorage.removeItem("lastSeasonFocus_parent_new");
+    localStorage.removeItem("lastSeasonFocus_season_part");
+    localStorage.removeItem("movie_cast_time");
+    localStorage.removeItem("movie_uid");
+    localStorage.removeItem("fromAlert");
+    window.scrollTo({ top: 0 });
+    if (localStorage.getItem("fromAlert") === "back") {
+      navigate("/");
+    } else {
+      e.preventDefault();
+      if (location.pathname !== "/player") navigate(-1);
     }
-  };
+  }, [location.pathname, navigate]);
+
+  useBackKey(handleBack);
   // const onRowFocus = React.useCallback(
   //   ({ y }) => {
   //     console.log(y);

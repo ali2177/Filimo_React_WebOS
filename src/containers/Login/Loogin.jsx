@@ -1,4 +1,5 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
+import { useBackKey } from "@src/hooks/useBackKey";
 import line from "../../assets/images/line.svg";
 import phone from "../../assets/images/phone.svg";
 import { Focusable } from "react-js-spatial-navigation";
@@ -30,7 +31,6 @@ const Loogin = () => {
 
   //clear local storage
   useEffect(() => {
-    window.addEventListener("keydown", keyHandler);
     getLoginCode();
     localStorage.removeItem("jwt");
     localStorage.removeItem("display_name");
@@ -38,7 +38,6 @@ const Loogin = () => {
     localStorage.removeItem("mobile_number");
     localStorage.removeItem("name");
     localStorage.removeItem("username");
-    return () => window.removeEventListener("keydown", keyHandler);
   }, []);
   useEffect(() => {
     if (jwt && userData) {
@@ -128,12 +127,11 @@ const Loogin = () => {
       ref.current.blur();
     }
   };
-  const keyHandler = (key) => {
-    // check if keycode is the return button on the remote and the remove button on your keyboard
-    if (key.keyCode === 10009 || key.keyCode === 8 || key.keyCode === 461) {
-      if (location.pathname !== "/player") navigate(-1);
-    }
-  };
+  const handleBack = useCallback(() => {
+    if (location.pathname !== "/player") navigate(-1);
+  }, [location.pathname, navigate]);
+
+  useBackKey(handleBack);
 
   if (isLoading) return <Loader />;
 

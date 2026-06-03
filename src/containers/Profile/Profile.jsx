@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
+import { useBackKey } from "@src/hooks/useBackKey";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Focusable } from "react-js-spatial-navigation";
 import {
@@ -26,17 +27,11 @@ function Profile() {
   const [isLoading, setIsLoading] = useState(true);
   let jwt = localStorage.getItem("jwt");
 
-  useEffect(() => {
-    window.addEventListener("keydown", keyHandler);
-    return () => window.removeEventListener("keydown", keyHandler);
-  }, []);
+  const handleBack = useCallback(() => {
+    if (location.pathname !== "/player") navigate(-1);
+  }, [location.pathname, navigate]);
 
-  const keyHandler = (key) => {
-    // check if keycode is the return button on the remote and the remove button on your keyboard
-    if (key.keyCode === 10009 || key.keyCode === 8 || key.keyCode === 461) {
-      if (location.pathname !== "/player") navigate(-1);
-    }
-  };
+  useBackKey(handleBack);
 
   //recive user data if log in
   const getUserData = async (jwt) => {

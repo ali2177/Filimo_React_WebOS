@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect, useMemo } from "react";
+import React, { useState, useRef, useEffect, useMemo, useCallback } from "react";
+import { useBackKey } from "@src/hooks/useBackKey";
 import MovieSearch from "@src/components/Movie/MovieSearch.jsx";
 import NetworkError from "@src/components/NetworkError/NetworkError.jsx";
 import Loader from "@src/components/Loader/Loader.jsx";
@@ -32,10 +33,11 @@ const MoreSingle = () => {
   const navigate = useNavigate();
   const location = useLocation("");
   const [curretFocusedMovie, setCurretFocusedMovie] = useState("");
-  useEffect(() => {
-    window.addEventListener("keydown", keyHandler);
-    return () => window.removeEventListener("keydown", keyHandler);
-  }, []);
+  const handleBack = useCallback(() => {
+    if (location.pathname !== "/player") navigate(-1);
+  }, [location.pathname, navigate]);
+
+  useBackKey(handleBack);
 
   useEffect(() => {
     if (id) {
@@ -57,13 +59,6 @@ const MoreSingle = () => {
     localStorage.removeItem("lastSeasonFocus");
   }, [location]);
 
-  const keyHandler = (key) => {
-    // check if keycode is the return button on the remote and the remove button on your keyboard
-    if (key.keyCode === 10009 || key.keyCode === 8 || key.keyCode === 461) {
-      // localStorage.removeItem("moreSingle");
-      if (location.pathname !== "/player") navigate(-1);
-    }
-  };
 
   const movieFocusSet = (movieUid) => {
     setCurretFocusedMovie(movieUid);

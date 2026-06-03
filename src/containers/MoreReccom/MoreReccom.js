@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useBackKey } from "@src/hooks/useBackKey";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 
 import NetworkError from "@src/components/NetworkError/NetworkError.jsx";
@@ -33,10 +34,14 @@ const MoreReccom = () => {
 
   const [curretFocusedMovie, setCurretFocusedMovie] = useState("");
 
+  const handleBack = useCallback(() => {
+    if (location.pathname !== "/player") navigate(-1);
+  }, [location.pathname, navigate]);
+
+  useBackKey(handleBack);
+
   useEffect(() => {
-    window.addEventListener("keydown", keyHandler);
     window.scrollTo({ top: 0 });
-    return () => window.removeEventListener("keydown", keyHandler);
   }, []);
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -86,13 +91,6 @@ const MoreReccom = () => {
 
   const movieFocusSet = (movieUid) => {
     setCurretFocusedMovie(movieUid);
-  };
-
-  const keyHandler = (key) => {
-    // check if keycode is the return button on the remote and the remove button on your keyboard
-    if (key.keyCode === 10009 || key.keyCode === 8 || key.keyCode === 461) {
-      if (location.pathname !== "/player") navigate(-1);
-    }
   };
 
   if (movieRecomError) return <NetworkError errorText="دیتایی یافت نشد" />;

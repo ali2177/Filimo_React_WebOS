@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useBackKey } from "@src/hooks/useBackKey";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import MovieList from "@src/components/MovieList/MovieList";
 import { useGetCategoriesQuery } from "../../services/TMDB";
@@ -31,21 +32,19 @@ const MoreCategory = () => {
   const { data, error, isFetching } = useGetCategoriesQuery({ tag_id });
   const [curretFocusedMovie, setCurretFocusedMovie] = useState(null);
 
+  const handleBack = useCallback(() => {
+    if (location.pathname !== "/player") navigate(-1);
+  }, [location.pathname, navigate]);
+
+  useBackKey(handleBack);
+
   useEffect(() => {
     localStorage.removeItem("lastFocusCat");
-    window.addEventListener("keydown", keyHandler);
     window.scrollTo({ top: 0 });
-    return () => window.removeEventListener("keydown", keyHandler);
   }, []);
   useEffect(() => {
     focusSelf();
   });
-  const keyHandler = (key) => {
-    // check if keycode is the return button on the remote and the remove button on your keyboard
-    if (key.keyCode === 10009 || key.keyCode === 8 || key.keyCode === 461) {
-      if (location.pathname !== "/player") navigate(-1);
-    }
-  };
   const onRowFocus = React.useCallback(
     ({ y }) => {
       myRef.current.scrollTo({

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
+import { useBackKey } from "@src/hooks/useBackKey";
 import { useGetUsersProfileQuery } from "../../services/TMDB";
 import {
   FocusableComponentLayout,
@@ -27,12 +28,11 @@ const UsersProfileCode = () => {
     return tokenPayload.sub;
   }
 
-  useEffect(() => {
-    window.addEventListener("keydown", keyHandler);
-    return () => {
-      window.removeEventListener("keydown", keyHandler);
-    };
-  }, []);
+  const handleBack = useCallback(() => {
+    if (location.pathname !== "/player") navigate(-1);
+  }, [location.pathname, navigate]);
+
+  useBackKey(handleBack);
   useEffect(() => {
     if (jwt) {
       setJwtSub(decodeJwtToken(jwt));
@@ -51,12 +51,6 @@ const UsersProfileCode = () => {
     // }
   }, [jwt]);
 
-  const keyHandler = (key) => {
-    // check if keycode is the return button on the remote and the remove button on your keyboard
-    if (key.keyCode === 10009 || key.keyCode === 8 || key.keyCode === 461) {
-      if (location.pathname !== "/player") navigate(-1);
-    }
-  };
 
   if (error) return <NetworkError />;
 

@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
+import { useBackKey } from "@src/hooks/useBackKey";
 import { useGetCategoriesQuery } from "../../services/TMDB";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Focusable } from "react-js-spatial-navigation";
@@ -46,8 +47,6 @@ const Categories = () => {
     localStorage.removeItem("lastFocusRowIranBeforeReload");
     localStorage.removeItem("lastdataloadedKids");
     localStorage.removeItem("lastFocusRowBeforeReload");
-    window.addEventListener("keydown", keyHandler);
-    return () => window.removeEventListener("keydown", keyHandler);
   }, []);
 
   useEffect(() => {
@@ -63,13 +62,13 @@ const Categories = () => {
       window.removeEventListener("keydown", handleKeyDown, true);
     };
   }, [isFetching]);
-  const keyHandler = (key) => {
-    // check if keycode is the return button on the remote and the remove button on your keyboard
-    if (key.keyCode === 10009 || key.keyCode === 8 || key.keyCode === 461) {
-      localStorage.removeItem("lastCatFocus");
-      if (location.pathname !== "/player") navigate(-1);
-    }
-  };
+  const handleBack = useCallback(() => {
+    localStorage.removeItem("lastCatFocus");
+    if (location.pathname !== "/player") navigate(-1);
+  }, [location.pathname, navigate]);
+
+  useBackKey(handleBack);
+
   const handleCatInterPress = (tag_id) => {
     navigate(`/morecategory/${tag_id}`);
   };

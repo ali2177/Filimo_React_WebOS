@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect, useMemo } from "react";
+import React, { useState, useRef, useEffect, useMemo, useCallback } from "react";
+import { useBackKey } from "@src/hooks/useBackKey";
 import MovieSearch from "@src/components/Movie/MovieSearch.jsx";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
@@ -24,9 +25,7 @@ const SearchResult = () => {
   useEffect(() => {
     localStorage.removeItem("seasonBtn");
     localStorage.removeItem("recommBtn");
-    window.addEventListener("keydown", keyHandler);
     setData(JSON.parse(localStorage.getItem("searchResult")));
-    return () => window.removeEventListener("keydown", keyHandler);
   }, []);
 
   useEffect(() => {
@@ -54,12 +53,11 @@ const SearchResult = () => {
     }
   }, [data]);
 
-  const keyHandler = (key) => {
-    // check if keycode is the return button on the remote and the remove button on your keyboard
-    if (key.keyCode === 10009 || key.keyCode === 8 || key.keyCode === 461) {
-      if (location.pathname !== "/player") navigate(-1);
-    }
-  };
+  const handleBack = useCallback(() => {
+    if (location.pathname !== "/player") navigate(-1);
+  }, [location.pathname, navigate]);
+
+  useBackKey(handleBack);
 
   const movieFocusSet = (movieUid) => {
     setCurretFocusedMovie(movieUid);
