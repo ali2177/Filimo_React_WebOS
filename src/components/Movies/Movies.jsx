@@ -325,7 +325,6 @@ function Movies({ isLogin }) {
 
   useEffect(() => {
     if (!movies?.data?.length) return;
-    if (!data?.data?.[0]) return;
     if (didInitFocusRef.current) return;
 
     didInitFocusRef.current = true;
