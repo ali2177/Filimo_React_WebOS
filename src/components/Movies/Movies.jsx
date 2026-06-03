@@ -104,7 +104,7 @@ function Movies({ isLogin }) {
   );
   const pageConfig = PAGE_TYPE_CONFIG[pageType];
 
-  const [curretFocusedMovie, setCurretFocusedMovie] = useState(null);
+  const [currentFocusedMovie, setCurrentFocusedMovie] = useState(null);
   const [movies, setMovies] = useState(null);
   const [showExitModal, setShowExitModal] = useState(false);
   const [showPoster, setShowPoster] = useState(true);
@@ -161,7 +161,7 @@ function Movies({ isLogin }) {
 
   const movieSet = useCallback(
     (movieUid, focusKeey) => {
-      setCurretFocusedMovie(movieUid);
+      setCurrentFocusedMovie(movieUid);
 
       if (focusKeey) {
         if (focusKeey.slice(6, 7) === "0" && !isKid) {
@@ -319,7 +319,7 @@ function Movies({ isLogin }) {
     }
 
     if (data?.data) {
-      setCurretFocusedMovie(
+      setCurrentFocusedMovie(
         data.data.filter(
           (item) =>
             item.output_type === "movie" || item.output_type === "livetv"
@@ -360,7 +360,7 @@ function Movies({ isLogin }) {
   }, [data, movies, pageConfig, pageType]);
 
   useEffect(() => {
-    setCurretFocusedMovie(null);
+    setCurrentFocusedMovie(null);
   }, [other_data]);
 
   useEffect(() => {
@@ -454,7 +454,7 @@ function Movies({ isLogin }) {
         {!isKid && location.pathname === "/" && showPoster && (
           <Content
             data={posterRows}
-            curretFocusedMovie={curretFocusedMovie}
+            currentFocusedMovie={currentFocusedMovie}
             type={other_data}
             firstRow={posterRows}
           />
