@@ -1,44 +1,15 @@
 import React, { useEffect, useState, createContext, useContext } from "react";
-import { Routes, Route, useLocation, useNavigation } from "react-router-dom";
-import useNetworkStatus from "../utils/useNetworkStatus";
-import {
-  Home,
-  Actors,
-  MovieInfo,
-  Navbar,
-  Profile,
-  TvPlayer,
-  Search,
-} from "./index";
-import Splash from "./Splash";
-import SpatialNavigation from "react-js-spatial-navigation";
+import { useLocation } from "react-router-dom";
+import { Navbar } from "@src/components/index";
+import Splash from "@src/components/Splash";
 import "./App.css";
-import MoreMovies from "./MoreMovies/MoreMovies";
-import Categories from "./Categories/Categories";
-import Loogin from "./Login/Loogin";
-import MoreCategory from "./MoreCategory/MoreCategory";
-import MyMovies from "./MyMovies/MyMovies";
-import Crew from "./Crew/Crew";
-// const MENU_FOCUS_KEY = 'MENU';
 import {
   init,
-  useFocusable,
-  FocusContext,
 } from "@noriginmedia/norigin-spatial-navigation";
-import MoreReccom from "./MoreReccom/MoreReccom";
-import SearchResult from "./Search/SearchResult";
-import AllEpisodes from "./AllEpisodes/AllEpisodes";
-import MoreSingle from "./AllEpisodes/AllEpisodesSingle";
-import Ip from "./Ip/Ip";
-import UsersProfile from "./UsersProfile/UsersProfile";
-import MoreMovieSingle from "./MoreMovies/MoreMovieSingle";
-import LivePlayer from "./Player/LivePlayer";
-import MoreDetail from "./MovieInfo/MoreDetail/MoreDetail";
-import MoreMovieWeb from "./MoreMovies/MoreMovieWebsevice";
-import UsersProfileCode from "./UsersProfile/UsersProfileCode";
-import Alert from "./Alert/Alert";
-import Loader from "./Loader/Loader";
-import { useAuth } from "./AuthProvider";
+import Alert from "@src/components/Alert/Alert";
+import Loader from "@src/components/Loader/Loader";
+import { useAuth } from "@src/components/AuthProvider";
+import AppRoutes from "@src/app/routes";
 
 init({
   debug: false,
@@ -259,78 +230,7 @@ function App() {
           >
             <>
               <Navbar isLogin={isLogin} hidden={!isShowMenu} />
-              <Routes>
-                <Route exact path="/ipcheck" element={<Ip />} />
-                <Route exact path="/" element={<Home isLogin={isLogin} />} />
-                <Route
-                  exact
-                  path="/movies/filter/:tag_id/:other_data"
-                  element={<Home isLogin={isLogin} />}
-                />
-                <Route
-                  exact
-                  path="/approved"
-                  element={<Home isLogin={isLogin} />}
-                />
-                <Route
-                  exact
-                  path="/movie/:id"
-                  element={<MovieInfo isLogin={isLogin} />}
-                />
-                <Route
-                  exact
-                  path="/moremovies/:tag_id"
-                  element={<MoreMovies />}
-                />
-                <Route
-                  exact
-                  path="/moreSingle/:id/:title"
-                  element={<MoreSingle />}
-                />
-                <Route
-                  exact
-                  path="/moreMovieSingle"
-                  element={<MoreMovieSingle />}
-                />
-                <Route
-                  exact
-                  path="/profileLockCode"
-                  element={<UsersProfileCode />}
-                />
-                <Route
-                  exact
-                  path="/moreMovieWeb/:tag_id"
-                  element={<MoreMovieWeb />}
-                />
-                <Route exact path="/morereccom/:id" element={<MoreReccom />} />
-                <Route exact path="/moredetail/:id" element={<MoreDetail />} />
-                <Route
-                  exact
-                  path="/morecategory/:tag_id"
-                  element={<MoreCategory />}
-                />
-                <Route exact path="/actor/:crew_name" element={<Crew />} />
-                <Route
-                  exact
-                  path="/allepisodes/:ui_id"
-                  element={<AllEpisodes />}
-                />
-                <Route exact path="/profile" element={<Profile />} />
-                <Route exact path="/player" element={<TvPlayer />} />
-                <Route exact path="/livePlayer" element={<LivePlayer />} />
-                <Route exact path="/usersProfile" element={<UsersProfile />} />
-
-                <Route exact path="/categories" element={<Categories />} />
-                <Route exact path="/login" element={<Loogin />} />
-                <Route exact path="/search" element={<Search />} />
-                <Route exact path="/searchResult" element={<SearchResult />} />
-
-                <Route
-                  exact
-                  path="/mymovies"
-                  element={<MyMovies isLogin={isLogin} />}
-                />
-              </Routes>
+              <AppRoutes isLogin={isLogin} />
             </>
           </OnlineStatusContext.Provider>
         )}

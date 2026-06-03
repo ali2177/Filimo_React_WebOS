@@ -4,7 +4,7 @@ import {
   FocusContext,
 } from "@noriginmedia/norigin-spatial-navigation";
 import { useAuth } from "../AuthProvider";
-import { useOnlineStatus } from "../App";
+import { useOnlineStatus } from "@src/app/App";
 import Episode from "./Episode";
 import Loader from "../Loader/Loader";
 

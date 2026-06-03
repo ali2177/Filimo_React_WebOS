@@ -5,7 +5,7 @@ import {
   setFocus,
 } from "@noriginmedia/norigin-spatial-navigation";
 import { useAuth } from "../AuthProvider";
-import { useOnlineStatus } from "../App";
+import { useOnlineStatus } from "@src/app/App";
 
 const User = ({ jwtSub, user, index }) => {
   const { jwt, setJwt } = useAuth();

@@ -5,7 +5,7 @@ import NetworkError from "../NetworkError/NetworkError";
 import Loader from "../Loader/Loader";
 import Snackbar from "../Snackbar/Snackbar";
 import { useAuth } from "../AuthProvider";
-import { useOnlineStatus } from "../App";
+import { useOnlineStatus } from "@src/app/App";
 import { useFocusable, setFocus } from "@noriginmedia/norigin-spatial-navigation";
 import ContentRow from "../ContentRow";
 import { getPageType, PAGE_TYPE_CONFIG } from "./homeUtils";

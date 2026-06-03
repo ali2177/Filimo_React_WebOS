@@ -11,7 +11,7 @@ import {
   useFocusable,
   setFocus,
 } from "@noriginmedia/norigin-spatial-navigation";
-import { useOnlineStatus } from "../App.jsx";
+import { useOnlineStatus } from "@src/app/App";
 import { Focusable } from "react-js-spatial-navigation";
 import NetworkError from "../NetworkError/NetworkError";
 import Loader from "../Loader/Loader";

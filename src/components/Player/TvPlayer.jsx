@@ -19,7 +19,7 @@ import Alert from "../Alert/Alert";
 import SubtitleList from "./SubtitleList";
 import { setFocus } from "@noriginmedia/norigin-spatial-navigation";
 import { useAuth } from "../AuthProvider";
-import { useOnlineStatus } from "../App";
+import { useOnlineStatus } from "@src/app/App";
 
 import logo from "../../assets/images/aparat-kids-type-gray.svg";
 import HlsTvPlayer from "../CustomPLayer/HlsTvPlayer";

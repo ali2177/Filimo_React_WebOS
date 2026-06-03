@@ -10,7 +10,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import NetworkError from "../NetworkError/NetworkError";
 import Loader from "../Loader/Loader";
 import { useAuth } from "../AuthProvider";
-import { useOnlineStatus } from "../App";
+import { useOnlineStatus } from "@src/app/App";
 const Loogin = () => {
   const { jwt, setJwt } = useAuth();
   const { isOnline } = useOnlineStatus();

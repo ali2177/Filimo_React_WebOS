@@ -16,7 +16,7 @@ import {
   setFocus,
 } from "@noriginmedia/norigin-spatial-navigation";
 import { useAuth } from "../AuthProvider";
-import { useOnlineStatus } from "../App";
+import { useOnlineStatus } from "@src/app/App";
 import ContentRow from "../ContentRow.jsx";
 import ContentMoreRow from "../ContentMoreRow.jsx";
 import MovieSearch from "../Movie/MovieSearch.jsx";

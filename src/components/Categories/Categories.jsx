@@ -15,7 +15,7 @@ import NetworkError from "../NetworkError/NetworkError";
 import Loader from "../Loader/Loader";
 import Category from "./category";
 import { useAuth } from "../AuthProvider";
-import { useOnlineStatus } from "../App";
+import { useOnlineStatus } from "@src/app/App";
 
 const Categories = () => {
   const { ref, focusKey, focused, focusSelf } = useFocusable({

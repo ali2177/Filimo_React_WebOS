@@ -12,7 +12,7 @@ import {
   setFocus,
 } from "@noriginmedia/norigin-spatial-navigation";
 import { useAuth } from "../AuthProvider";
-import { useOnlineStatus } from "../App";
+import { useOnlineStatus } from "@src/app/App";
 import { Link, useNavigate } from "react-router-dom";
 import SidebarItem from "./SidebarItem";
 

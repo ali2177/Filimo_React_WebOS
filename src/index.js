@@ -4,7 +4,7 @@ import { AuthProvider } from "./components/AuthProvider";
 import { HashRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./app/store";
-import App from "./components/App";
+import App from "./app/App";
 
 import "./index.css";
 
