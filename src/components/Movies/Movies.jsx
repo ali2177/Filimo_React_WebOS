@@ -280,7 +280,7 @@ function Movies({ isLogin }) {
 
       observer.current.observe(node);
     },
-    [handlePaginationResult, isFetching, jwt, movies]
+    [handlePaginationResult, isFetching, isNewDataLoading, jwt, movies]
   );
 
   useEffect(() => {
