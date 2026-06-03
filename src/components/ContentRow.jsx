@@ -99,50 +99,6 @@ const ContentRow = ({
   const handleMoreItemInterPress = (movie) => {
     navigate(`/moremovies/${row}`);
   };
-  useEffect(() => {
-    // setFocus("MOVIE_LIST_0");
-    // if (location.pathname === "/movies/filter/1/movie") {
-    //   setFocus("MOVIE_LIST_0");
-    // }
-    // if (localStorage.getItem("lastFocus") === null) {
-    //   setFocus("MOVIE_0__0");
-    // } else {
-    //   setFocus(localStorage.getItem("lastFocus"));
-    // }
-    // console.log(focusKeey);
-    // console.log(focusKey);
-    // focusSelf();
-  }, []);
-  useEffect(() => {
-    // if (localStorage.getItem("lastFocus") === null) {
-    //   setFocus("MOVIE_LIST_0");
-    // } else {
-    //   setFocus(localStorage.getItem("lastFocus"));
-    // }
-    // if (location.pathname === "/") {
-    //   if (!localStorage.getItem("lastFocus") === null)
-    //     setFocus(localStorage.getItem("lastFocus"));
-    // } else {
-    //   console.log("notFound");
-    //   setFocus("MOVIE_0_0");
-    // }
-    // setFocus(`MOVIE_LIST_${index}`);
-    // console.log(getCurrentFocusKey());
-    // console.log(focusKey);
-    // focusSelf();
-  }, [location]);
-  // useEffect(() => {
-  //   console.log("safhe avaz shod");
-  //   console.log(focusKey);
-  // }, [location]);
-  // useEffect(() => {
-  //   setFocus("sn:focusable-item-12");
-  //   // focusSelf();
-  // }, [focusSelf]);
-  // useEffect(() => {
-  //   setFocus("sn:focusable-item-23");
-  //   //handleScrolling();
-  // }, [setFocus, focusKey, focused]);
   return (
     <FocusContext.Provider value={focusKey}>
       <div className="contentRowWrapper" ref={ref}>
