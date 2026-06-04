@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import MovieList from "./MovieList/MovieList";
 import {
@@ -52,7 +52,7 @@ const ContentCatRow = ({
     setCurentMovie(movie);
     movieFocused(movie);
   };
-  const onAssetFocus = (i, movie) => {
+  const onAssetFocus = useCallback((i, movie) => {
     movieFocusSet(movie);
 
     if (i === 0) {
@@ -73,7 +73,7 @@ const ContentCatRow = ({
       // console.log(scrollingRef.current.scrollLeft);
       // scrollingRef.current.style.scrollBehavior = "smooth";
     }
-  };
+  }, [movieFocused]);
   const handleInterPress = (movie, focusKeeey) => {
     navigate(`/movie/${movie.uid}`);
   };
@@ -168,4 +168,4 @@ const ContentCatRow = ({
   );
 };
 
-export default ContentCatRow;
+export default React.memo(ContentCatRow);

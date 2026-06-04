@@ -83,4 +83,4 @@ const SidebarItem = ({ data, handleEnterPress, focuskeey, menuData, isActive }) 
   );
 };
 
-export default SidebarItem;
+export default React.memo(SidebarItem);

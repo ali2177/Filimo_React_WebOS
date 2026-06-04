@@ -113,4 +113,4 @@ function MoreItem({
   );
 }
 
-export default MoreItem;
+export default React.memo(MoreItem);

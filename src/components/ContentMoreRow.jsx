@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import MovieList from "./MovieList/MovieList";
 import {
@@ -155,7 +155,7 @@ const ContentMoreRow = ({
     // console.log(focusKey);
     // focusSelf();
   }, [location]);
-  const onAssetFocus = (i, movie) => {
+  const onAssetFocus = useCallback((i, movie) => {
     movieFocusSet(movie);
 
     if (i === 0) {
@@ -190,7 +190,7 @@ const ContentMoreRow = ({
       //   }
       // }
     }
-  };
+  }, [movieFocused]);
   // useEffect(() => {
   //   console.log("safhe avaz shod");
   //   console.log(focusKey);
@@ -249,4 +249,4 @@ const ContentMoreRow = ({
   );
 };
 
-export default ContentMoreRow;
+export default React.memo(ContentMoreRow);

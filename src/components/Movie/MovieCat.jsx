@@ -123,6 +123,4 @@ function MovieCat({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
   );
 }
 
-//export default Movie;
-
-export default MovieCat;
+export default React.memo(MovieCat);
