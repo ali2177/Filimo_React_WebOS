@@ -252,12 +252,6 @@
 .button:visited a {
   color: white;
 }
-.button-sign:focus img {
-  filter: invert(0.3) sepia(100) saturate(20) hue-rotate(180deg);
-}
-.button-notsign:focus img {
-  filter: invert(0.3) sepia(100) saturate(20) hue-rotate(180deg);
-}
 .btn-reload {
   display: flex;
   align-items: center;
