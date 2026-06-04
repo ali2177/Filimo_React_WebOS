@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { useFocusable } from "@noriginmedia/norigin-spatial-navigation";
-import { uiStorage } from "@src/utils/uiStorage";
+import { uiStorage } from "../../../../utils/uiStorage";
 
 const EpisodeRow = ({ focusKey: fk, label, isPlaying, onEnter }) => {
   const myRef = useRef(null);

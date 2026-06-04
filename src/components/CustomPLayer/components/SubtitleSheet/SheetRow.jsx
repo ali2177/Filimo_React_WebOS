@@ -22,7 +22,6 @@ const SheetRow = ({
     },
   });
 
-  // onFocus via useEffect — do NOT pass onFocus into useFocusable(), it won't fire for middle rows
   useEffect(() => {
     if (focused && onFocus) onFocus();
   }, [focused]);
@@ -37,7 +36,9 @@ const SheetRow = ({
       <div className="ss-row-text">
         <span className="ss-row-label u400">{label}</span>
         {subLabel && (
-          <span className={`ss-row-sublabel${focused ? " ss-row-sublabel-focused" : ""} u400`}>
+          <span
+            className={`ss-row-sublabel${focused ? " ss-row-sublabel-focused" : ""} u400`}
+          >
             {subLabel}
           </span>
         )}

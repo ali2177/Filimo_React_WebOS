@@ -72,7 +72,6 @@
 
 .es-row-focused {
   background: var(--Dark-Mode-Opacity-of-Neutral-White, #fff) !important;
-  backdrop-filter: blur(20px);
 }
 
 /* ── Episode Row specifics ───────────────────────────────── */

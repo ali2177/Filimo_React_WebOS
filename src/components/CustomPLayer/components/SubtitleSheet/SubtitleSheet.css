@@ -64,8 +64,6 @@
 
 .ss-row-focused {
   background: var(--Dark-Mode-Opacity-of-Neutral-White, #fff) !important;
-  /* BG Blur/Background Blur 01 */
-  backdrop-filter: blur(20px);
 }
 
 .ss-row-text {

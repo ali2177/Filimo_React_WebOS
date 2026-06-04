@@ -18,9 +18,8 @@
   border-radius: 0.7rem;
   background: var(
     --dark-mode-opacity-of-neutral-white-25,
-    rgba(255, 255, 255, 0.25)
+    rgba(255, 255, 255, 0.45)
   );
-  backdrop-filter: blur(26px);
   color: #fff;
   display: flex;
   align-items: center;
@@ -49,10 +48,8 @@
   border-radius: 0.7rem;
   background: var(
     --dark-mode-opacity-of-neutral-white-25,
-    rgba(255, 255, 255, 0.25)
+    rgba(255, 255, 255, 0.45)
   );
-  /* BG Blur/Background Blur */
-  backdrop-filter: blur(20px);
   padding: 0.85rem 2.4rem;
   font-size: 1.2rem;
   font-weight: 700;
@@ -83,7 +80,7 @@
   fill: #1a1a1a;
 }
 
-/* Timer fill — scaleX driven by JS setInterval (no CSS animation = no GPU contention) */
+/* Timer fill — grows left-to-right over 10s, behind the text */
 .next-episode-fill {
   position: absolute;
   top: 0;
@@ -93,10 +90,20 @@
   background: rgba(0, 0, 0, 0.22);
   transform-origin: left center;
   transform: scaleX(0);
+  animation: next-episode-fill-anim 10s linear forwards;
   z-index: 0;
 }
 
 .next-episode-btn span {
   position: relative;
   z-index: 1;
+}
+
+@keyframes next-episode-fill-anim {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
 }

@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { isBackKey } from "../../utils/utils";
+import React, { useCallback, useEffect } from "react";
 import {
   useFocusable,
   setFocus,
 } from "@noriginmedia/norigin-spatial-navigation";
+import { isBackKey } from "../../utils/utils";
 import "./NextEpisodeButton.css";
 
 const NextEpisodeButton = ({
@@ -25,23 +25,6 @@ const NextEpisodeButton = ({
     focusKey: "next-episode-dismiss",
     onEnterPress: onDismiss,
   });
-
-  const [fillPercent, setFillPercent] = useState(0);
-
-  // Drive the countdown fill with a 1-second interval instead of a CSS animation.
-  // CSS @keyframes run on the compositor thread alongside video decoding and compete
-  // for GPU budget on Tizen; setInterval is cheaper and keeps the fill off the GPU.
-  useEffect(() => {
-    if (!autoPlayNext) { setFillPercent(0); return; }
-    setFillPercent(0);
-    const interval = setInterval(() => {
-      setFillPercent((p) => {
-        if (p >= 100) { clearInterval(interval); return 100; }
-        return p + 10;
-      });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [autoPlayNext]);
 
   useEffect(() => {
     setFocus("next-episode-btn");
@@ -84,7 +67,7 @@ const NextEpisodeButton = ({
         className={`next-episode-btn${btnFocused ? " next-episode-btn-focused" : ""}`}
         onClick={goToNext}
       >
-        {autoPlayNext && <div className="next-episode-fill" style={{ transform: `scaleX(${fillPercent / 100})` }} />}
+        {autoPlayNext && <div className="next-episode-fill" />}
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="32"

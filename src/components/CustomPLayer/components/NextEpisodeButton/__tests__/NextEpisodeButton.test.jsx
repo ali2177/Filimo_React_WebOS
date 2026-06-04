@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, fireEvent, act } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import NextEpisodeButton from "../NextEpisodeButton";
 
 jest.mock("@noriginmedia/norigin-spatial-navigation", () => ({
@@ -15,7 +15,7 @@ describe("NextEpisodeButton", () => {
   });
 
   afterEach(() => {
-    act(() => { jest.runOnlyPendingTimers(); });
+    jest.runOnlyPendingTimers();
     jest.useRealTimers();
   });
 
@@ -32,7 +32,7 @@ describe("NextEpisodeButton", () => {
   });
 
   test("renders the dismiss button", () => {
-    const { container } = render(
+    render(
       <NextEpisodeButton
         castData={castData}
         autoPlayNext={false}
@@ -40,7 +40,7 @@ describe("NextEpisodeButton", () => {
         onDismiss={jest.fn()}
       />
     );
-    expect(container.querySelector(".next-episode-dismiss")).toBeInTheDocument();
+    expect(screen.getByText("✕")).toBeInTheDocument();
   });
 
   test("calls onNextEpisode with nextPartUid when the button is clicked", () => {
@@ -60,7 +60,7 @@ describe("NextEpisodeButton", () => {
 
   test("calls onDismiss when the dismiss button is clicked", () => {
     const onDismiss = jest.fn();
-    const { container } = render(
+    render(
       <NextEpisodeButton
         castData={castData}
         autoPlayNext={false}
@@ -69,7 +69,7 @@ describe("NextEpisodeButton", () => {
       />
     );
 
-    fireEvent.click(container.querySelector(".next-episode-dismiss"));
+    fireEvent.click(screen.getByText("✕"));
     expect(onDismiss).toHaveBeenCalledTimes(1);
   });
 
@@ -84,7 +84,7 @@ describe("NextEpisodeButton", () => {
       />
     );
 
-    act(() => { jest.advanceTimersByTime(10000); });
+    jest.advanceTimersByTime(10000);
     expect(onNextEpisode).toHaveBeenCalledWith("ep456");
   });
 
@@ -99,7 +99,7 @@ describe("NextEpisodeButton", () => {
       />
     );
 
-    act(() => { jest.advanceTimersByTime(9999); });
+    jest.advanceTimersByTime(9999);
     expect(onNextEpisode).not.toHaveBeenCalled();
   });
 
@@ -114,7 +114,7 @@ describe("NextEpisodeButton", () => {
       />
     );
 
-    act(() => { jest.advanceTimersByTime(10000); });
+    jest.advanceTimersByTime(10000);
     expect(onNextEpisode).not.toHaveBeenCalled();
   });
 

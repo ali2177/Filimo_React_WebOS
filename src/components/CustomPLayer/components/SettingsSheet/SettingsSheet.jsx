@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { isBackKey } from "../../utils/utils";
 import {
   FocusContext,
   useFocusable,
@@ -10,6 +9,7 @@ import SelectRow from "./SelectRow";
 import NavRow from "./NavRow";
 import ToggleRow from "./ToggleRow";
 import { ChevronRightIcon } from "../sheetIcons";
+import { isBackKey } from "../../utils/utils";
 import "./SettingsSheet.css";
 
 const SPEEDS = [

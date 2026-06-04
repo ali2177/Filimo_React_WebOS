@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import { isBackKey } from "../../utils/utils";
 import {
   FocusContext,
   useFocusable,
@@ -14,6 +13,7 @@ import {
   ChevronDownIcon,
   ResetIcon,
 } from "../sheetIcons";
+import { isBackKey } from "../../utils/utils";
 import "./SubtitleSheet.css";
 
 const TEXT_COLORS = [
@@ -93,34 +93,10 @@ const SubtitleSheet = ({ onClose }) => {
 
   const [layer, setLayer] = useState("main");
 
-  // Tracks which focus key is currently active so the capture handler knows
-  // where to navigate from, without relying on norigin's spatial detection.
   const currentFocusKeyRef = useRef(null);
 
-  const { ref, focusKey } = useFocusable({
-    focusKey: "subtitle-sheet",
-    focusable: true,
-    trackChildren: true,
-    isFocusBoundary: true,
-    focusBoundaryDirections: ["up", "down"],
-  });
-
-  // When layer changes, restore focus to the correct starting row
-  useEffect(() => {
-    if (layer === "main") {
-      setShowSubtitlePreview(false);
-      const key = activeSubtitle ? `ss-lang-${activeSubtitle}` : "ss-lang-none";
-      currentFocusKeyRef.current = key;
-      setFocus(key);
-    } else {
-      setShowSubtitlePreview(true);
-      currentFocusKeyRef.current = "ss-textcolor";
-      setFocus("ss-textcolor");
-    }
-  }, [layer]);
-
-  // Action handlers for each settings row — stored in a ref updated every render
-  // so closures over setSubtitleStyle are always fresh (no stale state).
+  // Holds the current arrow handlers for each settings row.
+  // Updated on every render so closures over subtitleStyle are always fresh.
   const settingsArrowHandlersRef = useRef({});
   useEffect(() => {
     settingsArrowHandlersRef.current = {
@@ -179,11 +155,32 @@ const SubtitleSheet = ({ onClose }) => {
         enter: () => setSubtitleStyle(DEFAULT_STYLE),
       },
     };
-  }); // no deps — refreshes every render so closures are always fresh
+  });
 
-  // Single capture-phase keyboard handler: owns Back, Left, Right, Enter in settings layer.
-  // Stopping propagation here prevents norigin's spatial engine from ever seeing
-  // these keys, so focus movement is fully deterministic.
+  const { ref, focusKey } = useFocusable({
+    focusKey: "subtitle-sheet",
+    focusable: true,
+    trackChildren: true,
+    isFocusBoundary: true,
+    focusBoundaryDirections: ["up", "down"],
+  });
+
+  // When layer changes, restore focus to the correct starting row
+  useEffect(() => {
+    if (layer === "main") {
+      setShowSubtitlePreview(false);
+      const key = activeSubtitle ? `ss-lang-${activeSubtitle}` : "ss-lang-none";
+      currentFocusKeyRef.current = key;
+      setFocus(key);
+    } else {
+      setShowSubtitlePreview(true);
+      currentFocusKeyRef.current = "ss-textcolor";
+      setFocus("ss-textcolor");
+    }
+  }, [layer]);
+
+  // Capture-phase keyboard handler: owns Back, and left/right arrows in settings.
+  // Fires before norigin so arrows are handled regardless of norigin's onArrowPress flow.
   useEffect(() => {
     const handler = (e) => {
       if (isBackKey(e)) {
@@ -203,13 +200,14 @@ const SubtitleSheet = ({ onClose }) => {
         const isEnter = e.key === "Enter" || e.keyCode === 13;
         if (isLeft || isRight || isEnter) {
           e.stopImmediatePropagation();
-          const h =
-            settingsArrowHandlersRef.current[currentFocusKeyRef.current];
+          const fk = currentFocusKeyRef.current;
+          const h = settingsArrowHandlersRef.current[fk];
           if (h) {
             if (isLeft) h.left?.();
             else if (isRight) h.right?.();
             else h.enter?.();
           }
+          return;
         }
       }
     };
@@ -278,27 +276,15 @@ const SubtitleSheet = ({ onClose }) => {
             <div className="ss-list">
               <SheetRow
                 focusKey="ss-textcolor"
-                onFocus={() => {
-                  currentFocusKeyRef.current = "ss-textcolor";
-                }}
                 label="رنگ متن"
                 subLabel={
                   TEXT_COLORS.find((c) => c.value === subtitleStyle.color)
                     ?.label ?? "سفید"
                 }
                 leftIcon={ChevronLeftIcon}
-                onLeft={() =>
-                  setSubtitleStyle((s) => ({
-                    ...s,
-                    color: cycle(TEXT_COLORS, s.color, -1),
-                  }))
-                }
-                onRight={() =>
-                  setSubtitleStyle((s) => ({
-                    ...s,
-                    color: cycle(TEXT_COLORS, s.color, 1),
-                  }))
-                }
+                onFocus={() => {
+                  currentFocusKeyRef.current = "ss-textcolor";
+                }}
                 onEnter={() =>
                   setSubtitleStyle((s) => ({
                     ...s,
@@ -308,27 +294,15 @@ const SubtitleSheet = ({ onClose }) => {
               />
               <SheetRow
                 focusKey="ss-textsize"
-                onFocus={() => {
-                  currentFocusKeyRef.current = "ss-textsize";
-                }}
                 label="اندازه متن"
                 subLabel={
                   TEXT_SIZES.find((s) => s.value === subtitleStyle.size)
                     ?.label ?? "۱۰۰٪"
                 }
                 leftIcon={ChevronLeftIcon}
-                onLeft={() =>
-                  setSubtitleStyle((s) => ({
-                    ...s,
-                    size: cycle(TEXT_SIZES, s.size, -1),
-                  }))
-                }
-                onRight={() =>
-                  setSubtitleStyle((s) => ({
-                    ...s,
-                    size: cycle(TEXT_SIZES, s.size, 1),
-                  }))
-                }
+                onFocus={() => {
+                  currentFocusKeyRef.current = "ss-textsize";
+                }}
                 onEnter={() =>
                   setSubtitleStyle((s) => ({
                     ...s,
@@ -338,27 +312,15 @@ const SubtitleSheet = ({ onClose }) => {
               />
               <SheetRow
                 focusKey="ss-background"
-                onFocus={() => {
-                  currentFocusKeyRef.current = "ss-background";
-                }}
                 label="پس زمینه"
                 subLabel={
                   BG_OPTIONS.find((b) => b.value === subtitleStyle.background)
                     ?.label ?? "هیچ"
                 }
                 leftIcon={ChevronLeftIcon}
-                onLeft={() =>
-                  setSubtitleStyle((s) => ({
-                    ...s,
-                    background: cycle(BG_OPTIONS, s.background, -1),
-                  }))
-                }
-                onRight={() =>
-                  setSubtitleStyle((s) => ({
-                    ...s,
-                    background: cycle(BG_OPTIONS, s.background, 1),
-                  }))
-                }
+                onFocus={() => {
+                  currentFocusKeyRef.current = "ss-background";
+                }}
                 onEnter={() =>
                   setSubtitleStyle((s) => ({
                     ...s,
@@ -368,12 +330,12 @@ const SubtitleSheet = ({ onClose }) => {
               />
               <SheetRow
                 focusKey="ss-reset"
-                onFocus={() => {
-                  currentFocusKeyRef.current = "ss-reset";
-                }}
                 label="حالت پیش‌فرض"
                 subLabel="بازگشت به حالت اولیه"
                 leftIcon={ResetIcon}
+                onFocus={() => {
+                  currentFocusKeyRef.current = "ss-reset";
+                }}
                 onEnter={() => setSubtitleStyle(DEFAULT_STYLE)}
               />
             </div>

@@ -36,11 +36,16 @@ export function usePlayerKeyboard({
         return;
       }
 
-      if (e.key === "Enter") {
-        if (uiVisible || activeModal) return;
-        if (skipIntroRef.current) return; // norigin handles it
-        video.paused ? video.play().catch(() => {}) : video.pause();
-        resetUiTimer();
+      switch (e.key) {
+        case "Enter":
+          if (uiVisible || activeModal) break;
+          if (skipIntroRef.current) break; // norigin handles it
+          video.paused ? video.play().catch(() => {}) : video.pause();
+          resetUiTimer();
+          break;
+
+        default:
+          break;
       }
     };
 

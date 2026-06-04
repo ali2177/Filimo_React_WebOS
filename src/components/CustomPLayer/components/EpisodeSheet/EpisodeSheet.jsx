@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { isBackKey } from "../../utils/utils";
 import {
   FocusContext,
   useFocusable,
@@ -10,6 +9,7 @@ import EpisodeRow from "./EpisodeRow";
 import SeasonRow from "./SeasonRow";
 import NavRow from "./NavRow";
 import { ChevronRightIcon } from "../sheetIcons";
+import { isBackKey } from "../../utils/utils";
 import "./EpisodeSheet.css";
 
 // ─── EpisodeSheet ─────────────────────────────────────────────────────────────

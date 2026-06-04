@@ -14,7 +14,7 @@ export function usePlaybackControls(videoRef, hlsRef, duration) {
     const video = videoRef.current;
     if (!video) return;
     const onPlay  = () => setPlaying(true);
-    const onPause = () => setPlaying(false);
+    const onPause = () => { if (!video.seeking) setPlaying(false); };
     video.addEventListener("play",  onPlay);
     video.addEventListener("pause", onPause);
     return () => {

@@ -11,13 +11,8 @@ export function useSubtitles(videoRef, src) {
   const [activeSubtitle, setActiveSubtitle] = useState(null);
   const [subtitleCache, setSubtitleCache] = useState({});
   const [subtitleText, setSubtitleText] = useState("");
-
-  // Segment-boundary tracking — state change triggers the prefetch effect
-  const [segmentIndex, setSegmentIndex] = useState(-1);
-  const segmentIndexRef = useRef(-1);
-
-  const lastSubtitleRef     = useRef(null);
-  const lastSubtitleTextRef = useRef("");
+  const lastSubtitleRef = useRef(null);
+  const lastTextRef = useRef("");
 
   // Fetch available tracks from master playlist
   useEffect(() => {
@@ -28,20 +23,22 @@ export function useSubtitles(videoRef, src) {
     init();
   }, [src]);
 
-  // Handle switching subtitle track
+  // Handle switching subtitle
   const switchSubtitle = async (label) => {
     const video = videoRef.current;
     if (!video) return;
 
+    // "No Subtitles" — just clear active track, never touch playback
     if (label === null) {
       setActiveSubtitle(null);
       lastSubtitleRef.current = null;
-      return;
+        return;
     }
 
     const wasPlaying = !video.paused;
     video.pause();
 
+    // Load segments if not cached
     if (!subtitleCache[label]) {
       const track = subtitles.find((s) => s.label === label);
       if (!track) {
@@ -56,76 +53,62 @@ export function useSubtitles(videoRef, src) {
     }
 
     setActiveSubtitle(label);
+
+
     if (wasPlaying) video.play().catch(() => {});
+
     return label;
   };
 
-  // ── Prefetch effect — runs only when the player crosses a segment boundary ──
-  // Keeps async network calls entirely out of the timeupdate hot path
-  useEffect(() => {
-    if (!activeSubtitle || segmentIndex < 0) return;
-    const subData = subtitleCache[activeSubtitle];
-    if (!subData) return;
-    const { segments, loadedSegments } = subData;
-
-    const prefetch = async () => {
-      for (let i = segmentIndex; i <= segmentIndex + 2; i++) {
-        if (segments[i] && !loadedSegments.has(segments[i])) {
-          const segCues = await fetchVttSegments(segments[i]);
-          loadedSegments.add(segments[i]);
-          setSubtitleCache((prev) => {
-            if (!prev[activeSubtitle]) return prev;
-            return {
-              ...prev,
-              [activeSubtitle]: {
-                ...prev[activeSubtitle],
-                cues: [...prev[activeSubtitle].cues, ...segCues],
-                loadedSegments,
-              },
-            };
-          });
-        }
-      }
-    };
-    prefetch();
-  // subtitleCache intentionally excluded: we only want to re-prefetch when
-  // the segment boundary advances, not on every cache write
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [segmentIndex, activeSubtitle]);
-
-  // ── Lightweight timeupdate handler — cue lookup only, no network I/O ────────
+  // Update displayed subtitle text during playback
   useEffect(() => {
     const video = videoRef.current;
     if (!video || !activeSubtitle) {
       setSubtitleText("");
       return;
     }
+
     const subData = subtitleCache[activeSubtitle];
     if (!subData) return;
 
-    const { segmentDuration, cues } = subData;
+    let ticking = false;
 
-    const updateSubtitle = () => {
-      // Advance segment index only when playback crosses a boundary
-      const newIdx = Math.floor(video.currentTime / segmentDuration);
-      if (newIdx !== segmentIndexRef.current) {
-        segmentIndexRef.current = newIdx;
-        setSegmentIndex(newIdx);
+    const updateSubtitle = async () => {
+      if (ticking) return;
+      ticking = true;
+
+      const { segments, segmentDuration, loadedSegments } = subtitleCache[activeSubtitle];
+      const segmentIndex = Math.floor(video.currentTime / segmentDuration);
+
+      // Prefetch current + 2 segments
+      for (let i = segmentIndex; i <= segmentIndex + 2; i++) {
+        if (segments[i] && !loadedSegments.has(segments[i])) {
+          const segCues = await fetchVttSegments(segments[i]);
+          loadedSegments.add(segments[i]);
+          setSubtitleCache((prev) => ({
+            ...prev,
+            [activeSubtitle]: {
+              ...prev[activeSubtitle],
+              cues: [...prev[activeSubtitle].cues, ...segCues],
+              loadedSegments,
+            },
+          }));
+        }
       }
 
-      // Find the cue for this timestamp
-      const activeCue = cues.find(
+      // Display active cue
+      const activeCue = subtitleCache[activeSubtitle].cues.find(
         (c) => video.currentTime >= c.start && video.currentTime <= c.end
       );
       const displayCue = activeCue || lastSubtitleRef.current;
-      const newText    = displayCue ? displayCue.text : "";
-
-      // Skip the state update when the displayed text has not changed
-      if (newText !== lastSubtitleTextRef.current) {
-        lastSubtitleTextRef.current = newText;
+      const newText = displayCue ? displayCue.text : "";
+      if (newText !== lastTextRef.current) {
+        lastTextRef.current = newText;
         setSubtitleText(newText);
       }
       lastSubtitleRef.current = displayCue;
+
+      ticking = false;
     };
 
     video.addEventListener("timeupdate", updateSubtitle);

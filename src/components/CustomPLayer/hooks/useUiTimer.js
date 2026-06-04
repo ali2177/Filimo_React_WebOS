@@ -39,9 +39,7 @@ export function useUiTimer(videoRef, isModalOpen, isNextEpisodeShown = false) {
     };
   }, [videoRef, resetUiTimer]);
 
-  // Mouse / touch input resets the timer.
-  // isModalOpen is intentionally excluded — the guard is read from isModalRef
-  // inside resetUiTimer, so re-registering listeners on modal toggle is wasteful.
+  // Mouse / touch input resets the timer; re-runs when modal state changes
   useEffect(() => {
     const container = videoRef.current?.parentElement;
     if (!container) return;
@@ -49,7 +47,6 @@ export function useUiTimer(videoRef, isModalOpen, isNextEpisodeShown = false) {
     events.forEach((e) => container.addEventListener(e, resetUiTimer));
     resetUiTimer();
     return () => events.forEach((e) => container.removeEventListener(e, resetUiTimer));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [videoRef, resetUiTimer]);
 
   return { uiVisible, setUiVisible, resetUiTimer, forceHideUi };

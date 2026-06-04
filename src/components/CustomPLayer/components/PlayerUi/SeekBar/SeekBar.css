@@ -1,3 +1,48 @@
+/* ── Preview thumbnail ───────────────────────────────────── */
+
+.seekbar-preview {
+  position: absolute;
+  bottom: calc(100% + 0.6rem);
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.seekbar-preview-canvas {
+  width: 8rem;
+  height: 4.5rem;
+  border-radius: 0.3rem;
+  border: 0.1rem solid rgba(255, 255, 255, 0.5);
+  display: block;
+  background: #2a2a2a;
+}
+
+.seekbar-preview-placeholder {
+  background: #3a3a3a;
+}
+
+.seekbar-preview-time {
+  margin-top: 0.2rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+/* ── Preview marker on the bar ───────────────────────────── */
+
+.progress-preview-marker {
+  position: absolute;
+  top: 50%;
+  width: 0.15rem;
+  height: 0.9rem;
+  background: rgba(255, 255, 255, 0.6);
+  transform: translate(-50%, -50%);
+  border-radius: 0.1rem;
+  pointer-events: none;
+  z-index: 3;
+}
+
 /* ── Progress bar wrapper ────────────────────────────────── */
 
 .progress-bar-wrapper {
@@ -21,6 +66,32 @@
   position: relative;
   display: flex;
   flex-direction: column;
+}
+
+.progress-thumb {
+  position: absolute;
+  top: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+  background-color: #fff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+
+.progress-bar-container:hover .progress-thumb {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.progress-thumb-active {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
 }
 
 .progress-bar-container {
@@ -50,30 +121,5 @@
   background-color: #fff;
   border-radius: 0.15rem;
   transform-origin: left center;
-  transform: scaleX(0);
   transition: transform 0.1s linear;
-}
-
-/* Circle thumb — hidden by default, shown on hover or active focus */
-
-.progress-thumb {
-  position: absolute;
-  top: 50%;
-  width: 1.5rem;
-  height: 1.5rem;
-  background-color: #fff;
-  border-radius: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  pointer-events: none;
-  z-index: 4;
-  opacity: 0;
-  transition:
-    opacity 0.15s ease,
-    transform 0.15s ease;
-}
-
-.progress-bar-container:hover .progress-thumb,
-.progress-thumb-active {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
 }

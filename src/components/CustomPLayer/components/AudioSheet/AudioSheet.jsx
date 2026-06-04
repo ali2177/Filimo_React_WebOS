@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { isBackKey } from "../../utils/utils";
 import {
   FocusContext,
   useFocusable,
@@ -7,6 +6,7 @@ import {
 } from "@noriginmedia/norigin-spatial-navigation";
 import { usePlayerContext } from "../../context/PlayerContext";
 import AudioRow from "./AudioRow";
+import { isBackKey } from "../../utils/utils";
 import "./AudioSheet.css";
 
 const LANG_LABELS = {
