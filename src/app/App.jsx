@@ -125,8 +125,8 @@ function App() {
     }
   };
 
-  usePolling(getUserData, 2000, !!jwt);
-  usePolling(checkConnection, 300);
+  usePolling(getUserData, 10000, !!jwt);
+  usePolling(checkConnection, 3000);
 
   useEffect(() => {
     const splashShown = sessionStorage.getItem("splash_shown");
