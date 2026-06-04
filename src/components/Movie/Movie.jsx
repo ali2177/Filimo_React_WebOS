@@ -9,6 +9,7 @@ import {
   useFocusable,
   setFocus,
 } from "@noriginmedia/norigin-spatial-navigation";
+import { useOnlineStatus } from "@src/app/App";
 
 function Movie({
   movie,
@@ -80,6 +81,7 @@ function Movie({
       handleAction();
     },
   });
+  const { isKid } = useOnlineStatus();
   const [isImageLoaded, setIsImageLoaded] = useState(true);
   const location = useLocation("");
   const myRef = useRef();
@@ -116,7 +118,7 @@ function Movie({
   const handleScrolling = () => {
     setTimeout(() => {
       if (uiStorage.getItem("mode") === "KeyboardMode") {
-        if (localStorage.getItem("kids-Lock") === true) {
+        if (isKid) {
           myRef?.current?.scrollIntoView({
             block: "center",
           });
