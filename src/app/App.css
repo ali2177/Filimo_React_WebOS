@@ -538,10 +538,7 @@
   /* Opacity Colors/Natural/Light/Black 25% - Light
 Black, Opacity , 25, Alpha, Dark
 */
-  background: rgba(12, 12, 12, 0.25);
-  /* BG Blur/Background Blur */
-  backdrop-filter: blur(20px);
-  /* Note: backdrop-filter has minimal browser support */
+  background: rgba(12, 12, 12, 0.75);
   border-radius: 800px;
 }
 .badge-category p {
@@ -1095,10 +1092,7 @@ Black, Opacity , 25, Alpha, Dark
   
   Tint, Yellow, Dark, 12, Brand
   */
-  background: rgba(245, 184, 63, 0.12);
-  /* BG Blur/Background Blur */
-  backdrop-filter: blur(20px);
-  /* Note: backdrop-filter has minimal browser support */
+  background: rgba(245, 184, 63, 0.35);
   border-radius: 9999px;
 }
 .badge-imdb span {
@@ -1132,10 +1126,7 @@ Black, Opacity , 25, Alpha, Dark
 
 Tint, Red, Dark, 12, Success
 */
-  background: rgba(34, 188, 103, 0.12);
-  /* BG Blur/Background Blur */
-  backdrop-filter: blur(20px);
-  /* Note: backdrop-filter has minimal browser support */
+  background: rgba(34, 188, 103, 0.35);
   border-radius: 800px;
 }
 .badge-rate span {
@@ -1184,11 +1175,8 @@ Tint, Red, Dark, 12, Success
   border-radius: 0.6rem;
   background: var(
     --dark-mode-opacity-of-neutral-white-8,
-    rgba(255, 255, 255, 0.08)
+    rgba(255, 255, 255, 0.15)
   );
-
-  /* BG Blur/Background Blur 01 */
-  backdrop-filter: blur(20px);
 
   font-size: 1.2rem;
   font-weight: 700;
@@ -1463,11 +1451,8 @@ Tint, Red, Dark, 12, Success
   border-radius: 800px;
   background: var(
     --opacity-colors-natural-dark-white-12-dark,
-    rgba(255, 255, 255, 0.12)
+    rgba(255, 255, 255, 0.2)
   );
-
-  /* BG Blur/Background Blur 01 */
-  backdrop-filter: blur(20px);
 }
 .user-info-svg {
   width: 1.2rem;
@@ -1585,8 +1570,7 @@ Tint, Red, Dark, 12, Success
 }
 .crew-detail {
   display: flex;
-  background: rgba(34, 188, 103, 0.12);
-  backdrop-filter: blur(20px);
+  background: rgba(34, 188, 103, 0.35);
   border-radius: 800px;
   padding: 10px 30px 10px 30px;
   text-align: center;
@@ -1803,11 +1787,8 @@ Tint, Red, Dark, 12, Success
   border-radius: 9999px;
   background: var(
     --opacity-colors-natural-light-black-75-light,
-    rgba(12, 12, 12, 0.75)
+    rgba(12, 12, 12, 0.85)
   );
-
-  /* BG Blur/Background Blur */
-  backdrop-filter: blur(30px);
 }
 .is-watched {
   display: flex;
@@ -1823,11 +1804,8 @@ Tint, Red, Dark, 12, Success
     );
   background: var(
     --dark-mode-opacity-of-neutral-white-12,
-    rgba(255, 255, 255, 0.12)
+    rgba(255, 255, 255, 0.2)
   );
-
-  /* BG Blur/Background Blur */
-  backdrop-filter: blur(20px);
 }
 .episode-progressbar-wrapper {
   position: absolute;
