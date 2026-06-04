@@ -22,6 +22,7 @@ import RecommBtn from "./RecommBtn";
 import dot from "../../assets/genres/dot.svg";
 import MoreBtn from "./MoreBtn";
 import { stripHtmlTags } from "../../utils";
+import { uiStorage } from "@src/utils/uiStorage";
 
 function MovieInfo({ isLogin }) {
   const { ref, focusKey, focusSelf } = useFocusable({
@@ -57,15 +58,15 @@ function MovieInfo({ isLogin }) {
     setTimeout(() => {
       setIsLoading(false);
     }, 5000);
-    localStorage.removeItem("subtitles");
-    localStorage.removeItem("subtitle");
+    uiStorage.removeItem("subtitles");
+    uiStorage.removeItem("subtitle");
     localStorage.removeItem("formAction");
-    localStorage.removeItem("movie_src");
-    localStorage.removeItem("movie_last_watch_time");
+    uiStorage.removeItem("movie_src");
+    uiStorage.removeItem("movie_last_watch_time");
     localStorage.removeItem("focusedSub");
     localStorage.removeItem("activeSub");
-    // localStorage.removeItem("lastFocusRowBeforeReload");
-    localStorage.removeItem("lastFocusRowSeriesBeforeReload");
+    // uiStorage.removeItem("lastFocusRowBeforeReload");
+    uiStorage.removeItem("lastFocusRowSeriesBeforeReload");
 
   }, []);
   useEffect(() => {
@@ -94,7 +95,7 @@ function MovieInfo({ isLogin }) {
 
   useEffect(() => {
     getData();
-    localStorage.removeItem("lastFocusMore");
+    uiStorage.removeItem("lastFocusMore");
     if (localStorage.getItem("moreBtn")) {
       setFocus("more-btn");
     } else if (localStorage.getItem("recommBtn")) {
@@ -175,9 +176,9 @@ function MovieInfo({ isLogin }) {
     localStorage.removeItem("seasonBtn");
     localStorage.removeItem("recommBtn");
     localStorage.removeItem("moreBtn");
-    localStorage.removeItem("lastSeasonFocus");
-    localStorage.removeItem("lastSeasonFocus_parent_new");
-    localStorage.removeItem("lastSeasonFocus_season_part");
+    uiStorage.removeItem("lastSeasonFocus");
+    uiStorage.removeItem("lastSeasonFocus_parent_new");
+    uiStorage.removeItem("lastSeasonFocus_season_part");
     localStorage.removeItem("movie_cast_time");
     localStorage.removeItem("movie_uid");
     localStorage.removeItem("fromAlert");

@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Focusable } from "react-js-spatial-navigation";
+import { uiStorage } from "@src/utils/uiStorage";
 
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import LazyLoad from "react-lazy-load";
@@ -19,7 +20,7 @@ function Movie({
   onscroll,
 }) {
   const handleAction = () => {
-    localStorage.setItem("lastFocus", focusKeey);
+    uiStorage.setItem("lastFocus", focusKeey);
     if (movie.img) {
       localStorage.setItem("movie_uid", movie.link_key);
       navigate(`/livePlayer`);
@@ -34,8 +35,8 @@ function Movie({
       if (focusKey.slice(9) === "0") {
         // console.log(focusKey);
         if (e === "right") {
-          if (localStorage.getItem("lastFocusMenuItem")) {
-            setFocus(localStorage.getItem("lastFocusMenuItem"));
+          if (uiStorage.getItem("lastFocusMenuItem")) {
+            setFocus(uiStorage.getItem("lastFocusMenuItem"));
           } else {
             setFocus("menuItem__0");
           }
@@ -59,7 +60,7 @@ function Movie({
       ) {
         // console.log("movie here");
         // console.log(focusKeey);
-        localStorage.setItem("lastMovieFocus", focusKeey);
+        uiStorage.setItem("lastMovieFocus", focusKeey);
       }
 
       // console.log(focusKeey);
@@ -68,17 +69,11 @@ function Movie({
       // localStorage.setItem("lastFocusRow", focusKeey);
 
       if (parseInt(focusKeey[8]) >= 0) {
-        localStorage.setItem(
-          "lastFocusRow",
-          `MOVIE_${focusKeey[6]}${focusKeey[7]}${focusKeey[8]}`
-        );
+        uiStorage.setItem("lastFocusRow", `MOVIE_${focusKeey[6]}${focusKeey[7]}${focusKeey[8]}`);
       } else if (parseInt(focusKeey[7]) >= 0) {
-        localStorage.setItem(
-          "lastFocusRow",
-          `MOVIE_${focusKeey[6]}${focusKeey[7]}`
-        );
+        uiStorage.setItem("lastFocusRow", `MOVIE_${focusKeey[6]}${focusKeey[7]}`);
       } else {
-        localStorage.setItem("lastFocusRow", `MOVIE_${focusKeey[6]}`);
+        uiStorage.setItem("lastFocusRow", `MOVIE_${focusKeey[6]}`);
       }
     },
     onEnterPress: () => {
@@ -120,7 +115,7 @@ function Movie({
   // console.log(focusKey);
   const handleScrolling = () => {
     setTimeout(() => {
-      if (localStorage.getItem("mode") === "KeyboardMode") {
+      if (uiStorage.getItem("mode") === "KeyboardMode") {
         if (localStorage.getItem("kids-Lock") === true) {
           myRef?.current?.scrollIntoView({
             block: "center",

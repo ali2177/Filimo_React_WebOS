@@ -10,6 +10,7 @@ import {
   categoriiesIfSignIn,
 } from "../../utils";
 import { Link, useNavigate } from "react-router-dom";
+import { uiStorage } from "@src/utils/uiStorage";
 
 const SidebarItem = ({ data, handleEnterPress, focuskeey }) => {
   const { pathname } = useLocation();
@@ -21,23 +22,23 @@ const SidebarItem = ({ data, handleEnterPress, focuskeey }) => {
     },
     onArrowPress: (e) => {
       if (e === "left") {
-        // setFocus(localStorage.getItem("lastMovieFocus"));
+        // setFocus(uiStorage.getItem("lastMovieFocus"));
         setTimeout(() => {
-          // console.log(localStorage.getItem("lastMovieFocus"));
-          if (localStorage.getItem("lastMovieFocus"))
-            setFocus(localStorage.getItem("lastMovieFocus"));
+          // console.log(uiStorage.getItem("lastMovieFocus"));
+          if (uiStorage.getItem("lastMovieFocus"))
+            setFocus(uiStorage.getItem("lastMovieFocus"));
         }, 100);
       }
     },
   });
 
   useEffect(() => {
-    if (localStorage.getItem("lastFocusMenuItem") === focuskeey) {
+    if (uiStorage.getItem("lastFocusMenuItem") === focuskeey) {
       setIsActive(true);
     } else {
       setIsActive(false);
     }
-  }, [localStorage.getItem("lastFocusMenuItem")]);
+  }, [uiStorage.getItem("lastFocusMenuItem")]);
   useEffect(() => {
     // console.log(
     //   JSON.parse(localStorage.getItem("MenuData")).findIndex(

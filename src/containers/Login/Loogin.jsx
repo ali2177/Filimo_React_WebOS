@@ -13,6 +13,7 @@ import NetworkError from "@src/components/NetworkError/NetworkError";
 import Loader from "@src/components/Loader/Loader";
 import { useAuth } from "@src/components/AuthProvider";
 import { useOnlineStatus } from "@src/app/App";
+import { uiStorage } from "@src/utils/uiStorage";
 const Loogin = () => {
   const { jwt, setJwt } = useAuth();
   const { isOnline } = useOnlineStatus();
@@ -46,7 +47,7 @@ const Loogin = () => {
       localStorage.setItem("mobile_number", userData.mobile_number);
       localStorage.setItem("name", userData.name);
       localStorage.setItem("username", userData.username);
-      localStorage.removeItem("lastdataloaded");
+      uiStorage.removeItem("lastdataloaded");
       if (location.pathname !== "/player") navigate(-1);
     }
   }, [jwt, userData]);

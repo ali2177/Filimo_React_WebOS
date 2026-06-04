@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import { useGetMoviesQuery } from "../../../services/TMDB";
 import { safeParse } from "../homeUtils";
+import { uiStorage } from "@src/utils/uiStorage";
 
 export function useHomeMovies({ tag_id, other_data, jwt, pageConfig }) {
   const [movies, setMovies] = useState(null);
@@ -53,7 +54,7 @@ export function useHomeMovies({ tag_id, other_data, jwt, pageConfig }) {
         if (pageConfig) {
           localStorage.setItem(
             pageConfig.focusRowBeforeReloadKey,
-            localStorage.getItem("lastFocusRow") || "",
+            uiStorage.getItem("lastFocusRow") || "",
           );
           persistMoviesToStorage(nextMovies);
         }

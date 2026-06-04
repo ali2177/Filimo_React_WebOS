@@ -4,12 +4,13 @@ import {
   setFocus,
 } from "@noriginmedia/norigin-spatial-navigation";
 import { useNavigate } from "react-router-dom";
+import { uiStorage } from "@src/utils/uiStorage";
 
 const Category = ({ image, title, focusKeey, tag_id }) => {
   const navigate = useNavigate();
   const myRef = useRef(null);
   const handleAction = () => {
-    localStorage.setItem("lastCatFocus", focusKeey);
+    uiStorage.setItem("lastCatFocus", focusKeey);
     navigate(`/morecategory/${tag_id}`);
   };
   const { ref, focused, focusKey } = useFocusable({
@@ -27,15 +28,16 @@ const Category = ({ image, title, focusKeey, tag_id }) => {
     focusKey: focusKeey,
   });
   useEffect(() => {
-    if (localStorage.getItem("lastCatFocus")) {
-      setFocus(localStorage.getItem("lastCatFocus"));
+    const saved = uiStorage.getItem("lastCatFocus");
+    if (saved) {
+      setFocus(saved);
     } else {
       setFocus("CAT_LIST_0");
     }
   }, []);
   const handleScrolling = () => {
     setTimeout(() => {
-      if (localStorage.getItem("mode") === "KeyboardMode") {
+      if (uiStorage.getItem("mode") === "KeyboardMode") {
         myRef?.current?.scrollIntoView({
           block: "center",
         });

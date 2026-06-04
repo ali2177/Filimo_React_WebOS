@@ -17,6 +17,7 @@ import {
   useGetMovieDetailQuery,
   useGetMovieRecomQuery,
 } from "../../services/TMDB";
+import { uiStorage } from "@src/utils/uiStorage";
 
 const MoreSingle = () => {
   const { title, id } = useParams();
@@ -48,15 +49,15 @@ const MoreSingle = () => {
   }, [movieDetail]);
   useEffect(() => {
     setFocus("movieSearch_0");
-    localStorage.removeItem("lastFocusActor");
-    localStorage.removeItem("lastFocusCrew");
+    uiStorage.removeItem("lastFocusActor");
+    uiStorage.removeItem("lastFocusCrew");
 
     // focusSelf();
   }, []);
   useEffect(() => {
     localStorage.removeItem("seasonBtn");
     // localStorage.removeItem("recommBtn");
-    localStorage.removeItem("lastSeasonFocus");
+    uiStorage.removeItem("lastSeasonFocus");
   }, [location]);
 
 

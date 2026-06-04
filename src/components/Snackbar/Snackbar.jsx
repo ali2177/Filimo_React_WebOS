@@ -9,6 +9,7 @@ import {
   getCurrentFocusKey,
 } from "@noriginmedia/norigin-spatial-navigation";
 import ModalBtn from "./ModalBtn";
+import { uiStorage } from "@src/utils/uiStorage";
 
 const Snackbar = ({ onExit }) => {
   const { ref, focusKey, focused, focusSelf } = useFocusable({
@@ -22,8 +23,8 @@ const Snackbar = ({ onExit }) => {
       const app =
         window.webOS?.applicationManager?.getOwnerApplication?.(document);
       if (app?.close) {
-        localStorage.removeItem("lastdataloaded");
-        localStorage.removeItem("lastFocus");
+        uiStorage.removeItem("lastdataloaded");
+        uiStorage.removeItem("lastFocus");
         app.close();
         return true;
       }
@@ -32,8 +33,8 @@ const Snackbar = ({ onExit }) => {
     return false;
   }, []);
   const exit = () => {
-    localStorage.removeItem("lastdataloaded");
-    localStorage.removeItem("lastFocus");
+    uiStorage.removeItem("lastdataloaded");
+    uiStorage.removeItem("lastFocus");
     if (!exitAppLG()) {
       window.close?.();
     }

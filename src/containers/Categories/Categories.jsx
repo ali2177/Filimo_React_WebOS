@@ -19,6 +19,7 @@ import Loader from "@src/components/Loader/Loader";
 import Category from "./category";
 import { useAuth } from "@src/components/AuthProvider";
 import { useOnlineStatus } from "@src/app/App";
+import { uiStorage } from "@src/utils/uiStorage";
 
 const Categories = () => {
   const { ref, focusKey, focused, focusSelf } = useFocusable({
@@ -39,7 +40,7 @@ const Categories = () => {
 
   useDisableKeyboardWhileLoading(isFetching);
   const handleBack = useCallback(() => {
-    localStorage.removeItem("lastCatFocus");
+    uiStorage.removeItem("lastCatFocus");
     if (location.pathname !== "/player") navigate(-1);
   }, [location.pathname, navigate]);
 

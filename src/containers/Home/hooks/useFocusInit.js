@@ -1,5 +1,6 @@
 import { useRef, useCallback, useEffect } from "react";
 import { setFocus } from "@noriginmedia/norigin-spatial-navigation";
+import { uiStorage } from "@src/utils/uiStorage";
 
 export function useFocusInit({ movies, data, pageConfig, pageType, other_data, location }) {
   const scrollRef = useRef(null);
@@ -19,14 +20,14 @@ export function useFocusInit({ movies, data, pageConfig, pageType, other_data, l
 
     didInitFocusRef.current = true;
 
-    const lastFocus = localStorage.getItem("lastFocus");
+    const lastFocus = uiStorage.getItem("lastFocus");
     if (lastFocus) {
       setFocus(lastFocus);
       return;
     }
 
     if (pageConfig?.focusRowBeforeReloadKey) {
-      const savedRow = localStorage.getItem(pageConfig.focusRowBeforeReloadKey);
+      const savedRow = uiStorage.getItem(pageConfig.focusRowBeforeReloadKey);
       if (savedRow) {
         setFocus(`${savedRow}__0`);
         return;
@@ -34,7 +35,7 @@ export function useFocusInit({ movies, data, pageConfig, pageType, other_data, l
     }
 
     if (pageType === "series") {
-      const lastMovieFocus = localStorage.getItem("lastMovieFocus");
+      const lastMovieFocus = uiStorage.getItem("lastMovieFocus");
       if (lastMovieFocus) {
         setFocus(lastMovieFocus);
         return;

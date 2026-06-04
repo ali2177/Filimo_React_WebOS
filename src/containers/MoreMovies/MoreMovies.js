@@ -23,6 +23,7 @@ import { useOnlineStatus } from "@src/app/App";
 import ContentRow from "@src/components/ContentRow.jsx";
 import ContentMoreRow from "@src/components/ContentMoreRow.jsx";
 import MovieSearch from "@src/components/Movie/MovieSearch.jsx";
+import { uiStorage } from "@src/utils/uiStorage";
 
 const MoreMovies = () => {
   const { jwt, setJwt } = useAuth();
@@ -48,9 +49,9 @@ const MoreMovies = () => {
 
   useEffect(() => {
     clearActorNavState();
-    localStorage.removeItem("last");
-    localStorage.removeItem("lastFocusMoreMovie");
-    localStorage.removeItem("lastFocusMore");
+    uiStorage.removeItem("last");
+    uiStorage.removeItem("lastFocusMoreMovie");
+    uiStorage.removeItem("lastFocusMore");
   }, []);
   useEffect(() => {
     setTimeout(() => {
@@ -194,7 +195,7 @@ const MoreMovies = () => {
           //        if (location.pathname === "/") {
           //          localStorage.setItem(
           //            "lastFocusRowBeforeReload",
-          //            localStorage.getItem("lastFocusRow")
+          //            uiStorage.getItem("lastFocusRow")
           //          );
           //          setTimeout(() => {
           //            localStorage.setItem(
@@ -210,7 +211,7 @@ const MoreMovies = () => {
           //        if (location.pathname.slice(16) === "/series") {
           //          localStorage.setItem(
           //            "lastFocusRowSeriesBeforeReload",
-          //            localStorage.getItem("lastFocusRow")
+          //            uiStorage.getItem("lastFocusRow")
           //          );
           //          setTimeout(() => {
           //            localStorage.setItem(
@@ -226,7 +227,7 @@ const MoreMovies = () => {
           //        if (location.pathname.slice(16) === "/movie") {
           //          localStorage.setItem(
           //            "lastFocusRowMoviesBeforeReload",
-          //            localStorage.getItem("lastFocusRow")
+          //            uiStorage.getItem("lastFocusRow")
           //          );
           //          setTimeout(() => {
           //            localStorage.setItem(
@@ -242,7 +243,7 @@ const MoreMovies = () => {
           //        if (location.pathname.slice(16) === "/iran") {
           //          localStorage.setItem(
           //            "lastFocusRowIranBeforeReload",
-          //            localStorage.getItem("lastFocusRow")
+          //            uiStorage.getItem("lastFocusRow")
           //          );
           //          setTimeout(() => {
           //            localStorage.setItem(
@@ -258,7 +259,7 @@ const MoreMovies = () => {
           //        if (location.pathname.slice(16) === "001215/kids") {
           //          localStorage.setItem(
           //            "lastFocusRowKidsBeforeReload",
-          //            localStorage.getItem("lastFocusRow")
+          //            uiStorage.getItem("lastFocusRow")
           //          );
           //          setTimeout(() => {
           //            localStorage.setItem(
@@ -287,8 +288,8 @@ const MoreMovies = () => {
 
   const handleBack = useCallback(() => {
     if (localStorage.getItem("level") === "level__2") {
-      localStorage.removeItem("lastFocusMoreMovie_level__2");
-      localStorage.removeItem("lastFocusMore_level__2");
+      uiStorage.removeItem("lastFocusMoreMovie_level__2");
+      uiStorage.removeItem("lastFocusMore_level__2");
     }
     if (localStorage.getItem("level")) {
       localStorage.setItem(
@@ -312,8 +313,8 @@ const MoreMovies = () => {
     } else {
       setFocus("MOVIEMore_0_0");
     }
-    //   // if (localStorage.getItem("last")) {
-    //   //   setFocus(localStorage.getItem("last"));
+    //   // if (uiStorage.getItem("last")) {
+    //   //   setFocus(uiStorage.getItem("last"));
     //   // } else {
     //   //   setFocus("movieSearch_0");
     //   // }
@@ -331,8 +332,8 @@ const MoreMovies = () => {
     } else {
       setFocus("MOVIEMore_0_0");
     }
-    //   // if (localStorage.getItem("last")) {
-    //   //   setFocus(localStorage.getItem("last"));
+    //   // if (uiStorage.getItem("last")) {
+    //   //   setFocus(uiStorage.getItem("last"));
     //   // } else {
     //   //   setFocus("movieSearch_0");
     //   // }

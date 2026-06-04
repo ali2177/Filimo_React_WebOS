@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useBackKey } from "@src/hooks/useBackKey";
 import { useDisableKeyboardWhileLoading } from "@src/hooks/useDisableKeyboardWhileLoading";
 import { clearActorNavState } from "@src/utils/storageKeys";
+import { uiStorage } from "@src/utils/uiStorage";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import MovieList from "@src/components/MovieList/MovieList";
 import { useGetAllEpisodesQuery } from "../../services/TMDB";
@@ -66,14 +67,8 @@ const AllEpisodes = () => {
 
   const HandleSeasonEnterPress = (season) => {
     // console.log(season.movies?.data[0]);
-    localStorage.setItem(
-      "lastSeasonFocus_parent_new",
-      season.movies?.data[0].serial_parent_new
-    );
-    localStorage.setItem(
-      "lastSeasonFocus_season_part",
-      season.movies?.data[0].serial_season_part
-    );
+    uiStorage.setItem("lastSeasonFocus_parent_new", season.movies?.data[0].serial_parent_new);
+    uiStorage.setItem("lastSeasonFocus_season_part", season.movies?.data[0].serial_season_part);
     setIsLoading(true);
     setIsActiveSeasonFocus(true);
     setCurretSeasonChosen(season.movies.data);

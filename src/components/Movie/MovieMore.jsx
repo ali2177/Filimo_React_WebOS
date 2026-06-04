@@ -8,17 +8,18 @@ import {
   setFocus,
 } from "@noriginmedia/norigin-spatial-navigation";
 import { useKeyboardAwareScroll } from "@src/hooks/useKeyboardAwareScroll";
+import { uiStorage } from "@src/utils/uiStorage";
 
 function MovieMore({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
   const handleAction = () => {
     if (localStorage.getItem("level") === "level__1") {
-      localStorage.setItem("lastFocusMoreMovie_level__1", focusKeey);
-      localStorage.removeItem("lastFocusMore_level__1");
+      uiStorage.setItem("lastFocusMoreMovie_level__1", focusKeey);
+      uiStorage.removeItem("lastFocusMore_level__1");
     } else if (localStorage.getItem("level") === "level__2") {
-      localStorage.setItem("lastFocusMoreMovie_level__2", focusKeey);
-      localStorage.removeItem("lastFocusMore_level__2");
+      uiStorage.setItem("lastFocusMoreMovie_level__2", focusKeey);
+      uiStorage.removeItem("lastFocusMore_level__2");
     } else {
-      localStorage.setItem("lastFocusMoreMovie", focusKeey);
+      uiStorage.setItem("lastFocusMoreMovie", focusKeey);
     }
     navigate(`/movie/${movie.uid}`);
   };
@@ -32,7 +33,7 @@ function MovieMore({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
       //     `MOVIE_${focusKeey[6]}${focusKeey[7]}`
       //   );
       // } else {
-      //   localStorage.setItem("lastFocusRow", `MOVIE_${focusKeey[6]}`);
+      //   uiStorage.setItem("lastFocusRow", `MOVIE_${focusKeey[6]}`);
       // }
     },
     onEnterPress: () => {

@@ -9,12 +9,13 @@ import {
   setFocus,
 } from "@noriginmedia/norigin-spatial-navigation";
 import { useKeyboardAwareScroll } from "@src/hooks/useKeyboardAwareScroll";
+import { uiStorage } from "@src/utils/uiStorage";
 
 function MovieSearch({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
   const handleAction = () => {
     localStorage.removeItem("recommBtn");
     localStorage.removeItem("seasonBtn");
-    localStorage.setItem("last", focusKeey);
+    uiStorage.setItem("last", focusKeey);
     if (movie.img) {
       localStorage.setItem("movie_uid", movie.link_key);
       navigate(`/livePlayer`);

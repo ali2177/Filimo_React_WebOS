@@ -3,13 +3,14 @@ import {
   useFocusable,
   setFocus,
 } from "@noriginmedia/norigin-spatial-navigation";
+import { uiStorage } from "@src/utils/uiStorage";
 
 const Season = ({ title, count, onEnterPress, focusKeey }) => {
   const myRef = useRef(null);
   const { ref, focused, focusSelf, focusKey } = useFocusable({
     onEnterPress: () => {
       onEnterPress();
-      localStorage.setItem("lastSeasonFocus", focusKey);
+      uiStorage.setItem("lastSeasonFocus", focusKey);
     },
     onFocus: () => {
       handleScrolling();
@@ -24,7 +25,7 @@ const Season = ({ title, count, onEnterPress, focusKeey }) => {
 
   const handleScrolling = () => {
     setTimeout(() => {
-      if (localStorage.getItem("mode") === "KeyboardMode") {
+      if (uiStorage.getItem("mode") === "KeyboardMode") {
         myRef?.current?.scrollIntoView({
           block: "center",
         });
@@ -32,8 +33,9 @@ const Season = ({ title, count, onEnterPress, focusKeey }) => {
     }, 10);
   };
   useEffect(() => {
-    if (localStorage.getItem("lastSeasonFocus")) {
-      setFocus(localStorage.getItem("lastSeasonFocus"));
+    const saved = uiStorage.getItem("lastSeasonFocus");
+    if (saved) {
+      setFocus(saved);
     } else {
       setFocus("Season_0");
     }

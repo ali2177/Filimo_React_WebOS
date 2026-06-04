@@ -4,6 +4,7 @@ import {
   setFocus,
   getCurrentFocusKey,
 } from "@noriginmedia/norigin-spatial-navigation";
+import { uiStorage } from "@src/utils/uiStorage";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 
 const Episode = ({ movieItem, focusKeey }) => {
@@ -40,7 +41,7 @@ const Episode = ({ movieItem, focusKeey }) => {
   //   }, []);
   const handleScrolling = () => {
     setTimeout(() => {
-      if (localStorage.getItem("mode") === "KeyboardMode") {
+      if (uiStorage.getItem("mode") === "KeyboardMode") {
         myRef?.current?.scrollIntoView({
           block: "center",
         });

@@ -10,14 +10,15 @@ import {
   setFocus,
   getCurrentFocusKey,
 } from "@noriginmedia/norigin-spatial-navigation";
+import { uiStorage } from "@src/utils/uiStorage";
 
 const SeasonBtn = ({ ui_id, onFocus, onEnterPress, seriesName }) => {
   const handleAction = () => {
     localStorage.setItem("seasonBtn", "season-btn");
     localStorage.setItem("seriesName", seriesName);
-    localStorage.removeItem("lastSeasonFocus");
-    localStorage.removeItem("lastSeasonFocus_parent_new");
-    localStorage.removeItem("lastSeasonFocus_season_part");
+    uiStorage.removeItem("lastSeasonFocus");
+    uiStorage.removeItem("lastSeasonFocus_parent_new");
+    uiStorage.removeItem("lastSeasonFocus_season_part");
     localStorage.removeItem("recommBtn");
     localStorage.removeItem("moreBtn");
     navigate(`/allepisodes/${ui_id}`);

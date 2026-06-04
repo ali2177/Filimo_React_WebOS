@@ -9,6 +9,7 @@ import { useAuth } from "@src/components/AuthProvider";
 import { useOnlineStatus } from "@src/app/App";
 import Episode from "./Episode";
 import Loader from "@src/components/Loader/Loader";
+import { uiStorage } from "@src/utils/uiStorage";
 
 const EpisodesWrapper = ({
   curretSeasonChosen,
@@ -32,10 +33,10 @@ const EpisodesWrapper = ({
   useDisableKeyboardWhileLoading(isNewDataLoading);
 
   useEffect(() => {
-    if (localStorage.getItem("lastSeasonFocus_parent_new")) {
+    if (uiStorage.getItem("lastSeasonFocus_parent_new")) {
       getUserData(
-        localStorage.getItem("lastSeasonFocus_parent_new"),
-        localStorage.getItem("lastSeasonFocus_season_part")
+        uiStorage.getItem("lastSeasonFocus_parent_new"),
+        uiStorage.getItem("lastSeasonFocus_season_part")
       );
     } else {
       getUserData(
@@ -45,10 +46,10 @@ const EpisodesWrapper = ({
     }
   }, [data]);
   useEffect(() => {
-    if (localStorage.getItem("lastSeasonFocus_parent_new")) {
+    if (uiStorage.getItem("lastSeasonFocus_parent_new")) {
       getUserData(
-        localStorage.getItem("lastSeasonFocus_parent_new"),
-        localStorage.getItem("lastSeasonFocus_season_part")
+        uiStorage.getItem("lastSeasonFocus_parent_new"),
+        uiStorage.getItem("lastSeasonFocus_season_part")
       );
     }
   }, [isSeasonChange]);

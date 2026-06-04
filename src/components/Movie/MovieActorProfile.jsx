@@ -10,12 +10,13 @@ import {
   setFocus,
 } from "@noriginmedia/norigin-spatial-navigation";
 import { clearActorNavState } from "@src/utils/storageKeys";
+import { uiStorage } from "@src/utils/uiStorage";
 
 function MovieActorProfile({ movie, movieFocus, onEnterPress, focusKeey }) {
   const handleAction = () => {
     navigate(`/movie/${movie.attributes.uid}`);
     clearActorNavState();
-    localStorage.removeItem("lastFocusRecomm");
+    uiStorage.removeItem("lastFocusRecomm");
   };
   const { ref, focused, focusSelf, focusKey } = useFocusable({
     onFocus: () => {
@@ -44,7 +45,7 @@ function MovieActorProfile({ movie, movieFocus, onEnterPress, focusKeey }) {
   useEffect(() => {
     localStorage.removeItem("seasonBtn");
     localStorage.removeItem("recommBtn");
-    localStorage.removeItem("lastSeasonFocus");
+    uiStorage.removeItem("lastSeasonFocus");
   }, [location]);
 
   return (

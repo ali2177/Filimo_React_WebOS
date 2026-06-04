@@ -1,14 +1,15 @@
 import React from "react";
 import { useFocusable } from "@noriginmedia/norigin-spatial-navigation";
 import { useNavigate, Link } from "react-router-dom";
+import { uiStorage } from "@src/utils/uiStorage";
 
 const Actor = ({ actor, onFocus, onEnterPress, focusKeey, name }) => {
   const navigate = useNavigate();
   const { ref, focused } = useFocusable({
     onFocus,
     onEnterPress: () => {
-      localStorage.setItem("lastFocusActor", focusKeey);
-      localStorage.removeItem("lastFocusCrew");
+      uiStorage.setItem("lastFocusActor", focusKeey);
+      uiStorage.removeItem("lastFocusCrew");
       navigate(`/actor/${name}`);
     },
     isFocusBoundary: false,

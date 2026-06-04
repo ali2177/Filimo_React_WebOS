@@ -9,6 +9,7 @@ import { useOnlineStatus } from "@src/app/App";
 import { useDisableKeyboardWhileLoading } from "@src/hooks/useDisableKeyboardWhileLoading";
 import { useFilimioFetch } from "@src/hooks/useFilimioFetch";
 import { clearHomeNavState } from "@src/utils/storageKeys";
+import { uiStorage } from "@src/utils/uiStorage";
 
 const User = ({ jwtSub, user, index }) => {
   const { jwt, setJwt } = useAuth();
@@ -27,7 +28,7 @@ const User = ({ jwtSub, user, index }) => {
         clearHomeNavState();
         localStorage.removeItem("moreSingle");
         localStorage.removeItem("lastRoute");
-        localStorage.removeItem("lastSeasonFocus");
+        uiStorage.removeItem("lastSeasonFocus");
         localStorage.removeItem("moreBtn");
         localStorage.removeItem("seasonBtn");
         localStorage.removeItem("recommBtn");
@@ -118,7 +119,7 @@ const User = ({ jwtSub, user, index }) => {
         clearHomeNavState();
         localStorage.removeItem("moreSingle");
         localStorage.removeItem("lastRoute");
-        localStorage.removeItem("lastSeasonFocus");
+        uiStorage.removeItem("lastSeasonFocus");
         localStorage.removeItem("moreBtn");
         localStorage.removeItem("seasonBtn");
         localStorage.removeItem("recommBtn");

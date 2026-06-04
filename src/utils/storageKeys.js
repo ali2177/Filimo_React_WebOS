@@ -1,3 +1,5 @@
+import { uiStorage } from './uiStorage';
+
 const HOME_NAV_KEYS = [
   "lastdataloaded",
   "lastdataloadedIran",
@@ -16,10 +18,10 @@ const HOME_NAV_KEYS = [
 ];
 
 export function clearHomeNavState() {
-  HOME_NAV_KEYS.forEach((key) => localStorage.removeItem(key));
+  uiStorage.clearKeys(HOME_NAV_KEYS);
 }
 
 export function clearActorNavState() {
-  localStorage.removeItem("lastFocusActor");
-  localStorage.removeItem("lastFocusCrew");
+  uiStorage.removeItem("lastFocusActor");
+  uiStorage.removeItem("lastFocusCrew");
 }

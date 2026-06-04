@@ -5,6 +5,7 @@ import {
   getCurrentFocusKey,
 } from "@noriginmedia/norigin-spatial-navigation";
 import { useNavigate } from "react-router-dom";
+import { uiStorage } from "@src/utils/uiStorage";
 
 const SignOutBtn = ({ onFocus, jwt }) => {
   const { ref, focused, focusSelf, focusKey } = useFocusable({
@@ -23,16 +24,16 @@ const SignOutBtn = ({ onFocus, jwt }) => {
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
-    localStorage.removeItem("lastdataloaded");
+    uiStorage.removeItem("lastdataloaded");
     setTimeout(() => {
-      localStorage.removeItem("lastdataloaded");
+      uiStorage.removeItem("lastdataloaded");
     }, 2000);
-    localStorage.removeItem("lastdataloadedIran");
-    localStorage.removeItem("lastFocusRowMoviesBeforeReload");
-    localStorage.removeItem("lastFocusRowIranBeforeReload");
-    localStorage.removeItem("lastdataloadedMovies");
-    localStorage.removeItem("lastFocusRow");
-    localStorage.removeItem("lastMovieFocus");
+    uiStorage.removeItem("lastdataloadedIran");
+    uiStorage.removeItem("lastFocusRowMoviesBeforeReload");
+    uiStorage.removeItem("lastFocusRowIranBeforeReload");
+    uiStorage.removeItem("lastdataloadedMovies");
+    uiStorage.removeItem("lastFocusRow");
+    uiStorage.removeItem("lastMovieFocus");
     localStorage.removeItem("MenuData");
     const userAgent = {
       os: "WebOs",

@@ -1,9 +1,10 @@
 import { useCallback } from "react";
+import { uiStorage } from "@src/utils/uiStorage";
 
 export function useKeyboardAwareScroll(ref) {
   return useCallback(() => {
     setTimeout(() => {
-      if (localStorage.getItem("mode") === "KeyboardMode") {
+      if (uiStorage.getItem("mode") === "KeyboardMode") {
         ref?.current?.scrollIntoView({ block: "center" });
       }
     }, 10);

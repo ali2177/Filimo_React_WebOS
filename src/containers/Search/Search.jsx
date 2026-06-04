@@ -17,6 +17,7 @@ import MovieSearch from "@src/components/Movie/MovieSearch.jsx";
 import Keyboard from "@src/components/Keyboard/Keyboard.jsx";
 import SearchInput from "./SearchInput.jsx";
 import KeyboardWithCaretFake from "@src/components/Keyboard/KeyBoardWithCaret.jsx";
+import { uiStorage } from "@src/utils/uiStorage";
 
 function Search() {
   const location = useLocation();
@@ -30,12 +31,12 @@ function Search() {
   const [curretFocusedMovie, setCurretFocusedMovie] = useState("");
 
   useEffect(() => {
-    localStorage.removeItem("lastFocus");
-    localStorage.removeItem("lastFocusRow");
-    localStorage.removeItem("lastMovieFocus");
+    uiStorage.removeItem("lastFocus");
+    uiStorage.removeItem("lastFocusRow");
+    uiStorage.removeItem("lastMovieFocus");
     localStorage.removeItem("lastRouteNotplayer");
-    localStorage.removeItem("lastSeasonFocus_parent_new");
-    localStorage.removeItem("lastSeasonFocus_season_part");
+    uiStorage.removeItem("lastSeasonFocus_parent_new");
+    uiStorage.removeItem("lastSeasonFocus_season_part");
     setData(JSON.parse(localStorage.getItem("searchResult")));
     if (localStorage.getItem("searchQuery"))
       setSearchQuery(localStorage.getItem("searchQuery"));

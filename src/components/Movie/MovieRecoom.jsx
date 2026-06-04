@@ -9,11 +9,12 @@ import {
   setFocus,
 } from "@noriginmedia/norigin-spatial-navigation";
 import { clearActorNavState } from "@src/utils/storageKeys";
+import { uiStorage } from "@src/utils/uiStorage";
 
 function MovieRecoom({ movie, movieFocus, onFocus, onEnterPress, focusKeeey }) {
   const handleAction = () => {
     clearActorNavState();
-    localStorage.removeItem("lastFocusMore");
+    uiStorage.removeItem("lastFocusMore");
     localStorage.removeItem("recommBtn");
     localStorage.removeItem("seasonBtn");
 

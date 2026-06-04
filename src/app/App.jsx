@@ -1,5 +1,6 @@
-import React, { useEffect, useState, createContext, useContext } from "react";
+import React, { useEffect, useRef, useState, createContext, useContext } from "react";
 import { useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { Navbar } from "@src/components/index";
 import Splash from "@src/components/Splash";
 import "./App.css";
@@ -12,6 +13,7 @@ import { useAuth } from "@src/components/AuthProvider";
 import AppRoutes from "@src/app/routes";
 import { useFilimioFetch } from "@src/hooks/useFilimioFetch";
 import { usePolling } from "@src/hooks/usePolling";
+import { setMode } from "@src/features/uiState";
 
 init({
   debug: false,
@@ -25,6 +27,8 @@ export const useOnlineStatus = () => useContext(OnlineStatusContext);
 function App() {
   const { jwt, setJwt } = useAuth();
   const filimioFetch = useFilimioFetch();
+  const dispatch = useDispatch();
+  const modeRef = useRef('KeyboardMode');
 
   const [isLoading, setIsLoading] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
@@ -138,20 +142,24 @@ function App() {
     }
     //start timer
 
-    localStorage.setItem("mode", "KeyboardMode");
-    const handleWheel = (event) => {
-      if (localStorage.getItem("mode") === "KeyboardMode") {
-        localStorage.setItem("mode", "PointerMode");
+    dispatch(setMode('KeyboardMode'));
+    modeRef.current = 'KeyboardMode';
+    const handleWheel = () => {
+      if (modeRef.current !== 'PointerMode') {
+        modeRef.current = 'PointerMode';
+        dispatch(setMode('PointerMode'));
       }
     };
-    const handleKeyDown = (event) => {
-      if (localStorage.getItem("mode") === "PointerMode") {
-        localStorage.setItem("mode", "KeyboardMode");
+    const handleKeyDown = () => {
+      if (modeRef.current !== 'KeyboardMode') {
+        modeRef.current = 'KeyboardMode';
+        dispatch(setMode('KeyboardMode'));
       }
     };
-    const handleMouseMove = (event) => {
-      if (localStorage.getItem("mode") === "KeyboardMode") {
-        localStorage.setItem("mode", "PointerMode");
+    const handleMouseMove = () => {
+      if (modeRef.current !== 'PointerMode') {
+        modeRef.current = 'PointerMode';
+        dispatch(setMode('PointerMode'));
       }
     };
 

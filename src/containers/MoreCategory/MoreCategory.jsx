@@ -16,6 +16,7 @@ import NetworkError from "@src/components/NetworkError/NetworkError";
 import Loader from "@src/components/Loader/Loader";
 
 import ContentCatRow from "@src/components/ContentCatRow";
+import { uiStorage } from "@src/utils/uiStorage";
 
 const MoreCategory = () => {
   const myRef = useRef(null);
@@ -39,7 +40,7 @@ const MoreCategory = () => {
   useBackKey(handleBack);
 
   useEffect(() => {
-    localStorage.removeItem("lastFocusCat");
+    uiStorage.removeItem("lastFocusCat");
     window.scrollTo({ top: 0 });
   }, []);
   useEffect(() => {

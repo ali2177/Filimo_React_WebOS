@@ -2,40 +2,41 @@ import React, { useEffect } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 
 import splash from "../../../src/assets/images/aparat-kids-splash.svg";
+import { uiStorage } from "@src/utils/uiStorage";
 
 const Splash = ({ jwtSub, user }) => {
   const location = useLocation("");
   useEffect(() => {
     // console.log("splash shown");
     if (location.pathname !== "/player") {
-      localStorage.removeItem("lastdataloaded");
-      localStorage.removeItem("lastdataloadedIran");
-      localStorage.removeItem("lastdataloadedMovies");
-      localStorage.removeItem("lastdataloadedSeries");
-      localStorage.removeItem("lastdataloadedKids");
+      uiStorage.removeItem("lastdataloaded");
+      uiStorage.removeItem("lastdataloadedIran");
+      uiStorage.removeItem("lastdataloadedMovies");
+      uiStorage.removeItem("lastdataloadedSeries");
+      uiStorage.removeItem("lastdataloadedKids");
       localStorage.removeItem("moreSingle");
       localStorage.removeItem("lastRoute");
-      localStorage.removeItem("lastFocus");
-      localStorage.removeItem("lastFocusMoreItem");
-      localStorage.removeItem("last");
-      localStorage.removeItem("lastFocusRow");
-      localStorage.removeItem("lastFocusRowMoviesBeforeReload");
-      localStorage.removeItem("lastFocusRowKidsBeforeReload");
-      localStorage.removeItem("lastFocusRowIranBeforeReload");
-      localStorage.removeItem("lastdataloadedKids");
-      localStorage.removeItem("lastFocusRowBeforeReload");
-      localStorage.removeItem("lastMovieFocus");
-      localStorage.removeItem("lastdataloadedMovies");
-      localStorage.removeItem("lastdataloadedSeries");
-      localStorage.removeItem("lastSeasonFocus");
+      uiStorage.removeItem("lastFocus");
+      uiStorage.removeItem("lastFocusMoreItem");
+      uiStorage.removeItem("last");
+      uiStorage.removeItem("lastFocusRow");
+      uiStorage.removeItem("lastFocusRowMoviesBeforeReload");
+      uiStorage.removeItem("lastFocusRowKidsBeforeReload");
+      uiStorage.removeItem("lastFocusRowIranBeforeReload");
+      uiStorage.removeItem("lastdataloadedKids");
+      uiStorage.removeItem("lastFocusRowBeforeReload");
+      uiStorage.removeItem("lastMovieFocus");
+      uiStorage.removeItem("lastdataloadedMovies");
+      uiStorage.removeItem("lastdataloadedSeries");
+      uiStorage.removeItem("lastSeasonFocus");
       localStorage.removeItem("moreBtn");
       localStorage.removeItem("seasonBtn");
       localStorage.removeItem("recommBtn");
       localStorage.removeItem("movie_cast_time");
       localStorage.removeItem("movie_uid");
       localStorage.removeItem("fromAlert");
-      // localStorage.removeItem("lastFocusMenuItem");
-      localStorage.removeItem("movie_last_watch_time");
+      // uiStorage.removeItem("lastFocusMenuItem");
+      uiStorage.removeItem("movie_last_watch_time");
     }
   }, []);
   let x;

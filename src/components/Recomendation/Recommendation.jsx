@@ -11,6 +11,7 @@ import ContentRow from "../ContentRow";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
+import { uiStorage } from "@src/utils/uiStorage";
 
 const Recommendation = ({ movieRow, rowId }) => {
   const [curretFocusedMovie, setCurretFocusedMovie] = useState(null);
@@ -43,7 +44,7 @@ const Recommendation = ({ movieRow, rowId }) => {
   useEffect(() => {
     // console.log(location);
     localStorage.removeItem("seasonBtn");
-    localStorage.removeItem("lastSeasonFocus");
+    uiStorage.removeItem("lastSeasonFocus");
   }, [location]);
   return (
     <div

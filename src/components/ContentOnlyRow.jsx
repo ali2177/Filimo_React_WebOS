@@ -15,6 +15,7 @@ import MovieActorProfile from "./Movie/MovieActorProfile";
 import Movie from "./Movie/Movie";
 import MoreItem from "./Movie/MoreItem";
 import MovieRecoom from "./Movie/MovieRecoom";
+import { uiStorage } from "@src/utils/uiStorage";
 
 const ContentOnlyRow = ({
   title,
@@ -73,24 +74,24 @@ const ContentOnlyRow = ({
     }
   };
   const handleInterPress = (movie, focusKeeey) => {
-    localStorage.removeItem("lastFocusCrew");
-    localStorage.removeItem("lastFocusActor");
-    localStorage.removeItem("lastFocusMore");
+    uiStorage.removeItem("lastFocusCrew");
+    uiStorage.removeItem("lastFocusActor");
+    uiStorage.removeItem("lastFocusMore");
     navigate(`/movie/${movie.uid}`);
   };
   const handleMoreItemInterPress = (movie) => {
-    localStorage.removeItem("lastFocusCrew");
-    localStorage.removeItem("lastFocusActor");
-    localStorage.removeItem("lastFocusMore");
+    uiStorage.removeItem("lastFocusCrew");
+    uiStorage.removeItem("lastFocusActor");
+    uiStorage.removeItem("lastFocusMore");
     localStorage.setItem("moreSingle", JSON.stringify(movies));
     navigate(`/moreSingle/${linkText}`);
   };
   useEffect(() => {
     // setFocus("MOVIE_LIST_0");
-    // if (localStorage.getItem("lastFocus") === null) {
+    // if (uiStorage.getItem("lastFocus") === null) {
     //   setFocus("MOVIE_LIST_0");
     // } else {
-    //   setFocus(localStorage.getItem("lastFocus"));
+    //   setFocus(uiStorage.getItem("lastFocus"));
     // }
     // console.log(focusKeey);
     // console.log(focusKey);
@@ -98,7 +99,7 @@ const ContentOnlyRow = ({
   }, []);
   useEffect(() => {
     // if (location.pathname === "/") {
-    //   setFocus(localStorage.getItem("lastFocus"));
+    //   setFocus(uiStorage.getItem("lastFocus"));
     // } else {
     //   console.log("notFound");
     //   setFocus("MOVIE_LIST_0");

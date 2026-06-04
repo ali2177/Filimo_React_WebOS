@@ -3,6 +3,7 @@ import { useBackKey } from "@src/hooks/useBackKey";
 import MovieSearch from "@src/components/Movie/MovieSearch.jsx";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useGetMoreMoviesQuery } from "../../services/TMDB";
+import { uiStorage } from "@src/utils/uiStorage";
 import {
   FocusableComponentLayout,
   FocusContext,
@@ -28,8 +29,8 @@ const MoreMovieWeb = () => {
     localStorage.removeItem("recommBtn");
   }, []);
   useEffect(() => {
-    if (localStorage.getItem("last")) {
-      setFocus(localStorage.getItem("last"));
+    if (uiStorage.getItem("last")) {
+      setFocus(uiStorage.getItem("last"));
     } else {
       setFocus("movieSearch_0");
     }

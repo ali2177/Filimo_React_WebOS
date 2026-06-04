@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import { Link } from "react-router-dom";
 import { Focusable } from "react-js-spatial-navigation";
 import { useNavigate, useLocation } from "react-router-dom";
+import { uiStorage } from "@src/utils/uiStorage";
 import {
   useFocusable,
   setFocus,
@@ -20,30 +21,29 @@ function MoreItem({
 }) {
   const handleAction = () => {
     if (type === "mainPage") {
-      localStorage.setItem("lastFocus", focusKeey);
-
+      uiStorage.setItem("lastFocus", focusKeey);
       localStorage.setItem("level", "level__1");
       navigate(`/moremovies/${tag_id}`);
     } else if (type === "moreReccom") {
       localStorage.setItem("moreSingle", JSON.stringify(movies));
       navigate(`/moreSingle/${linkText}`);
     } else if (type === "live") {
-      localStorage.setItem("lastFocus", focusKeey);
+      uiStorage.setItem("lastFocus", focusKeey);
       localStorage.setItem("moreSingle", JSON.stringify(movies));
       navigate(`/moreMovieSingle`);
     } else if (type === "moreCat") {
-      localStorage.setItem("lastFocusCat", focusKeey);
+      uiStorage.setItem("lastFocusCat", focusKeey);
       localStorage.setItem("moreSingle", JSON.stringify(movies));
       navigate(`/moreMovieSingle`);
     } else if (type === "morePage") {
       if (localStorage.getItem("level") === "level__1") {
-        localStorage.setItem("lastFocusMore_level__1", focusKeey);
-        localStorage.removeItem("lastFocusMoreMovie_level__1");
+        uiStorage.setItem("lastFocusMore_level__1", focusKeey);
+        uiStorage.removeItem("lastFocusMoreMovie_level__1");
       } else if (localStorage.getItem("level") === "level__2") {
-        localStorage.setItem("lastFocusMore_level__2", focusKeey);
-        localStorage.removeItem("lastFocusMoreMovie_level__2");
+        uiStorage.setItem("lastFocusMore_level__2", focusKeey);
+        uiStorage.removeItem("lastFocusMoreMovie_level__2");
       } else {
-        localStorage.setItem("lastFocusMore", focusKeey);
+        uiStorage.setItem("lastFocusMore", focusKeey);
       }
       if (localStorage.getItem("level")) {
         localStorage.setItem(
@@ -54,7 +54,7 @@ function MoreItem({
 
       navigate(`/moremovies/${tag_id}`);
     } else {
-      localStorage.setItem("lastFocusMore", focusKeey);
+      uiStorage.setItem("lastFocusMore", focusKeey);
       localStorage.setItem("moreSingle", JSON.stringify(movies));
       navigate(`/moreMovieSingle/`);
     }
@@ -81,7 +81,7 @@ function MoreItem({
   const handleScrolling = () => {
     // console.log(focusKey);
     setTimeout(() => {
-      if (localStorage.getItem("mode") === "KeyboardMode") {
+      if (uiStorage.getItem("mode") === "KeyboardMode") {
         myRef?.current?.scrollIntoView({
           block: focusKey.slice(5, 6) === "0" ? "end" : "center",
         });

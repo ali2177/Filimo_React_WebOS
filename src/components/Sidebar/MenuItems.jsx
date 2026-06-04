@@ -15,6 +15,7 @@ import { useAuth } from "../AuthProvider";
 import { useOnlineStatus } from "@src/app/App";
 import { Link, useNavigate } from "react-router-dom";
 import SidebarItem from "./SidebarItem";
+import { uiStorage } from "@src/utils/uiStorage";
 
 const MenuItems = ({ isLogin }) => {
   const { jwt, setJwt } = useAuth();
@@ -125,23 +126,23 @@ const MenuItems = ({ isLogin }) => {
 
   const handleInterPress = (item) => {
     if (item.link_text === "کودک" && !isLogin) {
-      localStorage.setItem("lastFocus", "MOVIE_1__0");
+      uiStorage.setItem("lastFocus", "MOVIE_1__0");
     }
     if (item.link_text === "کودک" && isLogin) {
-      localStorage.setItem("lastFocus", "MOVIE_0__0");
+      uiStorage.setItem("lastFocus", "MOVIE_0__0");
     }
     if (item.link_text !== "کودک") {
-      localStorage.setItem("lastFocus", "MOVIE_0__0");
+      uiStorage.setItem("lastFocus", "MOVIE_0__0");
     }
-    localStorage.removeItem("lastFocusRowBeforeReload");
-    localStorage.removeItem("lastFocusRowSeriesBeforeReload");
-    localStorage.removeItem("lastFocusRowKidsBeforeReload");
-    localStorage.removeItem("lastFocusRowMoviesBeforeReload");
-    localStorage.removeItem("lastdataloadedKids");
-    localStorage.removeItem("lastdataloadedMovies");
-    localStorage.removeItem("lastdataloadedSeries");
-    localStorage.removeItem("lastFocus");
-    localStorage.removeItem("lastMovieFocus");
+    uiStorage.removeItem("lastFocusRowBeforeReload");
+    uiStorage.removeItem("lastFocusRowSeriesBeforeReload");
+    uiStorage.removeItem("lastFocusRowKidsBeforeReload");
+    uiStorage.removeItem("lastFocusRowMoviesBeforeReload");
+    uiStorage.removeItem("lastdataloadedKids");
+    uiStorage.removeItem("lastdataloadedMovies");
+    uiStorage.removeItem("lastdataloadedSeries");
+    uiStorage.removeItem("lastFocus");
+    uiStorage.removeItem("lastMovieFocus");
 
     if (item.link_type === "login") {
       navigate("/login");
@@ -193,7 +194,7 @@ const MenuItems = ({ isLogin }) => {
     // }
     getUserData(jwt);
     // setTimeout(() => {
-    //   setFocus(localStorage.getItem("lastFocus"));
+    //   setFocus(uiStorage.getItem("lastFocus"));
     // }, 300);
   };
 
@@ -214,7 +215,7 @@ const MenuItems = ({ isLogin }) => {
                   data={item.attributes}
                   handleEnterPress={(focusKey) => {
                     if (item.attributes.link_type === "list") {
-                      localStorage.setItem("lastFocusMenuItem", focusKey);
+                      uiStorage.setItem("lastFocusMenuItem", focusKey);
                     }
                     handleInterPress(item.attributes);
                   }}

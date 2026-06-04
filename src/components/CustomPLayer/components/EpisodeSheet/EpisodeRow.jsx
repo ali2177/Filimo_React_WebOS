@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import { useFocusable } from "@noriginmedia/norigin-spatial-navigation";
+import { uiStorage } from "@src/utils/uiStorage";
 
 const EpisodeRow = ({ focusKey: fk, label, isPlaying, onEnter }) => {
   const myRef = useRef(null);
@@ -12,7 +13,7 @@ const EpisodeRow = ({ focusKey: fk, label, isPlaying, onEnter }) => {
   });
   const handleScrolling = () => {
     setTimeout(() => {
-      if (localStorage.getItem("mode") === "KeyboardMode") {
+      if (uiStorage.getItem("mode") === "KeyboardMode") {
         myRef?.current?.scrollIntoView({
           block: "center",
         });

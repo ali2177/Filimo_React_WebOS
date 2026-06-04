@@ -9,10 +9,11 @@ import {
   setFocus,
 } from "@noriginmedia/norigin-spatial-navigation";
 import { useKeyboardAwareScroll } from "@src/hooks/useKeyboardAwareScroll";
+import { uiStorage } from "@src/utils/uiStorage";
 
 function MovieCat({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
   const handleAction = () => {
-    localStorage.setItem("lastFocusCat", focusKeey);
+    uiStorage.setItem("lastFocusCat", focusKeey);
 
     navigate(`/movie/${movie.uid}`);
   };

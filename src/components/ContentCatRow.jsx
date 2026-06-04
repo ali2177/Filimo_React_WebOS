@@ -16,6 +16,7 @@ import Movie from "./Movie/Movie";
 import MoreItem from "./Movie/MoreItem";
 import MovieRecoom from "./Movie/MovieRecoom";
 import MovieCat from "./Movie/MovieCat";
+import { uiStorage } from "@src/utils/uiStorage";
 
 const ContentCatRow = ({
   title,
@@ -81,16 +82,16 @@ const ContentCatRow = ({
     // navigate(`/moreSingle/${linkText}`);
   };
   useEffect(() => {
-    if (localStorage.getItem("lastFocusCat") === null) {
+    if (uiStorage.getItem("lastFocusCat") === null) {
       setFocus("MOVIECAT_0__0");
     } else {
-      setFocus(localStorage.getItem("lastFocusCat"));
+      setFocus(uiStorage.getItem("lastFocusCat"));
     }
     // setFocus("MOVIE_LIST_0");
-    // if (localStorage.getItem("lastFocus") === null) {
+    // if (uiStorage.getItem("lastFocus") === null) {
     //   setFocus("MOVIE_LIST_0");
     // } else {
-    //   setFocus(localStorage.getItem("lastFocus"));
+    //   setFocus(uiStorage.getItem("lastFocus"));
     // }
     // console.log(focusKeey);
     // console.log(focusKey);
@@ -98,7 +99,7 @@ const ContentCatRow = ({
   }, []);
   useEffect(() => {
     // if (location.pathname === "/") {
-    //   setFocus(localStorage.getItem("lastFocus"));
+    //   setFocus(uiStorage.getItem("lastFocus"));
     // } else {
     //   console.log("notFound");
     //   setFocus("MOVIE_LIST_0");
