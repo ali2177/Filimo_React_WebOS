@@ -43,8 +43,8 @@ function MovieActorProfile({ movie, movieFocus, onEnterPress, focusKeey }) {
   };
 
   useEffect(() => {
-    localStorage.removeItem("seasonBtn");
-    localStorage.removeItem("recommBtn");
+    uiStorage.removeItem("seasonBtn");
+    uiStorage.removeItem("recommBtn");
     uiStorage.removeItem("lastSeasonFocus");
   }, [location]);
 

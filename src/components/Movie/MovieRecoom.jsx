@@ -15,8 +15,8 @@ function MovieRecoom({ movie, movieFocus, onFocus, onEnterPress, focusKeeey }) {
   const handleAction = () => {
     clearActorNavState();
     uiStorage.removeItem("lastFocusMore");
-    localStorage.removeItem("recommBtn");
-    localStorage.removeItem("seasonBtn");
+    uiStorage.removeItem("recommBtn");
+    uiStorage.removeItem("seasonBtn");
 
     navigate(`/movie/${movie.uid}`);
   };

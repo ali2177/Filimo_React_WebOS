@@ -22,7 +22,7 @@ function Movie({
   const handleAction = () => {
     uiStorage.setItem("lastFocus", focusKeey);
     if (movie.img) {
-      localStorage.setItem("movie_uid", movie.link_key);
+      uiStorage.setItem("movie_uid", movie.link_key);
       navigate(`/livePlayer`);
     } else {
       navigate(`/movie/${movie.uid}`);

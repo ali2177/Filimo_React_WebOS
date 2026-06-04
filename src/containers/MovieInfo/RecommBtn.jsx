@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 
 import { useNavigate, Link, useNavigation } from "react-router-dom";
+import { uiStorage } from "@src/utils/uiStorage";
 import {
   FocusableComponentLayout,
   FocusContext,
@@ -14,9 +15,9 @@ import {
 const RecommBtn = ({ onFocus, linkText, uid }) => {
   const handleAction = () => {
     // console.log(focusKey);
-    localStorage.setItem("recommBtn", "recomm-btn");
-    localStorage.removeItem("seasonBtn");
-    localStorage.removeItem("moreBtn");
+    uiStorage.setItem("recommBtn", "recomm-btn");
+    uiStorage.removeItem("seasonBtn");
+    uiStorage.removeItem("moreBtn");
     // localStorage.setItem("moreSingle", JSON.stringify(movieRow));
     navigate(`/morereccom/${uid}`);
   };

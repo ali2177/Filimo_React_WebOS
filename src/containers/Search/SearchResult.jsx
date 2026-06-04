@@ -12,6 +12,7 @@ import {
   setFocus,
 } from "@noriginmedia/norigin-spatial-navigation";
 import Loader from "@src/components/Loader/Loader";
+import { uiStorage } from "@src/utils/uiStorage";
 
 const SearchResult = () => {
   const { ref, focusKey, focusSelf, focused } = useFocusable({
@@ -24,8 +25,8 @@ const SearchResult = () => {
   const navigate = useNavigate();
   const [curretFocusedMovie, setCurretFocusedMovie] = useState("");
   useEffect(() => {
-    localStorage.removeItem("seasonBtn");
-    localStorage.removeItem("recommBtn");
+    uiStorage.removeItem("seasonBtn");
+    uiStorage.removeItem("recommBtn");
     setData(JSON.parse(localStorage.getItem("searchResult")));
   }, []);
 

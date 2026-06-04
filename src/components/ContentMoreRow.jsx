@@ -14,6 +14,7 @@ import {
 import Movie from "./Movie/Movie";
 import MovieMore from "./Movie/MovieMore";
 import MoreItem from "./Movie/MoreItem";
+import { uiStorage } from "@src/utils/uiStorage";
 
 const ContentMoreRow = ({
   title,
@@ -134,7 +135,7 @@ const ContentMoreRow = ({
     // console.log(focusKeey);
     // console.log(focusKey);
     // focusSelf();
-  }, [movies, localStorage.getItem("level")]);
+  }, [movies, uiStorage.getItem("level")]);
   useEffect(() => {
     // if (localStorage.getItem("lastFocusMore") === null) {
     //   setFocus("MOVIEMore_0_0");

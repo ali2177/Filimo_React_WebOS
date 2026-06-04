@@ -23,6 +23,7 @@ import { useOnlineStatus } from "@src/app/App";
 
 import logo from "../../assets/images/aparat-kids-type-gray.svg";
 import HlsTvPlayer from "@src/components/CustomPLayer/HlsTvPlayer";
+import { uiStorage } from "@src/utils/uiStorage";
 
 let interval;
 let interval2;
@@ -86,9 +87,9 @@ const TvPlayer = () => {
   useEffect(() => {
     // getData();
     setJwt(localStorage.getItem("jwt"));
-    setMovieUid(localStorage.getItem("movie_uid"));
-    setFormAction(localStorage.getItem("formAction"));
-    setMovieCastTime(localStorage.getItem("movie_cast_time"));
+    setMovieUid(uiStorage.getItem("movie_uid"));
+    setFormAction(uiStorage.getItem("formAction"));
+    setMovieCastTime(uiStorage.getItem("movie_cast_time"));
     // setSubtitles(JSON.parse(localStorage.getItem("subtitles")));
     return () => {
       clearInterval(interval);
@@ -939,7 +940,7 @@ const TvPlayer = () => {
           handleBtnEnter={() => {
             setIsShowAlert(false);
             navigate(`/movie/${movieUid}`);
-            localStorage.setItem("fromAlert", "back");
+            uiStorage.setItem("fromAlert", "back");
           }}
         />
       );
@@ -1223,7 +1224,7 @@ const TvPlayer = () => {
               introEnd={movieIntroTimeEnd}
               castData={movieWatchData?.data.attributes.cast}
               onNextEpisode={(uid) => {
-                localStorage.setItem("movie_uid", uid);
+                uiStorage.setItem("movie_uid", uid);
                 localStorage.setItem("movie_last_watch_time", 0);
                 setMovieUid(uid);
               }}

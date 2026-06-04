@@ -14,13 +14,13 @@ import { uiStorage } from "@src/utils/uiStorage";
 
 const SeasonBtn = ({ ui_id, onFocus, onEnterPress, seriesName }) => {
   const handleAction = () => {
-    localStorage.setItem("seasonBtn", "season-btn");
-    localStorage.setItem("seriesName", seriesName);
+    uiStorage.setItem("seasonBtn", "season-btn");
+    uiStorage.setItem("seriesName", seriesName);
     uiStorage.removeItem("lastSeasonFocus");
     uiStorage.removeItem("lastSeasonFocus_parent_new");
     uiStorage.removeItem("lastSeasonFocus_season_part");
-    localStorage.removeItem("recommBtn");
-    localStorage.removeItem("moreBtn");
+    uiStorage.removeItem("recommBtn");
+    uiStorage.removeItem("moreBtn");
     navigate(`/allepisodes/${ui_id}`);
   };
   const { ref, focused, focusSelf, focusKey } = useFocusable({

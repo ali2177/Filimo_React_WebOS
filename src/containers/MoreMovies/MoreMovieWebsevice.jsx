@@ -25,8 +25,8 @@ const MoreMovieWeb = () => {
   const navigate = useNavigate();
   const [curretFocusedMovie, setCurretFocusedMovie] = useState("");
   useEffect(() => {
-    localStorage.removeItem("seasonBtn");
-    localStorage.removeItem("recommBtn");
+    uiStorage.removeItem("seasonBtn");
+    uiStorage.removeItem("recommBtn");
   }, []);
   useEffect(() => {
     if (uiStorage.getItem("last")) {

@@ -140,9 +140,9 @@ const AllEpisodes = () => {
             }}
           />
           <h1 className="u500">
-            {localStorage
+            {uiStorage
               .getItem("seriesName")
-              .substring(0, localStorage.getItem("seriesName").indexOf("-"))}
+              ?.substring(0, uiStorage.getItem("seriesName").indexOf("-"))}
           </h1>
         </div>
 

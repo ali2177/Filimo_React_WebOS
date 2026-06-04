@@ -14,7 +14,7 @@ const Splash = ({ jwtSub, user }) => {
       uiStorage.removeItem("lastdataloadedMovies");
       uiStorage.removeItem("lastdataloadedSeries");
       uiStorage.removeItem("lastdataloadedKids");
-      localStorage.removeItem("moreSingle");
+      uiStorage.removeItem("moreSingle");
       localStorage.removeItem("lastRoute");
       uiStorage.removeItem("lastFocus");
       uiStorage.removeItem("lastFocusMoreItem");
@@ -29,12 +29,12 @@ const Splash = ({ jwtSub, user }) => {
       uiStorage.removeItem("lastdataloadedMovies");
       uiStorage.removeItem("lastdataloadedSeries");
       uiStorage.removeItem("lastSeasonFocus");
-      localStorage.removeItem("moreBtn");
-      localStorage.removeItem("seasonBtn");
-      localStorage.removeItem("recommBtn");
-      localStorage.removeItem("movie_cast_time");
-      localStorage.removeItem("movie_uid");
-      localStorage.removeItem("fromAlert");
+      uiStorage.removeItem("moreBtn");
+      uiStorage.removeItem("seasonBtn");
+      uiStorage.removeItem("recommBtn");
+      uiStorage.removeItem("movie_cast_time");
+      uiStorage.removeItem("movie_uid");
+      uiStorage.removeItem("fromAlert");
       // uiStorage.removeItem("lastFocusMenuItem");
       uiStorage.removeItem("movie_last_watch_time");
     }

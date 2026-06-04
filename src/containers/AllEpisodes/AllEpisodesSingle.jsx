@@ -44,7 +44,7 @@ const MoreSingle = () => {
     if (id) {
       setData(movieDetail?.data[0].movies?.data);
     } else {
-      setData(JSON.parse(localStorage.getItem("moreSingle")));
+      setData(JSON.parse(uiStorage.getItem("moreSingle")));
     }
   }, [movieDetail]);
   useEffect(() => {
@@ -55,7 +55,7 @@ const MoreSingle = () => {
     // focusSelf();
   }, []);
   useEffect(() => {
-    localStorage.removeItem("seasonBtn");
+    uiStorage.removeItem("seasonBtn");
     // localStorage.removeItem("recommBtn");
     uiStorage.removeItem("lastSeasonFocus");
   }, [location]);

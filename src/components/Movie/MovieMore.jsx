@@ -12,10 +12,10 @@ import { uiStorage } from "@src/utils/uiStorage";
 
 function MovieMore({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
   const handleAction = () => {
-    if (localStorage.getItem("level") === "level__1") {
+    if (uiStorage.getItem("level") === "level__1") {
       uiStorage.setItem("lastFocusMoreMovie_level__1", focusKeey);
       uiStorage.removeItem("lastFocusMore_level__1");
-    } else if (localStorage.getItem("level") === "level__2") {
+    } else if (uiStorage.getItem("level") === "level__2") {
       uiStorage.setItem("lastFocusMoreMovie_level__2", focusKeey);
       uiStorage.removeItem("lastFocusMore_level__2");
     } else {

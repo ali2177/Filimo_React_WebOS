@@ -287,14 +287,14 @@ const MoreMovies = () => {
   };
 
   const handleBack = useCallback(() => {
-    if (localStorage.getItem("level") === "level__2") {
+    if (uiStorage.getItem("level") === "level__2") {
       uiStorage.removeItem("lastFocusMoreMovie_level__2");
       uiStorage.removeItem("lastFocusMore_level__2");
     }
-    if (localStorage.getItem("level")) {
-      localStorage.setItem(
+    if (uiStorage.getItem("level")) {
+      uiStorage.setItem(
         "level",
-        `level__${Number(localStorage.getItem("level").slice(7, 8)) - 1}`
+        `level__${Number(uiStorage.getItem("level").slice(7, 8)) - 1}`
       );
     }
     if (location.pathname !== "/player") navigate(-1);

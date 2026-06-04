@@ -26,15 +26,15 @@ const User = ({ jwtSub, user, index }) => {
       if (!isOnline) {
       } else {
         clearHomeNavState();
-        localStorage.removeItem("moreSingle");
+        uiStorage.removeItem("moreSingle");
         localStorage.removeItem("lastRoute");
         uiStorage.removeItem("lastSeasonFocus");
-        localStorage.removeItem("moreBtn");
-        localStorage.removeItem("seasonBtn");
-        localStorage.removeItem("recommBtn");
-        localStorage.removeItem("movie_cast_time");
-        localStorage.removeItem("movie_uid");
-        localStorage.removeItem("fromAlert");
+        uiStorage.removeItem("moreBtn");
+        uiStorage.removeItem("seasonBtn");
+        uiStorage.removeItem("recommBtn");
+        uiStorage.removeItem("movie_cast_time");
+        uiStorage.removeItem("movie_uid");
+        uiStorage.removeItem("fromAlert");
         getUserData(jwtSub, user.attributes.level_id);
         setIsLoading(true);
         setTimeout(() => {
@@ -117,15 +117,15 @@ const User = ({ jwtSub, user, index }) => {
       }}
       onClick={() => {
         clearHomeNavState();
-        localStorage.removeItem("moreSingle");
+        uiStorage.removeItem("moreSingle");
         localStorage.removeItem("lastRoute");
         uiStorage.removeItem("lastSeasonFocus");
-        localStorage.removeItem("moreBtn");
-        localStorage.removeItem("seasonBtn");
-        localStorage.removeItem("recommBtn");
-        localStorage.removeItem("movie_cast_time");
-        localStorage.removeItem("movie_uid");
-        localStorage.removeItem("fromAlert");
+        uiStorage.removeItem("moreBtn");
+        uiStorage.removeItem("seasonBtn");
+        uiStorage.removeItem("recommBtn");
+        uiStorage.removeItem("movie_cast_time");
+        uiStorage.removeItem("movie_uid");
+        uiStorage.removeItem("fromAlert");
         getUserData(jwtSub, user.attributes.level_id);
         setIsLoading(true);
         setTimeout(() => {

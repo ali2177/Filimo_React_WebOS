@@ -43,7 +43,7 @@ const Recommendation = ({ movieRow, rowId }) => {
   //   }
   useEffect(() => {
     // console.log(location);
-    localStorage.removeItem("seasonBtn");
+    uiStorage.removeItem("seasonBtn");
     uiStorage.removeItem("lastSeasonFocus");
   }, [location]);
   return (

@@ -1,8 +1,9 @@
 import store from '@src/app/store';
 import { setMode, setFocusKey, removeFocusKey, clearFocusKeys } from '@src/features/uiState';
 
-// Phase 1: keys moved to Redux in-memory store (fastest path on TV hardware)
+// All keys routed to Redux in-memory store (fastest path on TV hardware)
 const IN_REDUX = new Set([
+  // Phase 1: focus state + input mode
   'mode',
   'lastFocus', 'lastMovieFocus', 'lastFocusMenuItem',
   'lastFocusCat', 'lastCatFocus', 'lastFocusMore', 'lastFocusMoreMovie',
@@ -16,6 +17,10 @@ const IN_REDUX = new Set([
   'lastFocusRowIranBeforeReload', 'lastFocusRowSeriesBeforeReload',
   'lastdataloaded', 'lastdataloadedIran',
   'lastdataloadedMovies', 'lastdataloadedSeries', 'lastdataloadedKids',
+  // Phase 2: player passthrough + UI button flags
+  'movie_uid', 'movie_cast_time', 'formAction', 'fromAlert',
+  'moreBtn', 'seasonBtn', 'recommBtn',
+  'level', 'moreSingle', 'seriesName',
 ]);
 
 export const uiStorage = {

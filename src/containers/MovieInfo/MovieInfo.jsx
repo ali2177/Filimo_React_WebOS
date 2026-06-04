@@ -60,7 +60,7 @@ function MovieInfo({ isLogin }) {
     }, 5000);
     uiStorage.removeItem("subtitles");
     uiStorage.removeItem("subtitle");
-    localStorage.removeItem("formAction");
+    uiStorage.removeItem("formAction");
     uiStorage.removeItem("movie_src");
     uiStorage.removeItem("movie_last_watch_time");
     localStorage.removeItem("focusedSub");
@@ -96,11 +96,11 @@ function MovieInfo({ isLogin }) {
   useEffect(() => {
     getData();
     uiStorage.removeItem("lastFocusMore");
-    if (localStorage.getItem("moreBtn")) {
+    if (uiStorage.getItem("moreBtn")) {
       setFocus("more-btn");
-    } else if (localStorage.getItem("recommBtn")) {
+    } else if (uiStorage.getItem("recommBtn")) {
       setFocus("recomm-btn");
-    } else if (localStorage.getItem("seasonBtn")) {
+    } else if (uiStorage.getItem("seasonBtn")) {
       setFocus("season-btn");
     } else if (isForbiden) {
       setFocus("netError-btn");
@@ -110,11 +110,11 @@ function MovieInfo({ isLogin }) {
     }
   }, []);
   useEffect(() => {
-    if (localStorage.getItem("moreBtn")) {
+    if (uiStorage.getItem("moreBtn")) {
       setFocus("more-btn");
-    } else if (localStorage.getItem("recommBtn")) {
+    } else if (uiStorage.getItem("recommBtn")) {
       setFocus("recomm-btn");
-    } else if (localStorage.getItem("seasonBtn")) {
+    } else if (uiStorage.getItem("seasonBtn")) {
       setFocus("season-btn");
     } else if (isForbiden) {
       setFocus("netError-btn");
@@ -173,17 +173,17 @@ function MovieInfo({ isLogin }) {
   }, [movieData]);
 
   const handleBack = useCallback((e) => {
-    localStorage.removeItem("seasonBtn");
-    localStorage.removeItem("recommBtn");
-    localStorage.removeItem("moreBtn");
+    uiStorage.removeItem("seasonBtn");
+    uiStorage.removeItem("recommBtn");
+    uiStorage.removeItem("moreBtn");
     uiStorage.removeItem("lastSeasonFocus");
     uiStorage.removeItem("lastSeasonFocus_parent_new");
     uiStorage.removeItem("lastSeasonFocus_season_part");
-    localStorage.removeItem("movie_cast_time");
-    localStorage.removeItem("movie_uid");
-    localStorage.removeItem("fromAlert");
+    uiStorage.removeItem("movie_cast_time");
+    uiStorage.removeItem("movie_uid");
+    uiStorage.removeItem("fromAlert");
     window.scrollTo({ top: 0 });
-    if (localStorage.getItem("fromAlert") === "back") {
+    if (uiStorage.getItem("fromAlert") === "back") {
       navigate("/");
     } else {
       e.preventDefault();
@@ -228,15 +228,15 @@ function MovieInfo({ isLogin }) {
     });
   };
   const handlePlayPress = () => {
-    localStorage.removeItem("seasonBtn");
-    localStorage.removeItem("recommBtn");
-    localStorage.removeItem("moreBtn");
+    uiStorage.removeItem("seasonBtn");
+    uiStorage.removeItem("recommBtn");
+    uiStorage.removeItem("moreBtn");
     if (movieData?.data?.watch_action.type === "watch") {
       localStorage.setItem(
         "subtitles",
         JSON.stringify(movieData.data.General?.subtitle?.data)
       );
-      localStorage.setItem(
+      uiStorage.setItem(
         "formAction",
         movieData.data?.watch_action?.visit_url?.formAction
       );
@@ -245,7 +245,7 @@ function MovieInfo({ isLogin }) {
         "movie_src",
         movieData?.data?.watch_action.movie_src
       );
-      localStorage.setItem(
+      uiStorage.setItem(
         "movie_cast_time",
         movieData?.data?.watch_action?.cast_skip_arr.cast_s
       );
@@ -253,7 +253,7 @@ function MovieInfo({ isLogin }) {
         "movie_last_watch_time",
         movieData?.data?.watch_action?.last_watch_position?.last_second
       );
-      localStorage.setItem("movie_uid", movieData?.data?.General?.uid);
+      uiStorage.setItem("movie_uid", movieData?.data?.General?.uid);
 
       navigate(`/player`);
       return;

@@ -83,7 +83,7 @@ const ContentOnlyRow = ({
     uiStorage.removeItem("lastFocusCrew");
     uiStorage.removeItem("lastFocusActor");
     uiStorage.removeItem("lastFocusMore");
-    localStorage.setItem("moreSingle", JSON.stringify(movies));
+    uiStorage.setItem("moreSingle", JSON.stringify(movies));
     navigate(`/moreSingle/${linkText}`);
   };
   useEffect(() => {

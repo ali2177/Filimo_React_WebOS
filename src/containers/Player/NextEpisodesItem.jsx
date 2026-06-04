@@ -4,6 +4,7 @@ import {
   setFocus,
 } from "@noriginmedia/norigin-spatial-navigation";
 import { useNavigate, useLocation } from "react-router-dom";
+import { uiStorage } from "@src/utils/uiStorage";
 
 let jwt = localStorage.getItem("jwt");
 
@@ -22,7 +23,7 @@ const NextEpisodesItem = ({
       // console.log("focus");
     },
     onEnterPress: () => {
-      localStorage.setItem("movie_uid", nextUid);
+      uiStorage.setItem("movie_uid", nextUid);
       window.location.reload();
     },
     focusable: true,
@@ -61,7 +62,7 @@ const NextEpisodesItem = ({
         setFocus(focusKey);
       }}
       onClick={() => {
-        localStorage.setItem("movie_uid", nextUid);
+        uiStorage.setItem("movie_uid", nextUid);
         window.location.reload();
       }}
     >

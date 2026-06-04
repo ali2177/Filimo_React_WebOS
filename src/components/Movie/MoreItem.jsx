@@ -22,40 +22,40 @@ function MoreItem({
   const handleAction = () => {
     if (type === "mainPage") {
       uiStorage.setItem("lastFocus", focusKeey);
-      localStorage.setItem("level", "level__1");
+      uiStorage.setItem("level", "level__1");
       navigate(`/moremovies/${tag_id}`);
     } else if (type === "moreReccom") {
-      localStorage.setItem("moreSingle", JSON.stringify(movies));
+      uiStorage.setItem("moreSingle", JSON.stringify(movies));
       navigate(`/moreSingle/${linkText}`);
     } else if (type === "live") {
       uiStorage.setItem("lastFocus", focusKeey);
-      localStorage.setItem("moreSingle", JSON.stringify(movies));
+      uiStorage.setItem("moreSingle", JSON.stringify(movies));
       navigate(`/moreMovieSingle`);
     } else if (type === "moreCat") {
       uiStorage.setItem("lastFocusCat", focusKeey);
-      localStorage.setItem("moreSingle", JSON.stringify(movies));
+      uiStorage.setItem("moreSingle", JSON.stringify(movies));
       navigate(`/moreMovieSingle`);
     } else if (type === "morePage") {
-      if (localStorage.getItem("level") === "level__1") {
+      if (uiStorage.getItem("level") === "level__1") {
         uiStorage.setItem("lastFocusMore_level__1", focusKeey);
         uiStorage.removeItem("lastFocusMoreMovie_level__1");
-      } else if (localStorage.getItem("level") === "level__2") {
+      } else if (uiStorage.getItem("level") === "level__2") {
         uiStorage.setItem("lastFocusMore_level__2", focusKeey);
         uiStorage.removeItem("lastFocusMoreMovie_level__2");
       } else {
         uiStorage.setItem("lastFocusMore", focusKeey);
       }
-      if (localStorage.getItem("level")) {
-        localStorage.setItem(
+      if (uiStorage.getItem("level")) {
+        uiStorage.setItem(
           "level",
-          `level__${Number(localStorage.getItem("level").slice(7, 8)) + 1}`
+          `level__${Number(uiStorage.getItem("level").slice(7, 8)) + 1}`
         );
       }
 
       navigate(`/moremovies/${tag_id}`);
     } else {
       uiStorage.setItem("lastFocusMore", focusKeey);
-      localStorage.setItem("moreSingle", JSON.stringify(movies));
+      uiStorage.setItem("moreSingle", JSON.stringify(movies));
       navigate(`/moreMovieSingle/`);
     }
   };

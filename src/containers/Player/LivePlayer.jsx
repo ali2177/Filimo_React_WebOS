@@ -18,6 +18,7 @@ import Alert from "@src/components/Alert/Alert";
 import { setFocus } from "@noriginmedia/norigin-spatial-navigation";
 
 import "./live.css";
+import { uiStorage } from "@src/utils/uiStorage";
 
 let interval;
 let interval2;
@@ -56,8 +57,8 @@ const LivePlayer = () => {
 
     // getData();
     setJwt(localStorage.getItem("jwt"));
-    setMovieUid(localStorage.getItem("movie_uid"));
-    setFormAction(localStorage.getItem("formAction"));
+    setMovieUid(uiStorage.getItem("movie_uid"));
+    setFormAction(uiStorage.getItem("formAction"));
     // setSubtitles(JSON.parse(localStorage.getItem("subtitles")));
     return () => {
       window.removeEventListener("keydown", keyHandler);
@@ -367,7 +368,7 @@ const LivePlayer = () => {
           handleBtnEnter={() => {
             setIsShowAlert(false);
             navigate(`/movie/${movieUid}`);
-            localStorage.setItem("fromAlert", "back");
+            uiStorage.setItem("fromAlert", "back");
           }}
         />
       );

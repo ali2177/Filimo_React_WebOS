@@ -12,8 +12,8 @@ const Episode = ({ movieItem, focusKeey }) => {
   const myRef = useRef(null);
   const navigate = useNavigate();
   const handleAction = () => {
-    localStorage.removeItem("seasonBtn");
-    localStorage.removeItem("recommBtn");
+    uiStorage.removeItem("seasonBtn");
+    uiStorage.removeItem("recommBtn");
     navigate(
       `/movie/${
         movieItem.attributes ? movieItem.attributes.uid : movieItem.uid

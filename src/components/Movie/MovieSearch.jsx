@@ -13,11 +13,11 @@ import { uiStorage } from "@src/utils/uiStorage";
 
 function MovieSearch({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
   const handleAction = () => {
-    localStorage.removeItem("recommBtn");
-    localStorage.removeItem("seasonBtn");
+    uiStorage.removeItem("recommBtn");
+    uiStorage.removeItem("seasonBtn");
     uiStorage.setItem("last", focusKeey);
     if (movie.img) {
-      localStorage.setItem("movie_uid", movie.link_key);
+      uiStorage.setItem("movie_uid", movie.link_key);
       navigate(`/livePlayer`);
     } else {
       navigate(`/movie/${movie.uid}`);
