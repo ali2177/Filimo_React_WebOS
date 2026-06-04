@@ -210,7 +210,7 @@ const ContentMoreRow = ({
           <div ref={scrollingRef} className="contentRowScrollingContent">
             {movies.slice(0, 6).map((movie, i) => (
               // <div ref={myRef}>
-              <div>
+              <div key={movie.uid ?? movie.id ?? i}>
                 <MovieMore
                   movie={movie}
                   movieFocus={movieFocused}

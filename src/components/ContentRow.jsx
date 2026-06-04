@@ -99,7 +99,7 @@ const ContentRow = ({
               .slice(0, movies[0]?.output_type === "livetv" ? 4 : 6)
               .map((movie, i) => (
                 // <div ref={myRef}>
-                <div key={i}>
+                <div key={movie.uid ?? movie.id ?? i}>
                   <Movie
                     movie={movie}
                     movieFocus={movieFocused}
