@@ -157,6 +157,8 @@ function Movie({
                 src={movie.movie_img_m ? movie.movie_img_m : movie.img}
                 alt={movie.movie_title_en ? movie.movie_title_en : movie.title}
                 className="swiper-image"
+                width="212"
+                height="300"
                 onError={() => {
                   setIsImageLoaded(false);
                 }}
@@ -188,6 +190,8 @@ function Movie({
                 }
                 alt={movie.movie_title_en ? movie.movie_title_en : movie.title}
                 className="swiper-image"
+                width="212"
+                height="300"
                 onError={() => {
                   setIsImageLoaded(false);
                 }}

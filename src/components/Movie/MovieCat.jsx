@@ -64,6 +64,8 @@ function MovieCat({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
                 src={movie.movie_img_m}
                 alt={movie.movie_title_en}
                 className="swiper-image"
+                width="212"
+                height="300"
                 onError={() => {
                   setIsImageLoaded(false);
                 }}
@@ -93,6 +95,8 @@ function MovieCat({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
                 src={movie.pic.movie_img_m}
                 alt={movie.movie_title_en}
                 className="swiper-image"
+                width="212"
+                height="300"
                 onError={() => {
                   setIsImageLoaded(false);
                 }}
