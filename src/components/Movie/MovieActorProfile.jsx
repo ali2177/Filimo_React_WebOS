@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
+import { useKeyboardAwareScroll } from "@src/hooks/useKeyboardAwareScroll";
 import { Focusable } from "react-js-spatial-navigation";
 
 import { useNavigate, Link, useLocation } from "react-router-dom";
@@ -8,12 +9,12 @@ import {
   useFocusable,
   setFocus,
 } from "@noriginmedia/norigin-spatial-navigation";
+import { clearActorNavState } from "@src/utils/storageKeys";
 
 function MovieActorProfile({ movie, movieFocus, onEnterPress, focusKeey }) {
   const handleAction = () => {
     navigate(`/movie/${movie.attributes.uid}`);
-    localStorage.removeItem("lastFocusActor");
-    localStorage.removeItem("lastFocusCrew");
+    clearActorNavState();
     localStorage.removeItem("lastFocusRecomm");
   };
   const { ref, focused, focusSelf, focusKey } = useFocusable({
@@ -34,19 +35,10 @@ function MovieActorProfile({ movie, movieFocus, onEnterPress, focusKeey }) {
   const myRef = useRef();
   const navigate = useNavigate();
   const location = useLocation("");
+  const handleScrolling = useKeyboardAwareScroll(myRef);
 
-  //set focus for current movie and pass it to parent
   const onMovieFocus = () => {
     movieFocus(movie);
-  };
-  const handleScrolling = () => {
-    setTimeout(() => {
-      if (localStorage.getItem("mode") === "KeyboardMode") {
-        myRef?.current?.scrollIntoView({
-          block: "center",
-        });
-      }
-    }, 10);
   };
 
   useEffect(() => {

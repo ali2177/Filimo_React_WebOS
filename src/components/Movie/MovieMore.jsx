@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useState } from "react";
 
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import LazyLoad from "react-lazy-load";
@@ -7,6 +7,7 @@ import {
   useFocusable,
   setFocus,
 } from "@noriginmedia/norigin-spatial-navigation";
+import { useKeyboardAwareScroll } from "@src/hooks/useKeyboardAwareScroll";
 
 function MovieMore({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
   const handleAction = () => {
@@ -48,19 +49,10 @@ function MovieMore({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
   const myRef = useRef();
   const navigate = useNavigate();
   const location = useLocation("");
+  const handleScrolling = useKeyboardAwareScroll(myRef);
 
-  //set focus for current movie and pass it to parent
   const onMovieFocus = () => {
     movieFocus(movie);
-  };
-  const handleScrolling = () => {
-    setTimeout(() => {
-      if (localStorage.getItem("mode") === "KeyboardMode") {
-        myRef?.current?.scrollIntoView({
-          block: "center",
-        });
-      }
-    }, 10);
   };
 
   return (

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useBackKey } from "@src/hooks/useBackKey";
+import { useDisableKeyboardWhileLoading } from "@src/hooks/useDisableKeyboardWhileLoading";
 import { useGetActorQuery } from "../../services/TMDB";
 import { Focusable } from "react-js-spatial-navigation";
 import { Link } from "react-router-dom";
@@ -47,19 +48,7 @@ const Crew = () => {
 
   useBackKey(handleBack);
 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (isFetching) {
-        e.stopPropagation();
-        e.preventDefault();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown, true);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown, true);
-    };
-  }, [isFetching]);
+  useDisableKeyboardWhileLoading(isFetching);
   const handleScrolling = () => {
     myRef.current.scrollIntoView({
       block: "center",

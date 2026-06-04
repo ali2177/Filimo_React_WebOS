@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Focusable } from "react-js-spatial-navigation";
 
 import { useNavigate, Link, useLocation } from "react-router-dom";
@@ -8,11 +8,11 @@ import {
   useFocusable,
   setFocus,
 } from "@noriginmedia/norigin-spatial-navigation";
+import { clearActorNavState } from "@src/utils/storageKeys";
 
 function MovieRecoom({ movie, movieFocus, onFocus, onEnterPress, focusKeeey }) {
   const handleAction = () => {
-    localStorage.removeItem("lastFocusCrew");
-    localStorage.removeItem("lastFocusActor");
+    clearActorNavState();
     localStorage.removeItem("lastFocusMore");
     localStorage.removeItem("recommBtn");
     localStorage.removeItem("seasonBtn");
@@ -38,22 +38,9 @@ function MovieRecoom({ movie, movieFocus, onFocus, onEnterPress, focusKeeey }) {
   const myRef = useRef();
   const navigate = useNavigate();
 
-  //set focus for current movie and pass it to parent
   const onMovieFocus = () => {
     movieFocus(movie);
   };
-  const handleScrolling = () => {
-    setTimeout(() => {
-      if (localStorage.getItem("mode") === "KeyboardMode") {
-        myRef?.current?.scrollIntoView({
-          block: "center",
-        });
-      }
-    }, 10);
-  };
-  // useEffect(() => {
-  //   setFocus("Here Without Me_3");
-  // }, []);
 
   return (
     <div

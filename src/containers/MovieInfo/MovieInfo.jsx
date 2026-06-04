@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useBackKey } from "@src/hooks/useBackKey";
+import { useDisableKeyboardWhileLoading } from "@src/hooks/useDisableKeyboardWhileLoading";
 import { Link, useParams, useLocation } from "react-router-dom";
 
 import {
@@ -83,19 +84,7 @@ function MovieInfo({ isLogin }) {
   //   isFetching: RecomIsFetching,
   // } = useGetMovieRecomQuery({ id });
 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (isLoading && !isForbiden) {
-        e.stopPropagation();
-        e.preventDefault();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown, true);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown, true);
-    };
-  }, [isLoading, isForbiden]);
+  useDisableKeyboardWhileLoading(isLoading && !isForbiden);
   useEffect(() => {
     if (isForbiden)
       setTimeout(() => {

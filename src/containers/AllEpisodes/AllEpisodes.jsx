@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useBackKey } from "@src/hooks/useBackKey";
+import { useDisableKeyboardWhileLoading } from "@src/hooks/useDisableKeyboardWhileLoading";
+import { clearActorNavState } from "@src/utils/storageKeys";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import MovieList from "@src/components/MovieList/MovieList";
 import { useGetAllEpisodesQuery } from "../../services/TMDB";
@@ -47,27 +49,14 @@ const AllEpisodes = () => {
     setTimeout(() => {
       setIsActiveSeasonFocus(false);
     }, 2000);
-    localStorage.removeItem("lastFocusActor");
-    localStorage.removeItem("lastFocusCrew");
+    clearActorNavState();
     window.scrollTo({ top: 0 });
   }, []);
   useEffect(() => {
     setCurretSeasonChosen(data?.data[data.data.length - 1]?.movies?.data);
   }, [data]);
 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (isActiveSeasonFocus) {
-        e.stopPropagation();
-        e.preventDefault();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown, true);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown, true);
-    };
-  }, [isActiveSeasonFocus]);
+  useDisableKeyboardWhileLoading(isActiveSeasonFocus);
 
   const handleBack = useCallback(() => {
     if (location.pathname !== "/player") navigate(-1);

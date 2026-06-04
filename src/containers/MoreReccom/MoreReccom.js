@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useBackKey } from "@src/hooks/useBackKey";
+import { useDisableKeyboardWhileLoading } from "@src/hooks/useDisableKeyboardWhileLoading";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 
 import NetworkError from "@src/components/NetworkError/NetworkError.jsx";
@@ -43,19 +44,7 @@ const MoreReccom = () => {
   useEffect(() => {
     window.scrollTo({ top: 0 });
   }, []);
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (RecomIsFetching) {
-        e.stopPropagation();
-        e.preventDefault();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown, true);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown, true);
-    };
-  }, [RecomIsFetching]);
+  useDisableKeyboardWhileLoading(RecomIsFetching);
   // useEffect(() => {
   //   console.log(focusKey);
   //   focusSelf();

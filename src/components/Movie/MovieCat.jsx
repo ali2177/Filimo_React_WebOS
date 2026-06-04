@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Focusable } from "react-js-spatial-navigation";
 
 import { useNavigate, Link, useLocation } from "react-router-dom";
@@ -8,6 +8,7 @@ import {
   useFocusable,
   setFocus,
 } from "@noriginmedia/norigin-spatial-navigation";
+import { useKeyboardAwareScroll } from "@src/hooks/useKeyboardAwareScroll";
 
 function MovieCat({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
   const handleAction = () => {
@@ -33,19 +34,10 @@ function MovieCat({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
   const [isImageLoaded, setIsImageLoaded] = useState(true);
   const myRef = useRef();
   const navigate = useNavigate();
+  const handleScrolling = useKeyboardAwareScroll(myRef);
 
-  //set focus for current movie and pass it to parent
   const onMovieFocus = () => {
     movieFocus(movie);
-  };
-  const handleScrolling = () => {
-    setTimeout(() => {
-      if (localStorage.getItem("mode") === "KeyboardMode") {
-        myRef?.current?.scrollIntoView({
-          block: "center",
-        });
-      }
-    }, 10);
   };
 
   return (

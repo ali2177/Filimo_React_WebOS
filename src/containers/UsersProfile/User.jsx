@@ -6,50 +6,27 @@ import {
 } from "@noriginmedia/norigin-spatial-navigation";
 import { useAuth } from "@src/components/AuthProvider";
 import { useOnlineStatus } from "@src/app/App";
+import { useDisableKeyboardWhileLoading } from "@src/hooks/useDisableKeyboardWhileLoading";
+import { useFilimioFetch } from "@src/hooks/useFilimioFetch";
+import { clearHomeNavState } from "@src/utils/storageKeys";
 
 const User = ({ jwtSub, user, index }) => {
   const { jwt, setJwt } = useAuth();
   const { isOnline } = useOnlineStatus();
   const [isKidsLock, setIsKidsLock] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  // let jwt = localStorage.getItem("jwt");
+  const filimioFetch = useFilimioFetch();
 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (isLoading) {
-        e.stopPropagation();
-        e.preventDefault();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown, true);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown, true);
-    };
-  }, [isLoading]);
+  useDisableKeyboardWhileLoading(isLoading);
   const navigate = useNavigate();
   const { ref, focused, focusSelf, focusKey } = useFocusable({
     onFocus: () => {},
     onEnterPress: () => {
       if (!isOnline) {
       } else {
-        localStorage.removeItem("lastdataloaded");
-        localStorage.removeItem("lastdataloadedIran");
-        localStorage.removeItem("lastdataloadedMovies");
-        localStorage.removeItem("lastdataloadedSeries");
-        localStorage.removeItem("lastdataloadedKids");
+        clearHomeNavState();
         localStorage.removeItem("moreSingle");
         localStorage.removeItem("lastRoute");
-        localStorage.removeItem("lastFocus");
-        localStorage.removeItem("lastFocusMoreItem");
-        localStorage.removeItem("last");
-        localStorage.removeItem("lastFocusRow");
-        localStorage.removeItem("lastFocusRowMoviesBeforeReload");
-        localStorage.removeItem("lastFocusRowKidsBeforeReload");
-        localStorage.removeItem("lastFocusRowIranBeforeReload");
-        localStorage.removeItem("lastdataloadedKids");
-        localStorage.removeItem("lastFocusRowBeforeReload");
-        localStorage.removeItem("lastMovieFocus");
         localStorage.removeItem("lastSeasonFocus");
         localStorage.removeItem("moreBtn");
         localStorage.removeItem("seasonBtn");
@@ -57,8 +34,7 @@ const User = ({ jwtSub, user, index }) => {
         localStorage.removeItem("movie_cast_time");
         localStorage.removeItem("movie_uid");
         localStorage.removeItem("fromAlert");
-        //  localStorage.removeItem("lastFocusMenuItem");
-        getUserData(jwtSub, user.attributes.level_id, jwt);
+        getUserData(jwtSub, user.attributes.level_id);
         setIsLoading(true);
         setTimeout(() => {
           navigate("/");
@@ -89,34 +65,14 @@ const User = ({ jwtSub, user, index }) => {
     preferredChildFocusKey: null,
   });
 
-  const getUserData = (guid, lid, jwt) => {
-    const userAgent = {
-      os: "WebOs",
-      an: "Filimo",
-      vn: "1.00",
-    };
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    myHeaders.append("Authorization", `Bearer ${jwt}`);
-    myHeaders.append("UserAgent", JSON.stringify(userAgent));
-
-    const raw = JSON.stringify({
-      code: null,
-      guid: guid,
-      lid: lid,
-      uid: null,
-    });
-
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
-    fetch(
+  const getUserData = (guid, lid) => {
+    filimioFetch(
       "https://www.filimo.com/api/fa/v1/user/Authenticate/signin_profile?devicetype=react_tizen",
-      requestOptions
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: null, guid, lid, uid: null }),
+      }
     )
       .then((response) => response.json())
       .then((result) => {
@@ -128,25 +84,13 @@ const User = ({ jwtSub, user, index }) => {
   };
   useEffect(() => {
     setFocus(`user__main__0`);
-    getUserProfileData(jwt);
+    getUserProfileData();
   }, []);
 
-  const getUserProfileData = async (jwt) => {
+  const getUserProfileData = async () => {
     try {
-      const userAgent = {
-        os: "WebOs",
-        an: "Filimo",
-        vn: "1.00",
-      };
-      const res = await fetch(
-        `https://www.filimo.com/api/fa/v1/partner/TV/profile?devicetype=react_tizen`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-            UserAgent: JSON.stringify(userAgent),
-          },
-        }
+      const res = await filimioFetch(
+        "https://www.filimo.com/api/fa/v1/partner/TV/profile?devicetype=react_tizen"
       );
       const blocks = await res?.json();
       if (blocks.data.attributes.Profile_kids.kids_lock) {
@@ -171,23 +115,9 @@ const User = ({ jwtSub, user, index }) => {
         setFocus(focusKey);
       }}
       onClick={() => {
-        localStorage.removeItem("lastdataloaded");
-        localStorage.removeItem("lastdataloadedIran");
-        localStorage.removeItem("lastdataloadedMovies");
-        localStorage.removeItem("lastdataloadedSeries");
-        localStorage.removeItem("lastdataloadedKids");
+        clearHomeNavState();
         localStorage.removeItem("moreSingle");
         localStorage.removeItem("lastRoute");
-        localStorage.removeItem("lastFocus");
-        localStorage.removeItem("lastFocusMoreItem");
-        localStorage.removeItem("last");
-        localStorage.removeItem("lastFocusRow");
-        localStorage.removeItem("lastFocusRowMoviesBeforeReload");
-        localStorage.removeItem("lastFocusRowKidsBeforeReload");
-        localStorage.removeItem("lastFocusRowIranBeforeReload");
-        localStorage.removeItem("lastdataloadedKids");
-        localStorage.removeItem("lastFocusRowBeforeReload");
-        localStorage.removeItem("lastMovieFocus");
         localStorage.removeItem("lastSeasonFocus");
         localStorage.removeItem("moreBtn");
         localStorage.removeItem("seasonBtn");
@@ -195,7 +125,7 @@ const User = ({ jwtSub, user, index }) => {
         localStorage.removeItem("movie_cast_time");
         localStorage.removeItem("movie_uid");
         localStorage.removeItem("fromAlert");
-        getUserData(jwtSub, user.attributes.level_id, jwt);
+        getUserData(jwtSub, user.attributes.level_id);
         setIsLoading(true);
         setTimeout(() => {
           navigate("/");

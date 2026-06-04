@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
+import { usePolling } from "@src/hooks/usePolling";
 import { useBackKey } from "@src/hooks/useBackKey";
 import line from "../../assets/images/line.svg";
 import phone from "../../assets/images/phone.svg";
@@ -27,8 +28,6 @@ const Loogin = () => {
   // let jwt;
   let dataSet;
 
-  let intervalCall;
-
   //clear local storage
   useEffect(() => {
     getLoginCode();
@@ -41,7 +40,6 @@ const Loogin = () => {
   }, []);
   useEffect(() => {
     if (jwt && userData) {
-      clearInterval(intervalCall);
       localStorage.setItem("jwt", userData.jwt);
       localStorage.setItem("display_name", userData.display_name);
       localStorage.setItem("email", userData.email);
@@ -73,7 +71,6 @@ const Loogin = () => {
       if (blocks.data.attributes.jwt) {
         setUserData(blocks.data.attributes);
         setJwt(blocks.data.attributes.jwt);
-        clearInterval(intervalCall);
       }
       // jwt = blocks.data.attributes.jwt;
       // console.log(blocks);
@@ -110,16 +107,7 @@ const Loogin = () => {
     }
   };
 
-  //start timer when code is generated and wait for user to login
-  useEffect(() => {
-    intervalCall = setInterval(() => {
-      getData();
-    }, 1000);
-    return () => {
-      // clean up
-      clearInterval(intervalCall);
-    };
-  }, [code]);
+  usePolling(getData, 1000, !!code && !jwt);
 
   // on blur input when press inter
   const handleKeyDown = (e) => {

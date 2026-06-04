@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useBackKey } from "@src/hooks/useBackKey";
+import { useDisableKeyboardWhileLoading } from "@src/hooks/useDisableKeyboardWhileLoading";
+import { clearActorNavState } from "@src/utils/storageKeys";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Focusable } from "react-js-spatial-navigation";
 import { useGetMoreMoviesQuery } from "../../services/TMDB";
@@ -45,12 +47,10 @@ const MoreMovies = () => {
   const [curretFocusedMovie, setCurretFocusedMovie] = useState("");
 
   useEffect(() => {
-    localStorage.removeItem("lastFocusActor");
-    localStorage.removeItem("lastFocusCrew");
+    clearActorNavState();
     localStorage.removeItem("last");
     localStorage.removeItem("lastFocusMoreMovie");
     localStorage.removeItem("lastFocusMore");
-    // window.scrollTo({ top: 0 });
   }, []);
   useEffect(() => {
     setTimeout(() => {
@@ -63,19 +63,7 @@ const MoreMovies = () => {
     }
   }, [isFetching]);
 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (isLoading) {
-        e.stopPropagation();
-        e.preventDefault();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown, true);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown, true);
-    };
-  }, [isLoading]);
+  useDisableKeyboardWhileLoading(isLoading);
   useEffect(() => {
     if (data) {
       setMovies(data.data.filter((item) => item.output_type === "movie")[0]);

@@ -10,6 +10,8 @@ import Alert from "@src/components/Alert/Alert";
 import Loader from "@src/components/Loader/Loader";
 import { useAuth } from "@src/components/AuthProvider";
 import AppRoutes from "@src/app/routes";
+import { useFilimioFetch } from "@src/hooks/useFilimioFetch";
+import { usePolling } from "@src/hooks/usePolling";
 
 init({
   debug: false,
@@ -22,6 +24,7 @@ export const useOnlineStatus = () => useContext(OnlineStatusContext);
 
 function App() {
   const { jwt, setJwt } = useAuth();
+  const filimioFetch = useFilimioFetch();
 
   const [isLoading, setIsLoading] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
@@ -73,22 +76,10 @@ function App() {
   }, [location]);
 
   //call webservice for check if user still log in
-  const getUserData = async (jwt) => {
+  const getUserData = async () => {
     try {
-      const userAgent = {
-        os: "WebOs",
-        an: "Filimo",
-        vn: "1.00",
-      };
-      const res = await fetch(
-        `https://www.filimo.com/api/fa/v1/partner/TV/profile?devicetype=react_tizen`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-            UserAgent: JSON.stringify(userAgent),
-          },
-        }
+      const res = await filimioFetch(
+        "https://www.filimo.com/api/fa/v1/partner/TV/profile?devicetype=react_tizen"
       );
       const blocks = await res?.json();
       localStorage.setItem("isOffline", false);
@@ -131,31 +122,10 @@ function App() {
     }
   };
 
-  //start timer when user login
-  useEffect(() => {
-    //start timer
-    if (jwt) {
-      var intervalCall = setInterval(() => {
-        // setJwt(localStorage.getItem("jwt"));
-        // jwt = localStorage.getItem("jwt");
-        getUserData(jwt);
-      }, 2000);
-    }
+  usePolling(getUserData, 2000, !!jwt);
+  usePolling(checkConnection, 300);
 
-    ///end timer when user log out
-    if (jwt == null) {
-      clearInterval(intervalCall);
-    }
-    return () => {
-      // clean up
-      clearInterval(intervalCall);
-    };
-  }, [jwt]);
-  //start timer when user login
   useEffect(() => {
-    var intervalCall = setInterval(() => {
-      checkConnection();
-    }, 300);
     const splashShown = sessionStorage.getItem("splash_shown");
     if (!splashShown) {
       setIsShowSplash(true);
@@ -193,7 +163,6 @@ function App() {
       window.removeEventListener("wheel", handleWheel);
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("mousemove", handleMouseMove);
-      clearInterval(intervalCall);
     };
   }, []);
 

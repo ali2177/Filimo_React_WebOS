@@ -1,5 +1,6 @@
-import React, { useState, useRef, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useBackKey } from "@src/hooks/useBackKey";
+import { useDisableKeyboardWhileLoading } from "@src/hooks/useDisableKeyboardWhileLoading";
 import MovieSearch from "@src/components/Movie/MovieSearch.jsx";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
@@ -28,19 +29,7 @@ const SearchResult = () => {
     setData(JSON.parse(localStorage.getItem("searchResult")));
   }, []);
 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (isLoading) {
-        e.stopPropagation();
-        e.preventDefault();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown, true);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown, true);
-    };
-  }, [isLoading]);
+  useDisableKeyboardWhileLoading(isLoading);
 
   useEffect(() => {
     setFocus("movieSearch_0");

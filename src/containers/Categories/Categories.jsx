@@ -1,5 +1,7 @@
 import React, { useEffect, useCallback } from "react";
 import { useBackKey } from "@src/hooks/useBackKey";
+import { useDisableKeyboardWhileLoading } from "@src/hooks/useDisableKeyboardWhileLoading";
+import { clearHomeNavState } from "@src/utils/storageKeys";
 import { useGetCategoriesQuery } from "../../services/TMDB";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Focusable } from "react-js-spatial-navigation";
@@ -32,36 +34,10 @@ const Categories = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    localStorage.removeItem("lastdataloaded");
-    localStorage.removeItem("lastdataloadedIran");
-    localStorage.removeItem("lastdataloadedMovies");
-    localStorage.removeItem("lastdataloadedSeries");
-    localStorage.removeItem("lastdataloadedKids");
-    localStorage.removeItem("lastFocus");
-    localStorage.removeItem("lastFocusMoreItem");
-    localStorage.removeItem("lastMovieFocus");
-    localStorage.removeItem("last");
-    localStorage.removeItem("lastFocusRow");
-    localStorage.removeItem("lastFocusRowMoviesBeforeReload");
-    localStorage.removeItem("lastFocusRowKidsBeforeReload");
-    localStorage.removeItem("lastFocusRowIranBeforeReload");
-    localStorage.removeItem("lastdataloadedKids");
-    localStorage.removeItem("lastFocusRowBeforeReload");
+    clearHomeNavState();
   }, []);
 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (isFetching) {
-        e.stopPropagation();
-        e.preventDefault();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown, true);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown, true);
-    };
-  }, [isFetching]);
+  useDisableKeyboardWhileLoading(isFetching);
   const handleBack = useCallback(() => {
     localStorage.removeItem("lastCatFocus");
     if (location.pathname !== "/player") navigate(-1);

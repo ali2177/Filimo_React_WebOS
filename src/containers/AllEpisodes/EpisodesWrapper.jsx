@@ -1,4 +1,6 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
+import { useDisableKeyboardWhileLoading } from "@src/hooks/useDisableKeyboardWhileLoading";
+import { useFilimioFetch } from "@src/hooks/useFilimioFetch";
 import {
   useFocusable,
   FocusContext,
@@ -16,6 +18,7 @@ const EpisodesWrapper = ({
 }) => {
   const { jwt, setJwt } = useAuth();
   const { isOnline, isSeasonChange } = useOnlineStatus();
+  const filimioFetch = useFilimioFetch();
   const observer = useRef();
   const [isNewDataLoading, setIsNewDataLoading] = useState(false);
   const [episodes, setEpisodes] = useState(null);
@@ -26,30 +29,16 @@ const EpisodesWrapper = ({
     focusBoundaryDirections: ["down", "up", "right"],
   });
 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (isNewDataLoading) {
-        e.stopPropagation();
-        e.preventDefault();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown, true);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown, true);
-    };
-  }, [isNewDataLoading]);
+  useDisableKeyboardWhileLoading(isNewDataLoading);
 
   useEffect(() => {
     if (localStorage.getItem("lastSeasonFocus_parent_new")) {
       getUserData(
-        localStorage.getItem("jwt"),
         localStorage.getItem("lastSeasonFocus_parent_new"),
         localStorage.getItem("lastSeasonFocus_season_part")
       );
     } else {
       getUserData(
-        localStorage.getItem("jwt"),
         data?.data[data.data.length - 1].movies?.data[0].serial_parent_new,
         data?.data[data.data.length - 1].movies?.data[0].serial_season_part
       );
@@ -58,29 +47,16 @@ const EpisodesWrapper = ({
   useEffect(() => {
     if (localStorage.getItem("lastSeasonFocus_parent_new")) {
       getUserData(
-        localStorage.getItem("jwt"),
         localStorage.getItem("lastSeasonFocus_parent_new"),
         localStorage.getItem("lastSeasonFocus_season_part")
       );
     }
   }, [isSeasonChange]);
 
-  const getUserData = async (jwt, parent_id, part) => {
+  const getUserData = async (parent_id, part) => {
     try {
-      const userAgent = {
-        os: "WebOs",
-        an: "Filimo",
-        vn: "1.00",
-      };
-      const res = await fetch(
-        `https://www.filimo.com/api/fa/v1/movie/serial/episodebyseason/parent_id/${parent_id}/part/${part}/sort/DESC/perpage/4?json_type=simple`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-            UserAgent: JSON.stringify(userAgent),
-          },
-        }
+      const res = await filimioFetch(
+        `https://www.filimo.com/api/fa/v1/movie/serial/episodebyseason/parent_id/${parent_id}/part/${part}/sort/DESC/perpage/4?json_type=simple`
       );
       const blocks = await res?.json();
       // console.log(blocks.data[0]);
