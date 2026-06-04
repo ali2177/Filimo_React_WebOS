@@ -103,7 +103,6 @@ function App() {
         setIsLogin(false);
         setJwt(null);
         localStorage.removeItem("jwt");
-        localStorage.removeItem("MenuData");
       }
     } catch (e) {
       // console.log(e);

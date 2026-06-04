@@ -12,7 +12,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { uiStorage } from "@src/utils/uiStorage";
 
-const SidebarItem = ({ data, handleEnterPress, focuskeey }) => {
+const SidebarItem = ({ data, handleEnterPress, focuskeey, menuData }) => {
   const { pathname } = useLocation();
   const [isActive, setIsActive] = useState(false);
   const { ref, focused, focusKey } = useFocusable({
@@ -46,10 +46,10 @@ const SidebarItem = ({ data, handleEnterPress, focuskeey }) => {
     //   )
     // );
     if (pathname === "/") {
-      if (localStorage.getItem("MenuData")) {
-        localStorage.setItem(
+      if (menuData) {
+        uiStorage.setItem(
           "lastFocusMenuItem",
-          `menuItem__${JSON.parse(localStorage.getItem("MenuData"))
+          `menuItem__${menuData
             .filter(
               (item) =>
                 item.attributes.link_type !== "subscribe" &&
@@ -60,7 +60,7 @@ const SidebarItem = ({ data, handleEnterPress, focuskeey }) => {
         );
       }
     }
-  }, [pathname]);
+  }, [pathname, menuData]);
 
   return (
     <div

@@ -16,6 +16,7 @@ import { useOnlineStatus } from "@src/app/App";
 import { Link, useNavigate } from "react-router-dom";
 import SidebarItem from "./SidebarItem";
 import { uiStorage } from "@src/utils/uiStorage";
+import { useGetMenuQuery } from "../../services/TMDB";
 
 const MenuItems = ({ isLogin }) => {
   const { jwt, setJwt } = useAuth();
@@ -28,8 +29,9 @@ const MenuItems = ({ isLogin }) => {
   });
   const myref = useRef(null);
   const [userData, setUserData] = useState(null);
-  const [menuData, setMenuData] = useState(null);
   const navigate = useNavigate();
+  const { data: menuResponse } = useGetMenuQuery(jwt);
+  const menuData = menuResponse?.data;
   // let jwt = localStorage.getItem("jwt");
   const onAssetFocus = React.useCallback(
     ({ y }) => {
@@ -46,11 +48,6 @@ const MenuItems = ({ isLogin }) => {
     [ref]
   );
   useEffect(() => {
-    if (localStorage.getItem("MenuData")) {
-      setMenuData(JSON.parse(localStorage.getItem("MenuData")));
-    }
-  }, []);
-  useEffect(() => {
     // jwt = localStorage.getItem("jwt");
     getUserData(jwt);
     // setTimeout(() => {
@@ -61,42 +58,7 @@ const MenuItems = ({ isLogin }) => {
   }, [isLogin]);
   useEffect(() => {
     getUserData(jwt);
-    setTimeout(() => {
-      getMenuData();
-    }, 1000);
   }, [jwt]);
-
-  //recive menu data and check if log in
-  const getMenuData = async () => {
-    try {
-      const userAgent = {
-        os: "WebOs",
-        an: "Filimo",
-        vn: "1.00",
-      };
-      const res = await fetch(
-        `https://www.filimo.com/api/fa/v1/menu/menu/sidepanel?devicetype=react_tizen`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-            UserAgent: JSON.stringify(userAgent),
-          },
-        }
-      );
-      const blocks = await res?.json();
-      if (blocks) {
-        localStorage.setItem("MenuData", JSON.stringify(blocks?.data));
-        setMenuData(blocks?.data);
-      }
-      // jwt = blocks.data.attributes.jwt;
-      // console.log(blocks);
-      // dataSet = blocks.data.attributes;
-    } catch (e) {
-      // setError(e);
-      console.log(e);
-    }
-  };
 
   //recive user data if log in
   const getUserData = async (jwt) => {
@@ -220,6 +182,7 @@ const MenuItems = ({ isLogin }) => {
                     handleInterPress(item.attributes);
                   }}
                   focuskeey={`menuItem__${index}`}
+                  menuData={menuData}
                 />
               </div>
             ))}

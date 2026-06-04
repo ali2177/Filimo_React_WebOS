@@ -77,7 +77,6 @@ const User = ({ jwtSub, user, index }) => {
     )
       .then((response) => response.json())
       .then((result) => {
-        localStorage.removeItem("MenuData");
         localStorage.setItem("jwt", result.data.attributes.token);
         setJwt(result.data.attributes.token);
       })

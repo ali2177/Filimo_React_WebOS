@@ -34,7 +34,6 @@ const SignOutBtn = ({ onFocus, jwt }) => {
     uiStorage.removeItem("lastdataloadedMovies");
     uiStorage.removeItem("lastFocusRow");
     uiStorage.removeItem("lastMovieFocus");
-    localStorage.removeItem("MenuData");
     const userAgent = {
       os: "WebOs",
       an: "Filimo",

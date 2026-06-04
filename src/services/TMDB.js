@@ -115,6 +115,11 @@ export const tmdbApi = createApi({
       query: (ui_id) =>
         `/movie/serial/allepisode/uid/${ui_id}/?devicetype=react_tizen&json_type=simple`,
     }),
+
+    // Get Sidebar Menu (jwt arg used as cache key so re-fetches on login/logout)
+    getMenu: builder.query({
+      query: () => `menu/menu/sidepanel?devicetype=react_tizen`,
+    }),
     // // Get Movies by Actor
     // getMoviesByActorId: builder.query({
     //   query: ({ id, page }) =>
@@ -148,4 +153,5 @@ export const {
   useGetActorQuery,
   useGetAllEpisodesQuery,
   useGetUsersProfileQuery,
+  useGetMenuQuery,
 } = tmdbApi;
