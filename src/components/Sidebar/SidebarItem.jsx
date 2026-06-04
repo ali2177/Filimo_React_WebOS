@@ -1,20 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   useFocusable,
   setFocus,
 } from "@noriginmedia/norigin-spatial-navigation";
-import { Routes, Route, useLocation, useNavigation } from "react-router-dom";
-import {
-  genreIcons,
-  categoriiesIfNotSignIn,
-  categoriiesIfSignIn,
-} from "../../utils";
-import { Link, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { uiStorage } from "@src/utils/uiStorage";
 
-const SidebarItem = ({ data, handleEnterPress, focuskeey, menuData }) => {
+const SidebarItem = ({ data, handleEnterPress, focuskeey, menuData, isActive }) => {
   const { pathname } = useLocation();
-  const [isActive, setIsActive] = useState(false);
   const { ref, focused, focusKey } = useFocusable({
     focusKey: focuskeey,
     onEnterPress: () => {
@@ -22,9 +15,7 @@ const SidebarItem = ({ data, handleEnterPress, focuskeey, menuData }) => {
     },
     onArrowPress: (e) => {
       if (e === "left") {
-        // setFocus(uiStorage.getItem("lastMovieFocus"));
         setTimeout(() => {
-          // console.log(uiStorage.getItem("lastMovieFocus"));
           if (uiStorage.getItem("lastMovieFocus"))
             setFocus(uiStorage.getItem("lastMovieFocus"));
         }, 100);
@@ -32,20 +23,9 @@ const SidebarItem = ({ data, handleEnterPress, focuskeey, menuData }) => {
     },
   });
 
+  // When navigating to home, focus the home sidebar item and record it
   useEffect(() => {
-    if (uiStorage.getItem("lastFocusMenuItem") === focuskeey) {
-      setIsActive(true);
-    } else {
-      setIsActive(false);
-    }
-  }, [uiStorage.getItem("lastFocusMenuItem")]);
-  useEffect(() => {
-    // console.log(
-    //   JSON.parse(localStorage.getItem("MenuData")).findIndex(
-    //     (item) => item.attributes.link_key === "1"
-    //   )
-    // );
-    if (pathname === "/") {
+    if (pathname === "/" && data.link_key === "1") {
       if (menuData) {
         uiStorage.setItem(
           "lastFocusMenuItem",
@@ -54,38 +34,16 @@ const SidebarItem = ({ data, handleEnterPress, focuskeey, menuData }) => {
               (item) =>
                 item.attributes.link_type !== "subscribe" &&
                 item.attributes.link_type !== "settings" &&
-                item.attributes.link_type !== "mycontent"
+                item.attributes.link_key !== "mycontent",
             )
-            .findIndex((item) => item.attributes.link_key === "1")}`
+            .findIndex((item) => item.attributes.link_key === "1")}`,
         );
       }
     }
   }, [pathname, menuData]);
 
   return (
-    <div
-      className="button-sign"
-      // onEnterPress={() => {
-      //   if (value === "contries") {
-      //     setIsContDropShow((prev) => !prev);
-      //   } else {
-      //     value === "/"
-      //       ? navigate("/")
-      //       : value === "search"
-      //       ? navigate("/search")
-      //       : value === "mymovies"
-      //       ? navigate("/mymovies")
-      //       : value === "profile"
-      //       ? navigate("/profile")
-      //       : value === "login"
-      //       ? navigate("/login")
-      //       : value === "cat"
-      //       ? navigate("categories")
-      //       : navigate(`/movies/filter/${tag_id}/${other_data}`);
-      //   }
-      //   getUserData(jwt);
-      // }}
-    >
+    <div className="button-sign">
       <div className={"links"}>
         <div
           ref={ref}

@@ -70,6 +70,7 @@ const Loogin = () => {
       );
       const blocks = await res?.json();
       if (blocks.data.attributes.jwt) {
+        localStorage.setItem("jwt", blocks.data.attributes.jwt);
         setUserData(blocks.data.attributes);
         setJwt(blocks.data.attributes.jwt);
       }
