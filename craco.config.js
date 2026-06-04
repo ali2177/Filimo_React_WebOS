@@ -7,4 +7,12 @@ module.exports = {
       '@containers': path.resolve(__dirname, 'src/containers'),
     },
   },
+  jest: {
+    configure: {
+      moduleNameMapper: {
+        '^@src/(.*)$': '<rootDir>/src/$1',
+        '^@containers/(.*)$': '<rootDir>/src/containers/$1',
+      },
+    },
+  },
 };
