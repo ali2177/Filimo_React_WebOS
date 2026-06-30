@@ -185,6 +185,37 @@ const SeekBar = () => {
     }
   }, [setSeekbarActive]);
 
+  // Resume playback after a seek WITHOUT depending solely on the `seeked` event.
+  // Seeking into an unbuffered region can stall so that `seeked` never fires,
+  // which left the player stuck on a black screen. Resume on any of the
+  // recovery events, and keep a watchdog that force-plays (and nudges to
+  // re-trigger HLS fragment loading) if nothing has happened in time.
+  const resumeAfterSeek = useCallback((v, target) => {
+    let done = false;
+    const events = ["seeked", "canplay", "playing"];
+    const cleanup = () => {
+      events.forEach((e) => v.removeEventListener(e, resume));
+      clearTimeout(watchdog);
+    };
+    const resume = () => {
+      if (done) return;
+      done = true;
+      cleanup();
+      v.play().catch(() => {});
+    };
+    events.forEach((e) => v.addEventListener(e, resume, { once: true }));
+
+    // Watchdog: if still stalled at the seek target after 1.5s, kick it.
+    const watchdog = setTimeout(() => {
+      if (done) return;
+      if (v.readyState < 3 && Math.abs(v.currentTime - target) < 0.5) {
+        // nudge by a frame to force HLS to (re)load the segment at this position
+        v.currentTime = target + 0.05;
+      }
+      v.play().catch(() => {});
+    }, 1500);
+  }, []);
+
   // Auto-clear seekPending once the video catches up to the clicked position
   useEffect(() => {
     if (seekPending !== null) {
@@ -238,12 +269,11 @@ const SeekBar = () => {
               const v     = videoRef.current;
               if (v && duration) {
                 const wasPlaying = !v.paused;
-                v.currentTime = ratio * duration;
+                const target = ratio * duration;
+                v.currentTime = target;
                 setSeekPending(ratio * 100);
                 resetUiTimer();
-                if (wasPlaying) {
-                  v.addEventListener("seeked", () => v.play().catch(() => {}), { once: true });
-                }
+                if (wasPlaying) resumeAfterSeek(v, target);
               }
             }}
           >

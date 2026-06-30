@@ -206,7 +206,7 @@ describe("usePlaybackControls — changeQuality", () => {
     );
 
     act(() => { result.current.changeQuality(2); });
-    expect(hlsRef.current.loadLevel).toBe(2);
+    expect(hlsRef.current.currentLevel).toBe(2);
     expect(result.current.selectedLevelIndex).toBe(2);
   });
 });

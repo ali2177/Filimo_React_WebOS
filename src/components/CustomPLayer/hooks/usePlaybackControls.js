@@ -54,8 +54,9 @@ export function usePlaybackControls(videoRef, hlsRef, duration) {
 
   const changeQuality = useCallback((index) => {
     if (!hlsRef.current) return;
-    if (index === -1) hlsRef.current.currentLevel = -1;
-    else hlsRef.current.loadLevel = index;
+    // currentLevel (not loadLevel): -1 re-enables ABR, otherwise lock the level
+    // so ABR can't keep fighting the manual pick and thrash level switches.
+    hlsRef.current.currentLevel = index;
     setSelectedLevelIndex(index);
   }, [hlsRef]);
 

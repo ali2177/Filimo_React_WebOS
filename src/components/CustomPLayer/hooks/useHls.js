@@ -19,8 +19,9 @@ export function useHls(src, autoPlay, videoRef) {
     const hls = new Hls({
       renderTextTracksNatively: false,
       enableWorker: true,
-      maxBufferLength: 20,
-      backBufferLength: 20,
+      maxBufferLength: 10,             // keep ~10s ahead (was 20)
+      backBufferLength: 0,             // don't retain played video — TVs have tiny MSE memory (was 20)
+      maxBufferSize: 20 * 1000 * 1000, // hard ~20MB cap so HLS evicts by size before hitting the platform quota
     });
 
     hls.loadSource(src);
@@ -42,7 +43,18 @@ export function useHls(src, autoPlay, videoRef) {
     });
 
     hls.on(Hls.Events.ERROR, (_, data) => {
-      if (!data.fatal) return;
+      // Non-fatal buffer hiccups: nudge the playhead / let HLS evict & resume
+      // instead of letting them spiral into a fatal recover (the long freeze).
+      if (!data.fatal) {
+        if (
+          data.details === Hls.ErrorDetails.BUFFER_STALLED_ERROR ||
+          data.details === Hls.ErrorDetails.BUFFER_NUDGE_ON_STALL
+        ) {
+          const v = videoRef.current;
+          if (v && !v.paused) v.currentTime += 0.1; // skip the stalled hole
+        }
+        return;
+      }
 
       if (data.type === Hls.ErrorTypes.NETWORK_ERROR && networkRetries < 3) {
         networkRetries++;
