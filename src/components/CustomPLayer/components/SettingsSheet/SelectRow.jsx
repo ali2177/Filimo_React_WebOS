@@ -4,7 +4,7 @@ import { toFarsiDigits } from "../../utils/toFarsiDigits.js";
 import { CheckIcon } from "../sheetIcons";
 
 const SelectRow = ({ focusKey: fk, label, subLabel, isActive, onEnter }) => {
-  const { ref, focused } = useFocusable({
+  const { ref, focused, focusSelf } = useFocusable({
     focusKey: fk,
     onEnterPress: onEnter,
   });
@@ -13,6 +13,7 @@ const SelectRow = ({ focusKey: fk, label, subLabel, isActive, onEnter }) => {
       ref={ref}
       className={`st-row${focused ? " st-row-focused" : ""}`}
       style={{ backgroundColor: isActive ? "#313131" : "transparent" }}
+      onMouseEnter={() => focusSelf()}
       onClick={onEnter}
     >
       <span className="st-row-icon">{isActive ? CheckIcon : null}</span>

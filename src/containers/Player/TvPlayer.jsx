@@ -67,7 +67,6 @@ const TvPlayer = () => {
 
   useEffect(() => {
     const internalPlayer = player?.getInternalPlayer?.();
-    console.log(internalPlayer);
     if (!internalPlayer) return;
 
     const interval = setInterval(() => {
@@ -396,11 +395,6 @@ const TvPlayer = () => {
   }
 
   useEffect(() => {
-    console.log("Onloaded player", player);
-    if (player) {
-      console.log(movie);
-      console.log("loaded player", player);
-    }
     const root = document.querySelector(".tv-player");
     if (!root) return;
     return watchControls(root, setIsUiActive);
@@ -1211,7 +1205,9 @@ const TvPlayer = () => {
               src={movie}
               hlsOptions={{ enableWorker: true, maxBufferLength: 30 }}
               autoPlay={true}
-              resumeFrom={Number(localStorage.getItem("movie_last_watch_time")) || 0}
+              resumeFrom={
+                Number(localStorage.getItem("movie_last_watch_time")) || 0
+              }
               movieFullTitle={movieWatchData.data.attributes.movie_title.replace(
                 ")",
                 " ",

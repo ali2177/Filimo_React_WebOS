@@ -3,7 +3,7 @@ import { useFocusable } from "@noriginmedia/norigin-spatial-navigation";
 import { ChevronLeftIcon } from "../sheetIcons";
 
 const NavRow = ({ focusKey: fk, label, subLabel, onEnter }) => {
-  const { ref, focused } = useFocusable({
+  const { ref, focused, focusSelf } = useFocusable({
     focusKey: fk,
     onEnterPress: onEnter,
   });
@@ -12,6 +12,7 @@ const NavRow = ({ focusKey: fk, label, subLabel, onEnter }) => {
       ref={ref}
       className={`st-row st-nav-row${focused ? " st-row-focused" : ""}`}
       style={{ backgroundColor: "#313131" }}
+      onMouseEnter={() => focusSelf()}
       onClick={onEnter}
     >
       <span className="st-row-icon">{ChevronLeftIcon}</span>

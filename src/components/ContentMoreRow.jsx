@@ -1,4 +1,10 @@
-import React, { useRef, useEffect, useState, useCallback } from "react";
+import React, {
+  useRef,
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+} from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import MovieList from "./MovieList/MovieList";
 import {
@@ -155,42 +161,46 @@ const ContentMoreRow = ({
     // console.log(focusKey);
     // focusSelf();
   }, [location]);
-  const onAssetFocus = useCallback((i, movie) => {
-    movieFocusSet(movie);
+  const slicedMovies = useMemo(() => movies.slice(0, 6), [movies]);
+  const onAssetFocus = useCallback(
+    (i, movie) => {
+      movieFocusSet(movie);
 
-    if (i === 0) {
-      scrollingRef.current.scrollLeft = 0;
-      return;
-    }
-    if (scrollingRef.current) {
-      const container = scrollingRef.current;
-      const selectedMovie = container.children[i];
-      // console.log(selectedMovie);
-
-      if (selectedMovie) {
-        const movieWidth = selectedMovie.offsetWidth;
-        const containerWidth = container.offsetWidth;
-        const maxScroll = container.scrollWidth - containerWidth;
-
-        // Calculate the optimal scroll position
-        let newScrollLeft =
-          selectedMovie.offsetLeft -
-          container.offsetLeft -
-          containerWidth / 2 +
-          movieWidth / 2;
-
-        container.scrollLeft = newScrollLeft;
+      if (i === 0) {
+        scrollingRef.current.scrollLeft = 0;
+        return;
       }
-      // if (event) {
-      //   if (event.key === "ArrowLeft") {
-      //     console.log("here");
-      //     scrollingRef.current.scrollLeft -= 600;
-      //   } else if (event.key === "ArrowRight") {
-      //     scrollingRef.current.scrollLeft += 600;
-      //   }
-      // }
-    }
-  }, [movieFocused]);
+      if (scrollingRef.current) {
+        const container = scrollingRef.current;
+        const selectedMovie = container.children[i];
+        // console.log(selectedMovie);
+
+        if (selectedMovie) {
+          const movieWidth = selectedMovie.offsetWidth;
+          const containerWidth = container.offsetWidth;
+          const maxScroll = container.scrollWidth - containerWidth;
+
+          // Calculate the optimal scroll position
+          let newScrollLeft =
+            selectedMovie.offsetLeft -
+            container.offsetLeft -
+            containerWidth / 2 +
+            movieWidth / 2;
+
+          container.scrollLeft = newScrollLeft;
+        }
+        // if (event) {
+        //   if (event.key === "ArrowLeft") {
+        //     console.log("here");
+        //     scrollingRef.current.scrollLeft -= 600;
+        //   } else if (event.key === "ArrowRight") {
+        //     scrollingRef.current.scrollLeft += 600;
+        //   }
+        // }
+      }
+    },
+    [movieFocused],
+  );
   // useEffect(() => {
   //   console.log("safhe avaz shod");
   //   console.log(focusKey);
@@ -208,7 +218,7 @@ const ContentMoreRow = ({
       <div className="contentRowWrapper" ref={ref}>
         <div className="contentScrollingWrapper">
           <div ref={scrollingRef} className="contentRowScrollingContent">
-            {movies.slice(0, 6).map((movie, i) => (
+            {slicedMovies.map((movie, i) => (
               // <div ref={myRef}>
               <div key={movie.uid ?? movie.id ?? i}>
                 <MovieMore

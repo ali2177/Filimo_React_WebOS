@@ -27,6 +27,7 @@ import AudioSheet from "./components/AudioSheet/AudioSheet.jsx";
 import SettingsSheet from "./components/SettingsSheet/SettingsSheet.jsx";
 import SkipIntroButton from "./components/SkipIntroButton/SkipIntroButton.jsx";
 import NextEpisodeButton from "./components/NextEpisodeButton/NextEpisodeButton.jsx";
+import PlayerDebugOverlay from "./components/PlayerDebugOverlay/PlayerDebugOverlay.jsx";
 import "./HlsTvPlayer.css";
 
 const HlsTvPlayer = ({
@@ -73,7 +74,7 @@ const HlsTvPlayer = ({
     toggleAutoPlayNext,
   } = usePlaybackControls(videoRef, hlsRef, duration);
 
-  const { activeModal, openModal, closeModal } = useModal(videoRef);
+  const { activeModal, openModal, closeModal } = useModal();
   const { showNextEpisode, dismissNextEpisode } = useNextEpisode(
     currentTime,
     castData,
@@ -258,6 +259,9 @@ const HlsTvPlayer = ({
       <PlayerContext.Provider value={contextWithSeekbar}>
         <div className="player-container">
           <video ref={videoRef} style={{ width: "100%", height: "100%" }} />
+
+          {/* TEMP diagnostic — remove once pausing bug is found */}
+          <PlayerDebugOverlay videoRef={videoRef} hlsRef={hlsRef} />
 
           {(subtitleText || showSubtitlePreview) && (
             <div

@@ -3,7 +3,7 @@ import { useFocusable } from "@noriginmedia/norigin-spatial-navigation";
 import { CheckIcon } from "../sheetIcons";
 
 const SeasonRow = ({ focusKey: fk, label, isActive, onEnter }) => {
-  const { ref, focused } = useFocusable({
+  const { ref, focused, focusSelf } = useFocusable({
     focusKey: fk,
     onEnterPress: onEnter,
   });
@@ -12,6 +12,7 @@ const SeasonRow = ({ focusKey: fk, label, isActive, onEnter }) => {
       ref={ref}
       className={`es-row${focused ? " es-row-focused" : ""}`}
       style={{ backgroundColor: isActive ? "#313131" : "transparent" }}
+      onMouseEnter={() => focusSelf()}
       onClick={onEnter}
     >
       <span className="es-row-icon u400">{isActive ? CheckIcon : null}</span>

@@ -1,4 +1,10 @@
-import React, { useRef, useEffect, useState, useCallback } from "react";
+import React, {
+  useRef,
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+} from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import MovieList from "./MovieList/MovieList";
 import {
@@ -52,28 +58,32 @@ const ContentCatRow = ({
     setCurentMovie(movie);
     movieFocused(movie);
   };
-  const onAssetFocus = useCallback((i, movie) => {
-    movieFocusSet(movie);
+  const slicedMovies = useMemo(() => movies.slice(0, 6), [movies]);
+  const onAssetFocus = useCallback(
+    (i, movie) => {
+      movieFocusSet(movie);
 
-    if (i === 0) {
-      scrollingRef.current.scrollLeft = 0;
-      return;
-    }
-    if (scrollingRef.current) {
-      if (event) {
-        if (event.key === "ArrowLeft") {
-          scrollingRef.current.scrollLeft -= 200;
-        } else if (event.key === "ArrowRight") {
-          scrollingRef.current.scrollLeft += 200;
-        }
+      if (i === 0) {
+        scrollingRef.current.scrollLeft = 0;
+        return;
       }
+      if (scrollingRef.current) {
+        if (event) {
+          if (event.key === "ArrowLeft") {
+            scrollingRef.current.scrollLeft -= 200;
+          } else if (event.key === "ArrowRight") {
+            scrollingRef.current.scrollLeft += 200;
+          }
+        }
 
-      // console.log(x);
-      // scrollingRef.current.scrollLeft -= 100;
-      // console.log(scrollingRef.current.scrollLeft);
-      // scrollingRef.current.style.scrollBehavior = "smooth";
-    }
-  }, [movieFocused]);
+        // console.log(x);
+        // scrollingRef.current.scrollLeft -= 100;
+        // console.log(scrollingRef.current.scrollLeft);
+        // scrollingRef.current.style.scrollBehavior = "smooth";
+      }
+    },
+    [movieFocused],
+  );
   const handleInterPress = (movie, focusKeeey) => {
     navigate(`/movie/${movie.uid}`);
   };
@@ -131,7 +141,7 @@ const ContentCatRow = ({
       >
         <div className="contentScrollingWrapper" ref={scrollingRef}>
           <div className="contentRowScrollingContent">
-            {movies.slice(0, 6).map((movie, i) => (
+            {slicedMovies.map((movie, i) => (
               // <div ref={myRef}>
               <div key={movie.uid ?? movie.id ?? i}>
                 <MovieCat

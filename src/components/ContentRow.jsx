@@ -1,4 +1,4 @@
-import React, { useRef, useCallback } from "react";
+import React, { useRef, useCallback, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   FocusContext,
@@ -32,9 +32,16 @@ const ContentRow = ({
   const location = useLocation();
   const navigate = useNavigate();
   const scrollingRef = useRef(null);
-  const movieFocusSet = useCallback((movie) => {
-    movieFocused(movie);
-  }, [movieFocused]);
+  const movieFocusSet = useCallback(
+    (movie) => {
+      movieFocused(movie);
+    },
+    [movieFocused],
+  );
+  const slicedMovies = useMemo(
+    () => movies.slice(0, movies[0]?.output_type === "livetv" ? 4 : 6),
+    [movies],
+  );
   // const onAssetFocus = (i, movie) => {
   //   movieFocusSet(movie);
 
@@ -95,24 +102,22 @@ const ContentRow = ({
         </h3>
         <div className="contentScrollingWrapper">
           <div ref={scrollingRef} className="contentRowScrollingContent">
-            {movies
-              .slice(0, movies[0]?.output_type === "livetv" ? 4 : 6)
-              .map((movie, i) => (
-                // <div ref={myRef}>
-                <div key={movie.uid ?? movie.id ?? i}>
-                  <Movie
-                    movie={movie}
-                    movieFocus={movieFocused}
-                    // onFocus={() => onAssetFocus(i, movie)}
-                    // onEnterPress={() => handleInterPress(movie)}
-                    focusKeey={`MOVIE_${index}__${i}`}
-                    scrollRef={scrollRef}
-                    onscroll={() => {
-                      // onAssetFocus(i);
-                    }}
-                  />
-                </div>
-              ))}
+            {slicedMovies.map((movie, i) => (
+              // <div ref={myRef}>
+              <div key={movie.uid ?? movie.id ?? i}>
+                <Movie
+                  movie={movie}
+                  movieFocus={movieFocused}
+                  // onFocus={() => onAssetFocus(i, movie)}
+                  // onEnterPress={() => handleInterPress(movie)}
+                  focusKeey={`MOVIE_${index}__${i}`}
+                  scrollRef={scrollRef}
+                  onscroll={() => {
+                    // onAssetFocus(i);
+                  }}
+                />
+              </div>
+            ))}
             <div>
               {movies.length > 6 && (
                 <MoreItem

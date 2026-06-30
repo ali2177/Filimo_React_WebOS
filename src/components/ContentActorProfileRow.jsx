@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useMemo } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import MovieList from "./MovieList/MovieList";
 import {
@@ -43,6 +43,7 @@ const ContentOnlyRow = ({
   //     block: "center",
   //   });
   // };
+  const slicedMovies = useMemo(() => movies.slice(0, 20), [movies]);
   const movieFocusSet = (movie) => {
     setCurentMovie(movie);
     movieFocused(movie);
@@ -120,7 +121,7 @@ const ContentOnlyRow = ({
         <h3 className="u700">{title}</h3>
         <div className="contentScrollingWrapper" ref={scrollingRef}>
           <div className="contentRowScrollingContent">
-            {movies.slice(0, 20).map((movie, i) => (
+            {slicedMovies.map((movie, i) => (
               // <div ref={myRef}>
               <div>
                 <MovieActorProfile

@@ -13,7 +13,7 @@ const SheetRow = ({
   onDown,
   onFocus,
 }) => {
-  const { ref, focused } = useFocusable({
+  const { ref, focused, focusSelf } = useFocusable({
     focusKey: fk,
     onEnterPress: onEnter,
     onArrowPress: (dir) => {
@@ -31,6 +31,8 @@ const SheetRow = ({
       ref={ref}
       className={`ss-row${focused ? " ss-row-focused" : ""}`}
       style={{ backgroundColor: leftIcon ? "#313131" : "none" }}
+      onMouseEnter={() => focusSelf()}
+      onClick={onEnter}
     >
       <span className="ss-row-icon">{leftIcon}</span>
       <div className="ss-row-text">

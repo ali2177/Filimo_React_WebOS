@@ -4,7 +4,7 @@ import { uiStorage } from "../../../../utils/uiStorage";
 
 const EpisodeRow = ({ focusKey: fk, label, isPlaying, onEnter }) => {
   const myRef = useRef(null);
-  const { ref, focused } = useFocusable({
+  const { ref, focused, focusSelf } = useFocusable({
     onFocus: () => {
       handleScrolling();
     },
@@ -24,6 +24,7 @@ const EpisodeRow = ({ focusKey: fk, label, isPlaying, onEnter }) => {
     <div
       ref={ref}
       className={`es-row${focused ? " es-row-focused" : ""}${isPlaying ? " es-row-playing" : ""}`}
+      onMouseEnter={() => focusSelf()}
       onClick={onEnter}
     >
       <span ref={myRef} className="es-row-badge u400">

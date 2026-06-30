@@ -44,6 +44,8 @@ const MoreMovies = () => {
   const [movies, setMovies] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [movieList, setMovieList] = useState(null);
+  const [rowList, setRowList] = useState(null);
+  const [forwardLink, setForwardLink] = useState(null);
   const { data, error, isFetching } = useGetMoreMoviesQuery({ tag_id });
   const [curretFocusedMovie, setCurretFocusedMovie] = useState("");
 
@@ -67,17 +69,23 @@ const MoreMovies = () => {
   useDisableKeyboardWhileLoading(isLoading);
   useEffect(() => {
     if (data) {
+      console.log(data);
       setMovies(data.data.filter((item) => item.output_type === "movie")[0]);
       setMovieList(
-        data.data.filter((item) => item.output_type === "movie")[0].movies.data
+        data.data.filter((item) => item.output_type === "movie")[0].movies.data,
+      );
+      setForwardLink(
+        data.links?.forward ??
+          data.data.filter((item) => item.output_type === "movie")[0]?.links
+            ?.next,
       );
       if (
-        data.data.filter((item) => item.output_type === "movie").length === 1
+        data.data.filter((item) => item.output_type === "movie").length !== 1
       ) {
-        localStorage.setItem(
-          "forward_link",
-          data.data.filter((item) => item.output_type === "movie")[0]?.links
-            ?.next
+        setRowList(
+          data.data.filter(
+            (item) => item.output_type === "movie" && item.link_text,
+          ),
         );
       }
       setTimeout(() => {
@@ -129,7 +137,7 @@ const MoreMovies = () => {
       // console.log(ref.current.scrollTop);
       // ref.current.style.scrollBehavior = "smooth";
     },
-    [ref]
+    [ref],
   );
 
   const lastMovieElement = useCallback(
@@ -140,7 +148,6 @@ const MoreMovies = () => {
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
           var myHeaders = new Headers();
-          // console.log(entries[0].isIntersecting);
           if (jwt) {
             myHeaders.append("Authorization", `Bearer ${jwt}`);
             var requestOptions = {
@@ -154,33 +161,43 @@ const MoreMovies = () => {
               redirect: "follow",
             };
           }
-          if (movies) {
-            if (movies?.links?.more_records) {
-              fetch(`${localStorage.getItem("forward_link")}`, requestOptions)
-                .then((response) => response.json())
-                .then((result) => {
-                  if (result.data.length) {
-                    setMovies(
+          if (forwardLink) {
+            fetch(forwardLink, requestOptions)
+              .then((response) => response.json())
+              .then((result) => {
+                if (result.data.length) {
+                  setMovies(
+                    result.data.filter(
+                      (item) => item.output_type === "movie",
+                    )[0],
+                  );
+                  setMovieList((prevMovieList) => [
+                    ...prevMovieList,
+                    ...result.data.filter(
+                      (item) => item.output_type === "movie",
+                    )[0]?.movies?.data,
+                  ]);
+                  setRowList((prev) =>
+                    prev
+                      ? [
+                          ...prev,
+                          ...result.data.filter(
+                            (item) =>
+                              item.output_type === "movie" && item.link_text,
+                          ),
+                        ]
+                      : prev,
+                  );
+                  setForwardLink(
+                    result.links?.forward ??
                       result.data.filter(
-                        (item) => item.output_type === "movie"
-                      )[0]
-                    );
-                    setMovieList((prevMovieList) => [
-                      ...prevMovieList,
-                      ...result.data.filter(
-                        (item) => item.output_type === "movie"
-                      )[0]?.movies?.data,
-                    ]);
-                    localStorage.setItem(
-                      "forward_link",
-                      result.data.filter(
-                        (item) => item.output_type === "movie"
-                      )[0]?.links?.next
-                    );
-                  }
-                })
-                .catch((error) => console.log("error", error));
-            }
+                        (item) => item.output_type === "movie",
+                      )[0]?.links?.next ??
+                      null,
+                  );
+                }
+              })
+              .catch((error) => console.log("error", error));
           }
 
           // if (movies?.links?.forward) {
@@ -279,7 +296,7 @@ const MoreMovies = () => {
       });
       if (node) observer.current.observe(node);
     },
-    [movies]
+    [forwardLink, isFetching, jwt],
   );
 
   const movieFocusSet = (movieUid) => {
@@ -294,7 +311,7 @@ const MoreMovies = () => {
     if (uiStorage.getItem("level")) {
       uiStorage.setItem(
         "level",
-        `level__${Number(uiStorage.getItem("level").slice(7, 8)) - 1}`
+        `level__${Number(uiStorage.getItem("level").slice(7, 8)) - 1}`,
       );
     }
     if (location.pathname !== "/player") navigate(-1);
@@ -425,30 +442,31 @@ const MoreMovies = () => {
             {data.data.filter((item) => item.output_type === "movie").length !==
             1 ? (
               <>
-                {data.data
-                  .filter(
-                    (item) => item.output_type === "movie" && item.link_text
+                {(
+                  rowList ??
+                  data.data.filter(
+                    (item) => item.output_type === "movie" && item.link_text,
                   )
-                  .map((movieItem, index) => (
-                    <div>
-                      <h3
-                        style={{
-                          paddingTop: "0px",
-                          margin: "12px 12px 0px 0px",
-                        }}
-                        className="u700"
-                      >
-                        {movieItem.link_text}
-                      </h3>
-                      <ContentMoreRow
-                        movieFocused={movieFocusSet}
-                        row={movieItem.link_key}
-                        movies={movieItem.movies.data}
-                        focusKeey={`MOVIE_LIST_${index}`}
-                        index={index}
-                      />
-                    </div>
-                  ))}
+                ).map((movieItem, index) => (
+                  <div key={movieItem.link_key ?? index} ref={lastMovieElement}>
+                    <h3
+                      style={{
+                        paddingTop: "0px",
+                        margin: "12px 12px 0px 0px",
+                      }}
+                      className="u700"
+                    >
+                      {movieItem.link_text}
+                    </h3>
+                    <ContentMoreRow
+                      movieFocused={movieFocusSet}
+                      row={movieItem.link_key}
+                      movies={movieItem.movies.data}
+                      focusKeey={`MOVIE_LIST_${index}`}
+                      index={index}
+                    />
+                  </div>
+                ))}
               </>
             ) : (
               <div className="result">

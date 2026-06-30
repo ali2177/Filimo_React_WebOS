@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   useFocusable,
   FocusContext,
@@ -17,14 +17,27 @@ function Navbar({ isLogin, hidden }) {
     focusBoundaryDirections: ["down", "up", "right", "left"],
   });
 
+  const [expanded, setExpanded] = useState(false);
+  const expandTimer = useRef(null);
+
+  useEffect(() => {
+    if (hasFocusedChild) {
+      expandTimer.current = setTimeout(() => setExpanded(true), 150);
+    } else {
+      clearTimeout(expandTimer.current);
+      setExpanded(false);
+    }
+    return () => clearTimeout(expandTimer.current);
+  }, [hasFocusedChild]);
+
   return (
     <FocusContext.Provider value={focusKey}>
       <nav
         style={{ display: hidden ? "none" : undefined }}
         ref={ref}
-        className={hasFocusedChild ? "drawer" : "drawer-focus"}
+        className={expanded ? "drawer" : "drawer-focus"}
       >
-        <Sidebar isLogin={isLogin} focusd={hasFocusedChild} />
+        <Sidebar isLogin={isLogin} focusd={expanded} />
       </nav>
     </FocusContext.Provider>
   );

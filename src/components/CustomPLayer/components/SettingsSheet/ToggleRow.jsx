@@ -2,7 +2,7 @@ import React from "react";
 import { useFocusable } from "@noriginmedia/norigin-spatial-navigation";
 
 const ToggleRow = ({ focusKey: fk, label, checked, onToggle }) => {
-  const { ref, focused } = useFocusable({
+  const { ref, focused, focusSelf } = useFocusable({
     focusKey: fk,
     onEnterPress: onToggle,
   });
@@ -10,6 +10,7 @@ const ToggleRow = ({ focusKey: fk, label, checked, onToggle }) => {
     <div
       ref={ref}
       className={`st-row${focused ? " st-row-focused" : ""}`}
+      onMouseEnter={() => focusSelf()}
       onClick={onToggle}
     >
       <div className={`st-toggle${checked ? " st-toggle-on" : ""}`}>

@@ -99,12 +99,12 @@ const SettingsSheet = ({ onClose }) => {
                 subLabel={qualityLabel}
                 onEnter={() => setLayer("quality")}
               />
-              <NavRow
+              {/* <NavRow
                 focusKey="st-speed"
                 label="سرعت پخش"
                 subLabel={speedLabel}
                 onEnter={() => setLayer("speed")}
-              />
+              /> */}
               <ToggleRow
                 focusKey="st-autoplay"
                 label="پخش خودکار قسمت بعد"
