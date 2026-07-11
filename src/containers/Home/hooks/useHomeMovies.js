@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import { useGetMoviesQuery } from "../../../services/TMDB";
-import { safeParse } from "../homeUtils";
+import { readHomeCache, writeHomeCache } from "../homeCache";
 import { uiStorage } from "@src/utils/uiStorage";
 
 export function useHomeMovies({ tag_id, other_data, jwt, pageConfig }) {
@@ -35,7 +35,7 @@ export function useHomeMovies({ tag_id, other_data, jwt, pageConfig }) {
   const persistMoviesToStorage = useCallback(
     (nextMovies) => {
       if (!pageConfig) return;
-      localStorage.setItem(pageConfig.cacheKey, JSON.stringify(nextMovies));
+      writeHomeCache(pageConfig.cacheKey, nextMovies);
     },
     [pageConfig],
   );
@@ -52,6 +52,8 @@ export function useHomeMovies({ tag_id, other_data, jwt, pageConfig }) {
         };
 
         if (pageConfig) {
+          // Plain string value, read back un-parsed via uiStorage.getItem in
+          // useFocusInit — must not be JSON-encoded.
           localStorage.setItem(
             pageConfig.focusRowBeforeReloadKey,
             uiStorage.getItem("lastFocusRow") || "",
@@ -120,7 +122,7 @@ export function useHomeMovies({ tag_id, other_data, jwt, pageConfig }) {
       return;
     }
 
-    const cached = safeParse(localStorage.getItem(pageConfig.cacheKey));
+    const cached = readHomeCache(pageConfig.cacheKey);
     if (cached?.data) {
       setMovies(cached);
     } else if (data) {

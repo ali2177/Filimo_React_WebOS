@@ -12,11 +12,11 @@ const IN_REDUX = new Set([
   'lastFocusRow', 'lastFocusActor', 'lastFocusCrew',
   'lastFocusRecomm', 'lastFocusMoreItem',
   'lastSeasonFocus', 'lastSeasonFocus_parent_new', 'lastSeasonFocus_season_part',
-  'last', 'lastFocusRowBeforeReload',
-  'lastFocusRowMoviesBeforeReload', 'lastFocusRowKidsBeforeReload',
-  'lastFocusRowIranBeforeReload', 'lastFocusRowSeriesBeforeReload',
-  'lastdataloaded', 'lastdataloadedIran',
-  'lastdataloadedMovies', 'lastdataloadedSeries', 'lastdataloadedKids',
+  'last',
+  // NOTE: the home content cache (lastdataloaded*) and its reload-survival focus
+  // keys (lastFocusRow*BeforeReload) intentionally live in real localStorage
+  // (see src/containers/Home/homeCache.js) so they survive the player's
+  // window.location.reload(). They must NOT be listed here.
   // Phase 2: player passthrough + UI button flags
   'movie_uid', 'movie_cast_time', 'formAction', 'fromAlert',
   'moreBtn', 'seasonBtn', 'recommBtn',

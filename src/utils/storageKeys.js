@@ -1,20 +1,15 @@
 import { uiStorage } from './uiStorage';
+import { HOME_CACHE_KEYS } from '@src/containers/Home/homeCache';
 
 const HOME_NAV_KEYS = [
-  "lastdataloaded",
-  "lastdataloadedIran",
-  "lastdataloadedMovies",
-  "lastdataloadedSeries",
-  "lastdataloadedKids",
+  // Content cache + reload-survival focus keys (localStorage, single source of
+  // truth in homeCache.js — includes lastdataloaded* and lastFocusRow*BeforeReload).
+  ...HOME_CACHE_KEYS,
   "lastFocus",
   "lastFocusMoreItem",
   "lastMovieFocus",
   "last",
   "lastFocusRow",
-  "lastFocusRowMoviesBeforeReload",
-  "lastFocusRowKidsBeforeReload",
-  "lastFocusRowIranBeforeReload",
-  "lastFocusRowBeforeReload",
 ];
 
 export function clearHomeNavState() {
