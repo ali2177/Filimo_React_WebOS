@@ -1,0 +1,31 @@
+.snackbar-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1999998;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+.snackbar-wrapper {
+  background: linear-gradient(180deg, #0c0c0c 0%, #151515 70.04%);
+  padding: 2rem 8rem;
+  position: fixed;
+  border-radius: 20px;
+  z-index: 1999999;
+  left: 40%;
+  top: 30%;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-direction: column;
+}
+.modal-btn-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.snackbar {
+  visibility: visible;
+  color: #fff;
+  text-align: center;
+  border-radius: 2px;
+  font-size: 18px;
+}

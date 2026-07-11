@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect } from "react";
+import "./Snackbar.css";
 import {
   FocusableComponentLayout,
   FocusContext,
@@ -48,6 +49,7 @@ const Snackbar = ({ onExit }) => {
   }, []);
   return (
     <FocusContext.Provider value={focusKey}>
+      <div className="snackbar-overlay" />
       <div className="snackbar-wrapper">
         <div className="snackbar u700">آیا می‌خواهید از فیلیمو خارج شوید؟</div>
         <div ref={ref} className="modal-btn-wrapper">
