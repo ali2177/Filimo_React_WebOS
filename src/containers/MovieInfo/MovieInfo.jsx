@@ -67,7 +67,6 @@ function MovieInfo({ isLogin }) {
     localStorage.removeItem("activeSub");
     // uiStorage.removeItem("lastFocusRowBeforeReload");
     uiStorage.removeItem("lastFocusRowSeriesBeforeReload");
-
   }, []);
   useEffect(() => {
     jwt = localStorage.getItem("jwt");
@@ -141,7 +140,7 @@ function MovieInfo({ isLogin }) {
 
     fetch(
       `https://www.filimo.com/api/fa/v1/movie/movie/one/uid/${id}?devicetype=react_tizen&json_type=simple`,
-      requestOptions
+      requestOptions,
     )
       .then((response) => response.json())
       .then((result) => {
@@ -172,24 +171,27 @@ function MovieInfo({ isLogin }) {
     }
   }, [movieData]);
 
-  const handleBack = useCallback((e) => {
-    uiStorage.removeItem("seasonBtn");
-    uiStorage.removeItem("recommBtn");
-    uiStorage.removeItem("moreBtn");
-    uiStorage.removeItem("lastSeasonFocus");
-    uiStorage.removeItem("lastSeasonFocus_parent_new");
-    uiStorage.removeItem("lastSeasonFocus_season_part");
-    uiStorage.removeItem("movie_cast_time");
-    uiStorage.removeItem("movie_uid");
-    uiStorage.removeItem("fromAlert");
-    window.scrollTo({ top: 0 });
-    if (uiStorage.getItem("fromAlert") === "back") {
-      navigate("/");
-    } else {
-      e.preventDefault();
-      if (location.pathname !== "/player") navigate(-1);
-    }
-  }, [location.pathname, navigate]);
+  const handleBack = useCallback(
+    (e) => {
+      uiStorage.removeItem("seasonBtn");
+      uiStorage.removeItem("recommBtn");
+      uiStorage.removeItem("moreBtn");
+      uiStorage.removeItem("lastSeasonFocus");
+      uiStorage.removeItem("lastSeasonFocus_parent_new");
+      uiStorage.removeItem("lastSeasonFocus_season_part");
+      uiStorage.removeItem("movie_cast_time");
+      uiStorage.removeItem("movie_uid");
+      uiStorage.removeItem("fromAlert");
+      window.scrollTo({ top: 0 });
+      if (uiStorage.getItem("fromAlert") === "back") {
+        navigate("/");
+      } else {
+        e.preventDefault();
+        if (location.pathname !== "/player") navigate(-1);
+      }
+    },
+    [location.pathname, navigate],
+  );
 
   useBackKey(handleBack);
   // const onRowFocus = React.useCallback(
@@ -234,24 +236,24 @@ function MovieInfo({ isLogin }) {
     if (movieData?.data?.watch_action.type === "watch") {
       localStorage.setItem(
         "subtitles",
-        JSON.stringify(movieData.data.General?.subtitle?.data)
+        JSON.stringify(movieData.data.General?.subtitle?.data),
       );
       uiStorage.setItem(
         "formAction",
-        movieData.data?.watch_action?.visit_url?.formAction
+        movieData.data?.watch_action?.visit_url?.formAction,
       );
 
       localStorage.setItem(
         "movie_src",
-        movieData?.data?.watch_action.movie_src
+        movieData?.data?.watch_action.movie_src,
       );
       uiStorage.setItem(
         "movie_cast_time",
-        movieData?.data?.watch_action?.cast_skip_arr.cast_s
+        movieData?.data?.watch_action?.cast_skip_arr.cast_s,
       );
       localStorage.setItem(
         "movie_last_watch_time",
-        movieData?.data?.watch_action?.last_watch_position?.last_second
+        movieData?.data?.watch_action?.last_watch_position?.last_second,
       );
       uiStorage.setItem("movie_uid", movieData?.data?.General?.uid);
 
@@ -402,13 +404,13 @@ function MovieInfo({ isLogin }) {
                       </svg>
                       <span className="u500">
                         {convertToFarsi(
-                          movieData?.data?.General?.serial.season_id
+                          movieData?.data?.General?.serial.season_id,
                         )}
                       </span>
                       <span className="u500">فصل،</span>
                       <span className="u500">
                         {convertToFarsi(
-                          movieData?.data?.General?.serial.serial_part
+                          movieData?.data?.General?.serial.serial_part,
                         )}
                       </span>
                       <span className="u500">قسمت</span>
@@ -425,7 +427,7 @@ function MovieInfo({ isLogin }) {
                     onFocus={handleScrolling}
                   />
                   {movieData.data.General.serial.enable && (
-                    <div style={{ marginLeft: "3rem" }} ref={seasonBtn}>
+                    <div style={{ marginLeft: "1rem" }} ref={seasonBtn}>
                       <SeasonBtn
                         seriesName={movieData?.data?.General?.title}
                         ui_id={movieData?.data?.General.uid}
@@ -434,7 +436,7 @@ function MovieInfo({ isLogin }) {
                     </div>
                   )}
 
-                  <div style={{ marginLeft: "3rem" }} ref={recommBtn}>
+                  <div style={{ marginLeft: "1rem" }} ref={recommBtn}>
                     <RecommBtn
                       onFocus={handleRecommBtnFocus}
                       linkText={"فیلم های پیشنهادی"}
