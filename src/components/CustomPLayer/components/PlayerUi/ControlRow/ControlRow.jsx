@@ -18,7 +18,18 @@ import SubtitleIcon from "./icons/SubtitleIcon";
 import SettingsIcon from "./icons/SettingsIcon";
 
 const ControlRow = () => {
-  const { playing, togglePlay, seek, openModal, isSeries, audioTracks, subtitles, levels, actualLevelIndex, onNextEpisode } = usePlayerContext();
+  const {
+    playing,
+    togglePlay,
+    seek,
+    openModal,
+    isSeries,
+    audioTracks,
+    subtitles,
+    levels,
+    actualLevelIndex,
+    onNextEpisode,
+  } = usePlayerContext();
 
   const qualityBadge = (() => {
     const h = levels[actualLevelIndex]?.height;
@@ -40,43 +51,81 @@ const ControlRow = () => {
     <FocusContext.Provider value={focusKey}>
       <div ref={ref} className="controls-row">
         <div className="control-row-section">
-          <PLayerButton handleAction={togglePlay} focuskey="Play">
+          <PLayerButton
+            handleAction={togglePlay}
+            focuskey="Play"
+            // label={playing ? "توقف" : "پخش"}
+          >
             {playing ? <PauseIcon /> : <PlayIcon />}
           </PLayerButton>
-          <PLayerButton handleAction={() => seek(-15)} focuskey="Forward">
+          <PLayerButton
+            handleAction={() => seek(-15)}
+            focuskey="Forward"
+            // label="عقب ۳۲"
+          >
             <RewindIcon />
           </PLayerButton>
-          <PLayerButton handleAction={() => seek(+15)} focuskey="Backward">
+          <PLayerButton
+            handleAction={() => seek(+15)}
+            focuskey="Backward"
+            // label="۱۵ ثانیه جلو"
+          >
             <ForwardIcon />
           </PLayerButton>
-          <PLayerButton handleAction={() => seek(0)} focuskey="Replay">
+          <PLayerButton
+            handleAction={() => seek(0)}
+            focuskey="Replay"
+            label="از ابتدا"
+          >
             <RestartIcon />
           </PLayerButton>
         </div>
         <div className="control-row-section">
           {isSeries && (
-            <PLayerButton handleAction={() => openModal("episodes")} focuskey="SeriesEpisodes">
+            <PLayerButton
+              handleAction={() => openModal("episodes")}
+              focuskey="SeriesEpisodes"
+              label="قسمت‌ها"
+            >
               <EpisodesIcon />
             </PLayerButton>
           )}
           {isSeries && (
-            <PLayerButton handleAction={() => onNextEpisode?.(isSeries)} focuskey="NextEpisode">
+            <PLayerButton
+              handleAction={() => onNextEpisode?.(isSeries)}
+              focuskey="NextEpisode"
+              label="قسمت بعدی"
+            >
               <NextEpisodeIcon />
             </PLayerButton>
           )}
           {audioTracks.length > 1 && (
-            <PLayerButton handleAction={() => openModal("audio")} focuskey="VoiceOpen">
+            <PLayerButton
+              handleAction={() => openModal("audio")}
+              focuskey="VoiceOpen"
+              label="صدا"
+            >
               <AudioIcon />
             </PLayerButton>
           )}
           {subtitles.length > 0 && (
-            <PLayerButton handleAction={() => openModal("subtitle")} focuskey="SubtitleOpen">
+            <PLayerButton
+              handleAction={() => openModal("subtitle")}
+              focuskey="SubtitleOpen"
+              label="زیرنویس"
+            >
               <SubtitleIcon />
             </PLayerButton>
           )}
-          <PLayerButton handleAction={() => openModal("settings")} focuskey="SettingOpen">
+          <PLayerButton
+            handleAction={() => openModal("settings")}
+            focuskey="SettingOpen"
+            label="تنظیمات"
+          >
             <div className="player-btn-icon-wrap">
-              {qualityBadge && <span className="quality-badge">{qualityBadge}</span>}
+              {qualityBadge && (
+                <span className="quality-badge">{qualityBadge}</span>
+              )}
               <SettingsIcon />
             </div>
           </PLayerButton>

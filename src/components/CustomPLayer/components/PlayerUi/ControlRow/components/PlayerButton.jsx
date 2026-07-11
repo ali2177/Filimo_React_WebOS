@@ -14,6 +14,7 @@ const PLayerButton = ({
   onEnterPress,
   focuskey,
   handleAction,
+  label,
   children,
 }) => {
   const { showSkipIntro } = usePlayerContext();
@@ -60,6 +61,9 @@ const PLayerButton = ({
         }}
         onClick={handleAction}
       >
+        {label && focused && (
+          <span className="player-btn-label">{label}</span>
+        )}
         {children}
       </div>
     </FocusContext.Provider>

@@ -21,12 +21,31 @@
 }
 
 .Player-button {
+  position: relative;
   display: flex;
   padding: 1.2rem;
   justify-content: center;
   align-items: center;
   border-radius: 50rem;
-  background: var(--light-mode-opacity-of-neutral-black-50, rgba(4, 4, 4, 0.75));
+  background: rgba(4, 4, 4, 0.5);
+}
+
+.player-btn-label {
+  position: absolute;
+  bottom: calc(100% + 0.8rem);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.3rem 0.9rem;
+  border-radius: 1.2rem;
+  background: var(--Dark-Mode-Background-Colors-Background-03, #282828);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: nowrap;
+  pointer-events: none;
+  backdrop-filter: blur(20px);
+  z-index: 5;
 }
 
 .Player-button svg {
