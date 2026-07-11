@@ -118,7 +118,14 @@ const EpisodesWrapper = ({
   );
   return (
     <FocusContext.Provider value={focusKey}>
-      <div style={{ height: "41.6rem", overflowY: "scroll" }}>
+      <div
+        style={{
+          height: "100%",
+          overflowY: "scroll",
+          paddingBottom: "3.5rem",
+          boxSizing: "border-box",
+        }}
+      >
         {episodes &&
           episodes.map((movieItem, index) => (
             <div ref={lastMovieElement}>

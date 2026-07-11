@@ -67,8 +67,14 @@ const AllEpisodes = () => {
 
   const HandleSeasonEnterPress = (season) => {
     // console.log(season.movies?.data[0]);
-    uiStorage.setItem("lastSeasonFocus_parent_new", season.movies?.data[0].serial_parent_new);
-    uiStorage.setItem("lastSeasonFocus_season_part", season.movies?.data[0].serial_season_part);
+    uiStorage.setItem(
+      "lastSeasonFocus_parent_new",
+      season.movies?.data[0].serial_parent_new,
+    );
+    uiStorage.setItem(
+      "lastSeasonFocus_season_part",
+      season.movies?.data[0].serial_season_part,
+    );
     setIsLoading(true);
     setIsActiveSeasonFocus(true);
     setCurretSeasonChosen(season.movies.data);
@@ -96,7 +102,7 @@ const AllEpisodes = () => {
       // console.log(ref.current.scrollTop);
       // ref.current.style.scrollBehavior = "smooth";
     },
-    [ref]
+    [ref],
   );
 
   const movieSet = (movieUid) => {
@@ -119,9 +125,11 @@ const AllEpisodes = () => {
           display: "flex",
           flexDirection: "column",
           width: "100%",
-          height: "100%",
+          height: "100vh",
+          boxSizing: "border-box",
           paddingTop: "3.5rem",
           paddingRight: "4.2rem",
+          paddingBottom: "1.5rem",
         }}
       >
         <div
@@ -151,6 +159,8 @@ const AllEpisodes = () => {
           style={{
             position: "relative",
             overflow: "hidden",
+            flex: 1,
+            minHeight: 0,
           }}
           className="allepisode-content-wrapper"
         >
