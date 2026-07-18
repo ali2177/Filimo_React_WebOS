@@ -1205,6 +1205,7 @@ const TvPlayer = () => {
               src={movie}
               hlsOptions={{ enableWorker: true, maxBufferLength: 30 }}
               autoPlay={true}
+              visitUrl={formAction}
               resumeFrom={
                 Number(localStorage.getItem("movie_last_watch_time")) || 0
               }

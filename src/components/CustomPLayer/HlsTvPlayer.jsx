@@ -17,6 +17,7 @@ import { usePlayerKeyboard } from "./hooks/usePlayerKeyboard.js";
 import { useSkipIntro } from "./hooks/useSkipIntro.js";
 import { useNextEpisode } from "./hooks/useNextEpisode.js";
 import { useBuffering } from "./hooks/useBuffering.js";
+import { useVisitUrl } from "./hooks/useVisitUrl.js";
 
 import { PlayerContext } from "./context/PlayerContext.js";
 import PlayerUi from "./components/PlayerUi/PlayerUI.jsx";
@@ -43,6 +44,7 @@ const HlsTvPlayer = ({
   onNextEpisode,
   autoPlay = true,
   resumeFrom = 0,
+  visitUrl,
 }) => {
   const navigate = useNavigate();
   const videoRef = useRef(null);
@@ -54,6 +56,7 @@ const HlsTvPlayer = ({
     videoRef,
   );
   const { isBuffering } = useBuffering(videoRef);
+  useVisitUrl(videoRef, visitUrl);
   const { currentTime, duration, bufferedPercent } = useVideoTime(videoRef);
   const { subtitles, activeSubtitle, subtitleText, switchSubtitle } =
     useSubtitles(videoRef, src);
