@@ -7,6 +7,11 @@ export function useFocusInit({ movies, data, pageConfig, pageType, other_data, l
   const didInitFocusRef = useRef(false);
 
   const onRowFocus = useCallback(({ y }) => {
+    // In PointerMode the mouse wheel drives scrolling. norigin reports the
+    // row's offset relative to its single-row wrapper (~0), so scrolling to
+    // `y` here yanks the page back to the first row on every hover/focus.
+    // Only assist scrolling for keyboard/remote navigation.
+    if (uiStorage.getItem("mode") !== "KeyboardMode") return;
     scrollRef.current?.scrollTo({ top: y, behavior: "smooth" });
   }, []);
 

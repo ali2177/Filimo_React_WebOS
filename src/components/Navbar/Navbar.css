@@ -1,29 +1,49 @@
 .drawer {
-  flex-shrink: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
   width: 270px;
   height: 100vh;
-  overflow-y: auto;
   overflow: hidden;
   border: none;
-
-  /* padding-right: 70px; */
-  /* height: 100%; */
-  /* right: 0; */
-
-  background: linear-gradient(180deg, #0c0c0c 0%, #151515 70.04%);
+  z-index: 999999999;
+}
+/* Full-screen gradient overlay behind the expanded menu column */
+.drawer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 100vw;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    270deg,
+    #000000 0%,
+    rgba(0, 0, 0, 0.95) 25.32%,
+    rgba(0, 0, 0, 0.8) 49.81%,
+    rgba(0, 0, 0, 0) 100%
+  );
 }
 .drawer .menu-items {
   align-items: flex-start;
   padding-right: 2rem;
 }
 .drawer-focus {
-  background: linear-gradient(180deg, #0c0c0c 0%, #151515 70.04%);
-  flex-shrink: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
   width: 120px;
+  height: 100vh;
   border: none;
-  /* height: 100%; */
-  /* overflow: auto; */
-  /* overflow-y: auto; */
+  z-index: 100;
+
+  background: linear-gradient(
+    270deg,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
 }
 .drawer-focus .menu-item-label {
   display: none;

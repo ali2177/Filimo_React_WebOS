@@ -138,6 +138,7 @@ const AllEpisodes = () => {
             justifyContent: "space-between",
             alignItems: "center",
             width: "94%",
+            marginBottom: "2rem",
           }}
         >
           <img

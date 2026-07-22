@@ -7,8 +7,16 @@
 .home-rows-wrapper {
   padding-top: 1.44rem;
   margin-right: 1.54rem;
+  /* Clear the collapsed navbar icon rail (keeps the hero background full-bleed) */
+  padding-right: 120px;
   position: relative;
   z-index: 999999;
+}
+
+@media screen and (min-width: 1600px) {
+  .home-rows-wrapper {
+    padding-right: 6.6rem;
+  }
 }
 
 .home-rows-wrapper--kids {
