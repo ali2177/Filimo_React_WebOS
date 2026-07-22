@@ -1,19 +1,18 @@
-import React, { useRef, useState, useEffect, useCallback } from "react";
-import Hls from "hls.js";
+import React, { useRef, useState, useEffect } from "react";
 import {
   FocusContext,
   useFocusable,
   setFocus,
 } from "@noriginmedia/norigin-spatial-navigation";
 import { usePlayerContext } from "../../../context/PlayerContext";
-import { formatTime }     from "../../../utils/formatTime";
-import { toFarsiDigits }  from "../../../utils/toFarsiDigits";
+import { formatTime }        from "../../../utils/formatTime";
+import { toFarsiDigits }     from "../../../utils/toFarsiDigits";
+import { resumeAfterSeek }   from "../../../utils/resumeAfterSeek";
 import "./SeekBar.css";
 
 const SeekBar = () => {
   const {
     videoRef,
-    src,
     currentTime,
     duration,
     bufferedPercent,
@@ -22,92 +21,39 @@ const SeekBar = () => {
     setSeekbarActive,
   } = usePlayerContext();
 
-  const [previewTime, setPreviewTime] = useState(0);
-  const [previewReady, setPreviewReady] = useState(false);
+  // Position the scrub marker points at (keyboard arrows / mouse hover).
+  const [scrubTime, setScrubTime]   = useState(0);
+  // Optimistic played position right after a committed seek, until the video
+  // actually catches up (avoids the bar snapping back to the old time).
   const [seekPending, setSeekPending] = useState(null);
 
-  const canvasRef = useRef(null);
-  const previewVideoRef = useRef(null);
-  const previewHlsRef = useRef(null);
-  const manifestReadyRef = useRef(false);
-
-  const previewTimeRef    = useRef(0);
+  const scrubTimeRef      = useRef(0);
   const durationRef       = useRef(duration);
   const currentTimeRef    = useRef(currentTime);
   // Refs to avoid stale closures in event handlers
   const seekbarActiveRef  = useRef(false);
   const focusedRef        = useRef(false);
   const mouseOverRef      = useRef(false);
+  // Debounce timer for live keyboard seeking (see onArrowPress)
+  const seekDebounceRef   = useRef(null);
 
-  useEffect(() => { durationRef.current    = duration;      }, [duration]);
-  useEffect(() => { currentTimeRef.current = currentTime;   }, [currentTime]);
-  useEffect(() => { previewTimeRef.current = previewTime;   }, [previewTime]);
+  useEffect(() => { durationRef.current      = duration;      }, [duration]);
+  useEffect(() => { currentTimeRef.current   = currentTime;   }, [currentTime]);
+  useEffect(() => { scrubTimeRef.current     = scrubTime;     }, [scrubTime]);
   useEffect(() => { seekbarActiveRef.current = seekbarActive; }, [seekbarActive]);
 
-  const drawFrame = useCallback(() => {
-    const canvas = canvasRef.current;
-    const video  = previewVideoRef.current;
-    if (!canvas || !video) return;
-    try {
-      canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
-      setPreviewReady(true);
-    } catch (_) {}
-  }, []);
-
-  const seekAndPreview = useCallback((time) => {
-    const v   = previewVideoRef.current;
-    const hls = previewHlsRef.current;
-    if (!v || !hls) return;
-    setPreviewReady(false);
-    hls.stopLoad();
-    hls.startLoad(time);
-    v.currentTime = time;
-    v.addEventListener("seeked", drawFrame, { once: true });
-  }, [drawFrame]);
-
-  // Initialize preview HLS on mount
-  useEffect(() => {
-    const video = previewVideoRef.current;
-    if (!video || !src) return;
-
-    const hls = new Hls({
-      startLevel: 0,
-      autoStartLoad: false,
-      maxBufferLength: 8,
-      backBufferLength: 0,
-      renderTextTracksNatively: false,
-    });
-    hls.loadSource(src);
-    hls.attachMedia(video);
-    previewHlsRef.current = hls;
-
-    hls.on(Hls.Events.MANIFEST_PARSED, () => {
-      manifestReadyRef.current = true;
-    });
-
-    return () => {
-      hls.destroy();
-      previewHlsRef.current  = null;
-      manifestReadyRef.current = false;
-    };
-  }, [src]);
-
-  // When keyboard scrub mode opens: load first frame
-  useEffect(() => {
-    if (!seekbarActive) {
-      setPreviewReady(false);
-      return;
-    }
-    const t   = currentTimeRef.current;
-    const hls = previewHlsRef.current;
-    const vid = previewVideoRef.current;
-    if (!hls || !vid) return;
-    if (manifestReadyRef.current) {
-      hls.startLoad(t);
-      vid.currentTime = t;
-      vid.addEventListener("seeked", drawFrame, { once: true });
-    }
-  }, [seekbarActive, drawFrame]);
+  // Commit a seek to the main video and recover if it stalls in an unbuffered
+  // region (shared with the click handler and the ±15s buttons).
+  const commitSeek = (target) => {
+    const v = videoRef.current;
+    if (!v || !durationRef.current) return;
+    const clamped = Math.max(0, Math.min(durationRef.current, target));
+    const wasPlaying = !v.paused;
+    v.currentTime = clamped;
+    setSeekPending((clamped / durationRef.current) * 100);
+    resetUiTimer();
+    if (wasPlaying) resumeAfterSeek(v, clamped);
+  };
 
   const { ref, focusKey, focused } = useFocusable({
     focusKey: "seekbar",
@@ -124,21 +70,32 @@ const SeekBar = () => {
         return false;
       }
       if (dir === "right" || dir === "left") {
-        // Only seek when actually in scrub mode — guards against UI-hidden arrow presses
+        // Arrows move the scrub marker AND live-seek the video — no OK press
+        // needed. The actual seek is debounced so a burst of rapid presses
+        // coalesces into a single commit; this gives real-time seeking while
+        // still avoiding the per-press live-seek thrash that stalled the buffer.
         if (seekbarActiveRef.current) {
           const delta = dir === "right" ? 15 : -15;
-          const next  = Math.max(0, Math.min(durationRef.current || 0, previewTimeRef.current + delta));
-          previewTimeRef.current = next;
-          setPreviewTime(next);
-          seekAndPreview(next);
-          const main = videoRef.current;
-          if (main) main.currentTime = next;
-          if (durationRef.current) setSeekPending((next / durationRef.current) * 100);
+          const next  = Math.max(0, Math.min(durationRef.current || 0, scrubTimeRef.current + delta));
+          scrubTimeRef.current = next;
+          setScrubTime(next);
+
+          clearTimeout(seekDebounceRef.current);
+          seekDebounceRef.current = setTimeout(() => {
+            if (Math.abs(scrubTimeRef.current - currentTimeRef.current) > 0.5) {
+              commitSeek(scrubTimeRef.current);
+            }
+          }, 400);
         }
         return false; // always block spatial nav
       }
     },
     onEnterPress: () => {
+      // Commit the scrubbed position immediately, then leave scrub mode.
+      clearTimeout(seekDebounceRef.current);
+      if (Math.abs(scrubTimeRef.current - currentTimeRef.current) > 0.5) {
+        commitSeek(scrubTimeRef.current);
+      }
       setSeekbarActive(false);
       setFocus("Play");
       resetUiTimer();
@@ -150,73 +107,44 @@ const SeekBar = () => {
     focusedRef.current = focused;
     if (focused) {
       const t = currentTimeRef.current;
-      previewTimeRef.current = t;
-      setPreviewTime(t);
+      scrubTimeRef.current = t;
+      setScrubTime(t);
       setSeekbarActive(true);
     } else if (!mouseOverRef.current) {
       setSeekbarActive(false);
+      clearTimeout(seekDebounceRef.current); // drop any pending live seek
     }
   }, [focused]);
 
+  // Clear any pending live-seek timer on unmount
+  useEffect(() => () => clearTimeout(seekDebounceRef.current), []);
+
   // ── Mouse hover scrub ──────────────────────────────────────────────────────
 
-  const handleMouseEnter = useCallback(() => {
+  const handleMouseEnter = () => {
     mouseOverRef.current = true;
     const t = currentTimeRef.current;
-    previewTimeRef.current = t;
-    setPreviewTime(t);
+    scrubTimeRef.current = t;
+    setScrubTime(t);
     setSeekbarActive(true);
-    seekAndPreview(t);
-  }, [seekAndPreview, setSeekbarActive]);
+  };
 
-  const handleMouseMove = useCallback((e) => {
+  const handleMouseMove = (e) => {
     const rect  = e.currentTarget.getBoundingClientRect();
     const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
     const t     = ratio * (durationRef.current || 0);
-    previewTimeRef.current = t;
-    setPreviewTime(t);
-    seekAndPreview(t);
-  }, [seekAndPreview]);
+    scrubTimeRef.current = t;
+    setScrubTime(t);
+  };
 
-  const handleMouseLeave = useCallback(() => {
+  const handleMouseLeave = () => {
     mouseOverRef.current = false;
     if (!focusedRef.current) {
       setSeekbarActive(false);
     }
-  }, [setSeekbarActive]);
+  };
 
-  // Resume playback after a seek WITHOUT depending solely on the `seeked` event.
-  // Seeking into an unbuffered region can stall so that `seeked` never fires,
-  // which left the player stuck on a black screen. Resume on any of the
-  // recovery events, and keep a watchdog that force-plays (and nudges to
-  // re-trigger HLS fragment loading) if nothing has happened in time.
-  const resumeAfterSeek = useCallback((v, target) => {
-    let done = false;
-    const events = ["seeked", "canplay", "playing"];
-    const cleanup = () => {
-      events.forEach((e) => v.removeEventListener(e, resume));
-      clearTimeout(watchdog);
-    };
-    const resume = () => {
-      if (done) return;
-      done = true;
-      cleanup();
-      v.play().catch(() => {});
-    };
-    events.forEach((e) => v.addEventListener(e, resume, { once: true }));
-
-    // Watchdog: if still stalled at the seek target after 1.5s, kick it.
-    const watchdog = setTimeout(() => {
-      if (done) return;
-      if (v.readyState < 3 && Math.abs(v.currentTime - target) < 0.5) {
-        // nudge by a frame to force HLS to (re)load the segment at this position
-        v.currentTime = target + 0.05;
-      }
-      v.play().catch(() => {});
-    }, 1500);
-  }, []);
-
-  // Auto-clear seekPending once the video catches up to the clicked position
+  // Auto-clear seekPending once the video catches up to the committed position
   useEffect(() => {
     if (seekPending !== null) {
       const playedPercent = duration ? (currentTime / duration) * 100 : 0;
@@ -228,34 +156,17 @@ const SeekBar = () => {
 
   // ── Derived percentages ────────────────────────────────────────────────────
 
-  const playedPercent  = duration ? (currentTime  / duration) * 100 : 0;
-  const previewPercent = duration ? (previewTime   / duration) * 100 : 0;
-  const clampedLeft    = Math.max(4, Math.min(96, previewPercent));
+  const playedPercent = duration ? (currentTime / duration) * 100 : 0;
+  const scrubPercent  = duration ? (scrubTime   / duration) * 100 : 0;
 
   // Single source of truth for bar, thumb, and time label
   const displayPercent = seekPending ?? playedPercent;
-  const activePercent  = seekbarActive ? previewPercent : displayPercent;
+  const activePercent  = seekbarActive ? scrubPercent : displayPercent;
   const activeTime     = duration ? (activePercent / 100) * duration : 0;
 
   return (
     <FocusContext.Provider value={focusKey}>
-      <video ref={previewVideoRef} muted playsInline style={{ display: "none" }} />
-
       <div ref={ref} className="controls-row row-seekbar">
-
-        {seekbarActive && (
-          <div className="seekbar-preview" style={{ left: `${clampedLeft}%` }}>
-            <canvas
-              ref={canvasRef}
-              width={240}
-              height={135}
-              className={`seekbar-preview-canvas${previewReady ? "" : " seekbar-preview-placeholder"}`}
-            />
-            <span className="seekbar-preview-time">
-              {toFarsiDigits(formatTime(previewTime))}
-            </span>
-          </div>
-        )}
 
         <div className="progress-bar-wrapper">
           <div
@@ -266,15 +177,7 @@ const SeekBar = () => {
             onClick={(e) => {
               const rect  = e.currentTarget.getBoundingClientRect();
               const ratio = (e.clientX - rect.left) / rect.width;
-              const v     = videoRef.current;
-              if (v && duration) {
-                const wasPlaying = !v.paused;
-                const target = ratio * duration;
-                v.currentTime = target;
-                setSeekPending(ratio * 100);
-                resetUiTimer();
-                if (wasPlaying) resumeAfterSeek(v, target);
-              }
+              if (duration) commitSeek(ratio * duration);
             }}
           >
             <div className="progress-buffered" style={{ width: `${bufferedPercent}%` }} />
@@ -284,7 +187,7 @@ const SeekBar = () => {
               style={{ left: `${displayPercent}%` }}
             />
             {seekbarActive && (
-              <div className="progress-preview-marker" style={{ left: `${previewPercent}%` }} />
+              <div className="progress-preview-marker" style={{ left: `${scrubPercent}%` }} />
             )}
           </div>
         </div>

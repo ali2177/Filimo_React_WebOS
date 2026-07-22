@@ -19,9 +19,10 @@ export function useHls(src, autoPlay, videoRef) {
     const hls = new Hls({
       renderTextTracksNatively: false,
       enableWorker: true,
-      maxBufferLength: 10,             // keep ~10s ahead (was 20)
-      backBufferLength: 0,             // don't retain played video — TVs have tiny MSE memory (was 20)
-      maxBufferSize: 20 * 1000 * 1000, // hard ~20MB cap so HLS evicts by size before hitting the platform quota
+      maxBufferLength: 30,             // keep ~30s ahead so near-playhead seeks don't stall (was 10)
+      backBufferLength: 30,            // retain ~30s behind so backward seeks have buffered data (was 0)
+      maxBufferSize: 20 * 1000 * 1000, // hard ~20MB cap — HLS evicts by size before hitting the platform quota (the memory backstop that makes the larger back buffer safe)
+      capLevelToPlayerSize: true,      // don't fetch levels larger than the video element → less ABR/MSE churn
     });
 
     hls.loadSource(src);
@@ -51,7 +52,9 @@ export function useHls(src, autoPlay, videoRef) {
           data.details === Hls.ErrorDetails.BUFFER_NUDGE_ON_STALL
         ) {
           const v = videoRef.current;
-          if (v && !v.paused) v.currentTime += 0.1; // skip the stalled hole
+          // Guard on !v.seeking so this nudge doesn't fight the seekbar/±15s
+          // resume watchdog while a user seek is already in progress.
+          if (v && !v.paused && !v.seeking) v.currentTime += 0.1; // skip the stalled hole
         }
         return;
       }

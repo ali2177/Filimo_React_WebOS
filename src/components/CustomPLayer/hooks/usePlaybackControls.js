@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { resumeAfterSeek } from "../utils/resumeAfterSeek";
 
 export function usePlaybackControls(videoRef, hlsRef, duration) {
   const [playing, setPlaying]               = useState(false);
@@ -47,9 +48,14 @@ export function usePlaybackControls(videoRef, hlsRef, duration) {
   const seek = useCallback((delta) => {
     const v = videoRef.current;
     if (!v) return;
-    v.currentTime = delta === 0
+    const wasPlaying = !v.paused;
+    const target = delta === 0
       ? 0
       : Math.min(Math.max(0, v.currentTime + delta), duration);
+    v.currentTime = target;
+    // Seeking into an unbuffered region can stall so `seeked` never fires;
+    // resumeAfterSeek recovers on any resume event + a watchdog nudge.
+    if (wasPlaying) resumeAfterSeek(v, target);
   }, [videoRef, duration]);
 
   const changeQuality = useCallback((index) => {
