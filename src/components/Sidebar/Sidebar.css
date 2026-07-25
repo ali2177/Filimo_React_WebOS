@@ -57,3 +57,19 @@
   padding-right: 0.7rem;
   padding-left: 0.7rem;
 }
+.sidbar-icon-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.menu-active-dot {
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #f5b83f 0%, #e77630 100%);
+}

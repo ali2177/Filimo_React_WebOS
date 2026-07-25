@@ -59,14 +59,17 @@ const SidebarItem = ({ data, handleEnterPress, focuskeey, menuData, isActive }) 
           }}
           className="menuItem"
         >
-          <img
-            className="sidbar-items-img"
-            style={{
-              width: "40px",
-              height: "40px",
-            }}
-            src={focused || isActive ? data.link_icon_h : data.link_icon}
-          />
+          <span className="sidbar-icon-wrap">
+            <img
+              className="sidbar-items-img"
+              style={{
+                width: "40px",
+                height: "40px",
+              }}
+              src={focused || isActive ? data.link_icon_h : data.link_icon}
+            />
+            {isActive && <span className="menu-active-dot" />}
+          </span>
           {data.link_type === "profile" && (
             <span className="menu-item-label u700">
               {data.link_text.length > 10
