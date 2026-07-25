@@ -43,7 +43,7 @@ const ContentRow = ({
     [movieFocused],
   );
   const slicedMovies = useMemo(
-    () => movies.slice(0, movies[0]?.output_type === "livetv" ? 4 : 6),
+    () => movies.slice(0, movies[0]?.output_type === "livetv" ? 4 : 10),
     [movies],
   );
   // const onAssetFocus = (i, movie) => {

@@ -274,7 +274,7 @@
   /* border-radius: 15px; */
   /* color: red !important; */
   border: 0.2rem solid white;
-  border-radius: 0.2rem;
+  border-radius: 1.2rem;
 }
 .more-item-btn {
   margin-left: 100px;
@@ -342,12 +342,28 @@
   text-align: center;
 }
 .swiper-image {
-  width: 212px;
-  height: 300px;
   margin-top: 20px;
   /* margin-right: 10px; */
-  border-radius: 8px;
+  border-radius: 1.2rem;
   /* object-fit: cover; */
+}
+/* Landscape card for thumbplay-theme rows. Compound selector + !important
+   so it wins over the responsive .swiper-image { height: 80% } override. */
+.swiper-image.swiper-image-landscape {
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 16 / 9;
+  object-fit: cover !important;
+}
+
+/* Landscape "more" button matches the landscape card aspect ratio so it lines
+   up with thumbplay/live-TV rows. Compound selector + !important to beat the
+   responsive .more-item { height: 80% } override. */
+.more-item.more-item-landscape {
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 16 / 9;
+  object-fit: contain !important;
 }
 
 #movieinfo-page {
@@ -1672,6 +1688,9 @@ Tint, Red, Dark, 12, Success
   display: flex;
   flex-direction: row;
   overflow-x: auto;
+  /* Trailing room (left edge in RTL) so the last card isn't flush against the
+     container and can be scrolled off the edge toward center on focus. */
+  padding-inline-end: 6rem;
 }
 .more {
   padding-right: 50px;

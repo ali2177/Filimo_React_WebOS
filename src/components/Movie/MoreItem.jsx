@@ -7,6 +7,7 @@ import {
   useFocusable,
   setFocus,
 } from "@noriginmedia/norigin-spatial-navigation";
+import { centerHorizontally, scrollVertically } from "@src/utils/scrollHelpers";
 
 function MoreItem({
   tag_id,
@@ -18,6 +19,7 @@ function MoreItem({
   movies,
   linkText,
   onscroll,
+  isLandscape,
 }) {
   const handleAction = () => {
     if (type === "mainPage") {
@@ -48,7 +50,7 @@ function MoreItem({
       if (uiStorage.getItem("level")) {
         uiStorage.setItem(
           "level",
-          `level__${Number(uiStorage.getItem("level").slice(7, 8)) + 1}`
+          `level__${Number(uiStorage.getItem("level").slice(7, 8)) + 1}`,
         );
       }
 
@@ -79,12 +81,13 @@ function MoreItem({
   const location = useLocation();
   const myRef = useRef();
   const handleScrolling = () => {
-    // console.log(focusKey);
     setTimeout(() => {
       if (uiStorage.getItem("mode") === "KeyboardMode") {
-        myRef?.current?.scrollIntoView({
-          block: focusKey.slice(5, 6) === "0" ? "end" : "center",
-        });
+        centerHorizontally(myRef.current);
+        scrollVertically(
+          myRef.current,
+          focusKey.slice(5, 6) === "0" ? "end" : "center",
+        );
       }
     }, 10);
   };
@@ -93,14 +96,22 @@ function MoreItem({
     movieFocus(null);
   };
 
+  // Match the row's card orientation so the "more" button lines up with the
+  // items. Landscape rows are thumbplay-theme or live TV (same rule as Movie).
+  const firstMovie = Array.isArray(movies) ? movies[0] : undefined;
+  const landscape =
+    isLandscape ??
+    (firstMovie?.theme === "thumbplay" || firstMovie?.type === "livetvs");
+
   return (
     <div
       className={focused ? "btn-not-focus btn-focus" : "btn-not-focus"}
       ref={ref}
+      style={landscape ? { width: "20.5rem", height: "auto" } : undefined}
     >
       <img
         ref={myRef}
-        className="more-item"
+        className={landscape ? "more-item more-item-landscape" : "more-item"}
         src={process.env.PUBLIC_URL + "/icon_more.png"}
         onClick={handleAction}
         onMouseEnter={() => {
