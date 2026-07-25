@@ -58,6 +58,7 @@ const defaultMoviesState = {
   lastMovieElement: null,
   filteredRows: [],
   posterRows: [],
+  sliderSlides: [],
 };
 
 beforeEach(() => {

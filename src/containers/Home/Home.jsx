@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useRef, useMemo, useEffect } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import Content from "@src/components/Content/Content";
+import HeroSlider from "@src/components/HeroSlider/HeroSlider";
 import NetworkError from "@src/components/NetworkError/NetworkError";
 import Loader from "@src/components/Loader/Loader";
 import Snackbar from "@src/components/Snackbar/Snackbar";
@@ -31,8 +32,11 @@ function Home({ isLogin }) {
 
   const [currentFocusedMovie, setCurrentFocusedMovie] = useState(null);
   const [showPoster, setShowPoster] = useState(true);
+  const [heroMode, setHeroMode] = useState("movie");
+  const [activeSlideIndex, setActiveSlideIndex] = useState(0);
 
   const myRef = useRef(null);
+  const didInitModeRef = useRef(false);
 
   const { showExitModal, setShowExitModal, backArmedRef } = useBackNavigation({
     location,
@@ -46,8 +50,11 @@ function Home({ isLogin }) {
     isFetching,
     lastMovieElement,
     filteredRows,
-    posterRows,
+    sliderSlides,
   } = useHomeMovies({ tag_id, other_data, jwt, pageConfig });
+
+  const hasSlider =
+    location.pathname === "/" && !isKid && (sliderSlides?.length ?? 0) > 0;
 
   const { scrollRef, onRowFocus } = useFocusInit({
     movies,
@@ -56,7 +63,22 @@ function Home({ isLogin }) {
     pageType,
     other_data,
     location,
+    hasSlider,
   });
+
+  // Initialize hero mode once content is loaded: slider when a headerslider
+  // row exists, otherwise the movie-poster hero (previous behavior).
+  useEffect(() => {
+    didInitModeRef.current = false;
+  }, [location.pathname, other_data]);
+
+  useEffect(() => {
+    if (didInitModeRef.current) return;
+    if (!movies?.data?.length) return;
+    didInitModeRef.current = true;
+    setHeroMode(hasSlider ? "slider" : "movie");
+    setActiveSlideIndex(0);
+  }, [movies, hasSlider]);
 
   useEffect(() => {
     if (data?.data) {
@@ -76,6 +98,7 @@ function Home({ isLogin }) {
   const movieSet = useCallback(
     (movieUid, focusKeey) => {
       setCurrentFocusedMovie(movieUid);
+      setHeroMode("movie");
 
       if (focusKeey) {
         if (focusKeey.slice(6, 7) === "0" && !isKid) {
@@ -87,6 +110,24 @@ function Home({ isLogin }) {
     },
     [isKid],
   );
+
+  const onEnterPlay = useCallback(
+    (slide) => {
+      if (!slide) return;
+      const linkKey = slide.link_key || slide.btns?.[0]?.link_key;
+      const linkType = slide.link_type || slide.btns?.[0]?.link_type;
+      if (linkType === "movie" && linkKey) {
+        navigate(`/movie/${linkKey}`);
+      }
+    },
+    [navigate],
+  );
+
+  const heroBgSrc =
+    heroMode === "slider"
+      ? sliderSlides[activeSlideIndex]?.cover_desktop?.[0] ||
+        sliderSlides[activeSlideIndex]?.cover?.[0]
+      : currentFocusedMovie?.cover_data?.horizontal;
 
   const renderedRows = useMemo(() => {
     return filteredRows.map((movieItem, index) => {
@@ -117,11 +158,20 @@ function Home({ isLogin }) {
             onFocus={onRowFocus}
             row={movieItem.link_key ? movieItem.link_key : movieItem.tag_id}
             scrollRef={scrollRef}
+            hasSlider={hasSlider}
           />
         </div>
       );
     });
-  }, [filteredRows, jwt, lastMovieElement, movieSet, onRowFocus, scrollRef]);
+  }, [
+    filteredRows,
+    jwt,
+    lastMovieElement,
+    movieSet,
+    onRowFocus,
+    scrollRef,
+    hasSlider,
+  ]);
 
   if (error) return <NetworkError />;
   if (isFetching) return <Loader />;
@@ -142,11 +192,27 @@ function Home({ isLogin }) {
       <div ref={scrollRef} className="home-scroll-container">
         {!isKid && location.pathname === "/" && showPoster && (
           <Content
-            data={posterRows}
+            bgSrc={heroBgSrc}
             currentFocusedMovie={currentFocusedMovie}
-            type={other_data}
-            firstRow={posterRows}
-          />
+            mode={heroMode}
+          >
+            {hasSlider && (
+              <HeroSlider
+                slides={sliderSlides}
+                activeIndex={activeSlideIndex}
+                setActiveIndex={setActiveSlideIndex}
+                onEnterPlay={onEnterPlay}
+                onDownToRows={() => setFocus("MOVIE_0__0")}
+                onFocusModeSlider={() => {
+                  setHeroMode("slider");
+                  // Returning to the slider must reset the scroll the rows
+                  // introduced, otherwise the hero stays partially scrolled up.
+                  scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                hidden={heroMode !== "slider"}
+              />
+            )}
+          </Content>
         )}
 
         <div
@@ -154,6 +220,9 @@ function Home({ isLogin }) {
             "home-rows-wrapper",
             isKid ? "home-rows-wrapper--kids" : "",
             location.pathname === "/" && !isKid && showPoster ? "main-rows" : "",
+            hasSlider && heroMode === "slider"
+              ? "home-rows-wrapper--hero-slider"
+              : "",
           ]
             .filter(Boolean)
             .join(" ")}

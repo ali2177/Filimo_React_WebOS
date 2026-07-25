@@ -13,13 +13,13 @@
 }
 
 .logo-element {
-  padding-top: 68px;
-  margin-bottom: 100px;
-  /* position: fixed; */
+  /* padding-top: 68px;
+  margin-bottom: 100px; */
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
   width: 100%;
   z-index: 1000;
-  display: flex;
-  justify-content: center;
   /* background-color: #111111; */
   /* background: linear-gradient(180deg, #0C0C0C 100%, #151515 70.04%); */
 }
@@ -35,7 +35,7 @@
   width: 100%;
   /* height: 900px;
   padding-right: 20px; */
-  height: 44rem !important;
+  /* height: 44rem !important; */
   /* overflow-y: scroll; */
   display: flex;
   flex-direction: column;

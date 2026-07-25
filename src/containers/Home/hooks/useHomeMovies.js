@@ -32,6 +32,14 @@ export function useHomeMovies({ tag_id, other_data, jwt, pageConfig }) {
     return data.data.filter((item) => item.output_type === "movie");
   }, [data]);
 
+  const sliderSlides = useMemo(() => {
+    if (!movies?.data) return [];
+    const sliderRow = movies.data.find(
+      (item) => item.output_type === "headerslider",
+    );
+    return sliderRow?.headersliders?.data ?? [];
+  }, [movies]);
+
   const persistMoviesToStorage = useCallback(
     (nextMovies) => {
       if (!pageConfig) return;
@@ -162,5 +170,6 @@ export function useHomeMovies({ tag_id, other_data, jwt, pageConfig }) {
     lastMovieElement,
     filteredRows,
     posterRows,
+    sliderSlides,
   };
 }

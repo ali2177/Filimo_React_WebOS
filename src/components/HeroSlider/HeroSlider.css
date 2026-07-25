@@ -1,0 +1,210 @@
+.hero-slider {
+  --hero-fg: #e8e8e8;
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  direction: rtl;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+  will-change: opacity;
+}
+
+/* Movie mode: slider is hidden but stays mounted so its focus keys survive
+   (Up from the first row can return focus to SLIDER_PLAY). */
+.hero-slider--hidden {
+  opacity: 0;
+}
+
+.hero-slider--hidden .hero-play-btn,
+.hero-slider--hidden .hero-dots {
+  pointer-events: none;
+}
+
+/* Visually hidden, screen-reader-only live region announcing the active slide. */
+.hero-slider-live {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.hero-slider-info {
+  position: absolute;
+  top: 18rem;
+  right: 7.6rem;
+  width: 40rem;
+  max-width: 46vw;
+  /* Each child row has a reserved height (below), so the total height — and
+     the play button's baseline — is identical on every slide, even when a
+     row (meta / desc) is empty. */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  color: var(--hero-fg);
+  text-align: right;
+  pointer-events: auto;
+}
+
+.hero-slider-logo-row {
+  height: 7rem;
+  display: flex;
+  align-items: center;
+}
+
+.hero-slider-logo {
+  max-width: 15rem;
+  max-height: 7rem;
+  object-fit: contain;
+  object-position: right center;
+}
+
+.hero-slider-title {
+  font-size: 2.1rem;
+  margin: 0;
+}
+
+.hero-slider-meta {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin-top: 1.2rem;
+  /* Reserved height: keeps the slot even when the slide has no badges/schedule. */
+  min-height: 2rem;
+  font-size: 1.1rem;
+  color: var(--hero-fg);
+}
+
+.hero-slider-schedule {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.hero-slider-schedule-icon {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+.hero-slider-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 1.05rem;
+  color: var(--hero-fg);
+}
+
+.hero-slider-badge-icon {
+  width: 7.4rem;
+  height: 2rem;
+  object-fit: contain;
+}
+
+.hero-slider-desc {
+  font-weight: 400;
+  font-size: 1.1rem;
+  line-height: 1.7rem;
+  width: 34rem;
+  max-width: 100%;
+  margin-top: 1.6rem;
+  margin-bottom: 0;
+  /* Reserved single-line slot: empty descs still hold height; long descs are
+     clamped so they never grow the block and shift the play button. */
+  min-height: 1.7rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: var(--hero-fg);
+}
+
+.hero-play-btn {
+  box-sizing: border-box;
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.6rem;
+  padding: 0.8rem 1.2rem;
+  border-radius: 0.6rem;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 2.2rem;
+  cursor: pointer;
+  will-change: transform;
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.hero-play-icon {
+  width: 1.7rem;
+  height: 1.7rem;
+}
+
+.hero-play-btn--focused {
+  background: var(--hero-fg);
+  color: #151515;
+  transform: scale(1.05);
+}
+
+.hero-dots {
+  position: absolute;
+  top: 35rem;
+  left: 3rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  opacity: 0.6;
+  transition: opacity 0.15s ease;
+  pointer-events: auto;
+}
+
+.hero-dots--focused {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.hero-dot {
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 50%;
+  background: rgba(232, 232, 232, 0.5);
+  transition:
+    width 0.15s ease,
+    height 0.15s ease,
+    background 0.15s ease;
+  cursor: pointer;
+}
+
+.hero-dot--active {
+  width: 1.8rem;
+  height: 0.9rem;
+  border-radius: 999px;
+  background: var(--hero-fg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-slider,
+  .hero-play-btn,
+  .hero-dots,
+  .hero-dot {
+    transition: none;
+  }
+
+  .hero-play-btn--focused {
+    transform: none;
+  }
+}

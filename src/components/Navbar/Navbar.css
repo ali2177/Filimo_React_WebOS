@@ -7,6 +7,9 @@
   overflow: hidden;
   border: none;
   z-index: 999999999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 /* Full-screen gradient overlay behind the expanded menu column */
 .drawer::before {
@@ -20,10 +23,10 @@
   pointer-events: none;
   background: linear-gradient(
     270deg,
-    #000000 0%,
-    rgba(0, 0, 0, 0.95) 25.32%,
-    rgba(0, 0, 0, 0.8) 49.81%,
-    rgba(0, 0, 0, 0) 100%
+    #151515 0%,
+    rgba(21, 21, 21, 0.95) 25.32%,
+    rgba(21, 21, 21, 0.8) 49.81%,
+    rgba(21, 21, 21, 0) 100%
   );
 }
 .drawer .menu-items {
@@ -38,12 +41,9 @@
   height: 100vh;
   border: none;
   z-index: 100;
-
-  background: linear-gradient(
-    270deg,
-    rgba(0, 0, 0, 0.8) 0%,
-    rgba(0, 0, 0, 0) 100%
-  );
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .drawer-focus .menu-item-label {
   display: none;

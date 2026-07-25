@@ -2,7 +2,7 @@ import { useRef, useCallback, useEffect } from "react";
 import { setFocus } from "@noriginmedia/norigin-spatial-navigation";
 import { uiStorage } from "@src/utils/uiStorage";
 
-export function useFocusInit({ movies, data, pageConfig, pageType, other_data, location }) {
+export function useFocusInit({ movies, data, pageConfig, pageType, other_data, location, hasSlider }) {
   const scrollRef = useRef(null);
   const didInitFocusRef = useRef(false);
 
@@ -47,8 +47,13 @@ export function useFocusInit({ movies, data, pageConfig, pageType, other_data, l
       }
     }
 
+    if (hasSlider) {
+      setFocus("SLIDER_PLAY");
+      return;
+    }
+
     setFocus("MOVIE_0__0");
-  }, [data, movies, pageConfig, pageType]);
+  }, [data, movies, pageConfig, pageType, hasSlider]);
 
   return { scrollRef, onRowFocus };
 }

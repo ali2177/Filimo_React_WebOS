@@ -19,6 +19,7 @@ function Movie({
   focusKeey,
   scrollRef,
   onscroll,
+  hasSlider,
 }) {
   const handleAction = () => {
     uiStorage.setItem("lastFocus", focusKeey);
@@ -33,6 +34,11 @@ function Movie({
   const { ref, focused, focusSelf, focusKey } = useFocusable({
     focusKey: focusKeey,
     onArrowPress: (e) => {
+      // First content row + Up returns to the hero slider (when present).
+      if (hasSlider && focusKey.slice(6, 7) === "0" && e === "up") {
+        setFocus("SLIDER_PLAY");
+        return false;
+      }
       if (focusKey.slice(9) === "0") {
         // console.log(focusKey);
         if (e === "right") {
@@ -43,6 +49,7 @@ function Movie({
           }
         }
       }
+      return true;
     },
     onFocus: () => {
       if (window.location.pathname === "/") {

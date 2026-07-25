@@ -19,14 +19,18 @@ const ContentRow = ({
   row,
   index,
   scrollRef,
+  hasSlider,
 }) => {
   // const [scroll, setscroll] = useState(0);
+  // The first row normally blocks "up"; when a hero slider sits above it,
+  // allow "up" so focus can travel back to the slider.
+  const firstRowBoundary = hasSlider ? ["left"] : ["left", "up"];
   const { ref, focusKey } = useFocusable({
     onFocus,
     focusable: true,
     trackChildren: true,
     isFocusBoundary: true,
-    focusBoundaryDirections: index === 0 ? ["left", "up"] : ["left"],
+    focusBoundaryDirections: index === 0 ? firstRowBoundary : ["left"],
     focusKey: focusKeey,
   });
   const location = useLocation();
@@ -112,6 +116,7 @@ const ContentRow = ({
                   // onEnterPress={() => handleInterPress(movie)}
                   focusKeey={`MOVIE_${index}__${i}`}
                   scrollRef={scrollRef}
+                  hasSlider={hasSlider}
                   onscroll={() => {
                     // onAssetFocus(i);
                   }}

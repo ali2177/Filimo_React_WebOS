@@ -49,10 +49,7 @@
     width: 3.5rem !important;
     height: 3rem;
   }
-  .logo-element {
-    padding-top: 3.5rem !important ;
-    margin-bottom: 5.1rem !important;
-  }
+
   .calender-logo {
     width: 2rem !important;
     height: 2rem;
@@ -450,7 +447,7 @@
 }
 .content-text {
   padding-right: 2.1rem;
-  padding-top: 3.1rem;
+  padding-top: 16rem;
   z-index: 100;
   position: absolute;
   top: 0.7rem;
@@ -1776,11 +1773,12 @@ Tint, Red, Dark, 12, Success
   position: relative;
   margin-left: 2.1rem;
   width: 18rem;
+  flex-shrink: 0;
 }
 .episode-pic-wrapper::before {
   content: "";
   display: block;
-  padding-top: 72.22%; /* 16:9 — height derived from the 18rem width */
+  padding-top: 56.25%; /* 16:9 — height derived from the 18rem width */
 }
 .episode-duration {
   position: absolute;
