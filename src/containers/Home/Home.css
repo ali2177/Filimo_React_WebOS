@@ -17,7 +17,7 @@
 /* Rows drop slightly while the hero slider is focused; they slide back up
    when a movie row takes focus (class is removed in movie mode). */
 .home-rows-wrapper--hero-slider {
-  transform: translateY(1rem);
+  transform: translateY(4rem);
 }
 
 @media screen and (min-width: 1600px) {
@@ -32,6 +32,6 @@
 
 @media only screen and (min-device-width: 720px) {
   .main-rows {
-    margin-top: 36rem !important;
+    margin-top: 33rem !important;
   }
 }

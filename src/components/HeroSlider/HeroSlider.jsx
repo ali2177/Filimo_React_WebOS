@@ -3,6 +3,7 @@ import {
   FocusContext,
   useFocusable,
   setFocus,
+  getCurrentFocusKey,
 } from "@noriginmedia/norigin-spatial-navigation";
 import { uiStorage } from "@src/utils/uiStorage";
 import "./HeroSlider.css";
@@ -10,17 +11,27 @@ import "./HeroSlider.css";
 const AUTO_ADVANCE_MS = 5000;
 
 // Play button — page focus lands here first. Enter plays; Left/Down go to dots.
-function PlayButton({ slide, onEnterPlay, onFocusModeSlider }) {
+function PlayButton({ slide, onEnterPlay, onFocusModeSlider, onPlayFocusChange }) {
   const btn = slide?.btns?.[0];
   const label = btn?.link_text || slide?.link_text || "تماشا";
 
   const { ref, focused } = useFocusable({
     focusKey: "SLIDER_PLAY",
     onEnterPress: () => onEnterPlay(slide),
-    onFocus: onFocusModeSlider,
+    onFocus: () => {
+      onFocusModeSlider();
+      // Focusing the play button pauses the slider's auto-advance.
+      onPlayFocusChange(true);
+    },
+    // Leaving the play button lets auto-advance resume.
+    onBlur: () => onPlayFocusChange(false),
     onArrowPress: (direction) => {
       if (direction === "left" || direction === "down") {
         setFocus("SLIDER_DOTS");
+        return false;
+      }
+      if (direction === "up") {
+        // Nothing sits above the play button — swallow Up so focus isn't lost.
         return false;
       }
       // Right returns focus to the navbar — same logic as the first movie-row
@@ -70,28 +81,23 @@ function PlayButton({ slide, onEnterPlay, onFocusModeSlider }) {
   );
 }
 
-// Dots pager. Focusing it starts auto-advance. Left = next slide, Right = prev
-// (RTL); Right on the first dot returns to the play button; Up returns to the
-// play button on any dot except the first (where Up does nothing); Down enters
-// rows.
+// Dots pager. Left = next slide, Right = prev (RTL); Right on the first dot
+// returns to the play button; Up returns to the play button on any dot except
+// the first (where Up does nothing); Down enters rows.
 function Dots({
   slides,
   activeIndex,
   setActiveIndex,
   onDownToRows,
   onFocusModeSlider,
+  showPlay,
 }) {
-  const [dotsFocused, setDotsFocused] = useState(false);
   const activeRef = useRef(activeIndex);
   activeRef.current = activeIndex;
 
   const { ref, focused } = useFocusable({
     focusKey: "SLIDER_DOTS",
-    onFocus: () => {
-      setDotsFocused(true);
-      onFocusModeSlider();
-    },
-    onBlur: () => setDotsFocused(false),
+    onFocus: onFocusModeSlider,
     onArrowPress: (direction) => {
       const current = activeRef.current;
       if (direction === "left") {
@@ -100,7 +106,9 @@ function Dots({
       }
       if (direction === "right") {
         if (current === 0) {
-          setFocus("SLIDER_PLAY");
+          // On the first slide, Right returns to the play button — unless this
+          // slide hides it (button_type "none"), in which case stay on the dots.
+          if (showPlay) setFocus("SLIDER_PLAY");
         } else {
           setActiveIndex(current - 1);
         }
@@ -113,7 +121,8 @@ function Dots({
       if (direction === "up") {
         // On the first dot, Up does nothing (only Right returns to the play
         // button). On any other dot, Up jumps straight to the play button.
-        if (current !== 0) {
+        // When the play button is hidden for this slide, Up does nothing.
+        if (current !== 0 && showPlay) {
           setFocus("SLIDER_PLAY");
         }
         return false;
@@ -121,15 +130,6 @@ function Dots({
       return true;
     },
   });
-
-  // Auto-advance only while the dots section is focused.
-  useEffect(() => {
-    if (!dotsFocused || slides.length <= 1) return undefined;
-    const id = setInterval(() => {
-      setActiveIndex((activeRef.current + 1) % slides.length);
-    }, AUTO_ADVANCE_MS);
-    return () => clearInterval(id);
-  }, [dotsFocused, slides.length, setActiveIndex]);
 
   return (
     <div
@@ -165,7 +165,46 @@ const HeroSlider = ({
     trackChildren: true,
   });
 
+  // Auto-advance pauses only while the play button is focused.
+  const [playFocused, setPlayFocused] = useState(false);
+
   const slide = slides[activeIndex] || slides[0];
+
+  // Slides flagged button_type "none" have no play action, so hide the button.
+  const showPlay = slide ? slide.button_type !== "none" : false;
+
+  // The play button can't be focused when it isn't rendered, so treat a no-play
+  // slide as "not focused" and let auto-advance keep running.
+  const playActive = showPlay && playFocused;
+
+  // Persist whether the current slide shows a play button so the movie rows know
+  // where to send focus when the user presses Up back into the slider.
+  useEffect(() => {
+    uiStorage.setItem("sliderHasPlay", showPlay ? "1" : "0");
+  }, [showPlay]);
+
+  // Advance while the slider is visible and the play button isn't focused. This
+  // keeps the slides rotating when focus is on the dots or the navbar, and stops
+  // only when the user is parked on the play button.
+  useEffect(() => {
+    if (hidden || playActive || slides.length <= 1) return undefined;
+    const id = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % slides.length);
+    }, AUTO_ADVANCE_MS);
+    return () => clearInterval(id);
+  }, [hidden, playActive, slides.length, setActiveIndex]);
+
+  // When the active slide hides the play button, make sure focus isn't stranded
+  // on the (now unmounted) button — send it to the dots instead. Covers both the
+  // page's initial setFocus("SLIDER_PLAY") and advancing onto a no-play slide.
+  useEffect(() => {
+    if (hidden || showPlay) return;
+    const current = getCurrentFocusKey();
+    if (current === "SLIDER_PLAY" || !current) {
+      setFocus("SLIDER_DOTS");
+    }
+  }, [hidden, showPlay, activeIndex]);
+
   if (!slide) return null;
 
   const title = slide.title || slide.parent_title || slide.movie_title || "";
@@ -239,11 +278,14 @@ const HeroSlider = ({
 
           <p className="hero-slider-desc u400">{desc}</p>
 
-          <PlayButton
-            slide={slide}
-            onEnterPlay={onEnterPlay}
-            onFocusModeSlider={onFocusModeSlider}
-          />
+          {showPlay ? (
+            <PlayButton
+              slide={slide}
+              onEnterPlay={onEnterPlay}
+              onFocusModeSlider={onFocusModeSlider}
+              onPlayFocusChange={setPlayFocused}
+            />
+          ) : null}
         </div>
 
         <Dots
@@ -252,6 +294,7 @@ const HeroSlider = ({
           setActiveIndex={setActiveIndex}
           onDownToRows={onDownToRows}
           onFocusModeSlider={onFocusModeSlider}
+          showPlay={showPlay}
         />
       </div>
     </FocusContext.Provider>
