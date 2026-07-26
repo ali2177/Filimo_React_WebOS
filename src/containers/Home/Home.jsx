@@ -13,6 +13,7 @@ import { getPageType, PAGE_TYPE_CONFIG } from "./homeUtils";
 import { useBackNavigation } from "./hooks/useBackNavigation";
 import { useHomeMovies } from "./hooks/useHomeMovies";
 import { useFocusInit } from "./hooks/useFocusInit";
+import HeroSliderDebugOverlay from "./components/HeroSliderDebugOverlay/HeroSliderDebugOverlay";
 import "./Home.css";
 
 function Home({ isLogin }) {
@@ -231,6 +232,10 @@ function Home({ isLogin }) {
           {renderedRows}
         </div>
       </div>
+
+      {location.pathname === "/" && !isKid && (
+        <HeroSliderDebugOverlay sliderSlides={sliderSlides} data={data} />
+      )}
     </main>
   );
 }
