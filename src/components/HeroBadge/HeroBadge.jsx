@@ -15,7 +15,7 @@ const HeroBadge = ({ movie }) => {
   return (
     <div className="badge hero-badge">
       {/* <span>{movie?.age_range}</span> */}
-      {movie?.age_range.slice(0, 2) !== "0" &&
+      {/* {movie?.age_range.slice(0, 2) !== "0" &&
         movie?.age_range !== "all" &&
         movie?.age_range.length === 5 && (
           <div>
@@ -23,10 +23,10 @@ const HeroBadge = ({ movie }) => {
               {convertToFarsi(movie?.age_range.slice(0, 2)) + "+"}
             </span>
           </div>
-        )}
-      {movie?.age_range === "all" && null}
-      {movie?.age_range.slice(0, 1) === "0" && null}
-      {(movie?.age_range.length === 3 || movie?.age_range.length === 4) &&
+        )} */}
+      {/* {movie?.age_range === "all" && null} */}
+      {/* {movie?.age_range.slice(0, 1) === "0" && null} */}
+      {/* {(movie?.age_range.length === 3 || movie?.age_range.length === 4) &&
         movie?.age_range !== "all" &&
         movie?.age_range.slice(0, 1) !== "0" && (
           <div>
@@ -34,8 +34,8 @@ const HeroBadge = ({ movie }) => {
               {convertToFarsi(movie?.age_range.slice(0, 1)) + "+"}
             </span>
           </div>
-        )}
-      <div style={{ marginRight: "1.2rem" }}>
+        )} */}
+      <div>
         <span className="u500">{convertToFarsi(movie?.duration.text)}</span>
       </div>
 
@@ -50,59 +50,52 @@ const HeroBadge = ({ movie }) => {
         </>
       )}
 
-      {movie?.imdb_rate !== "0" && (
-        <div style={{ marginRight: "1.2rem" }}>
-          <span className="badge-imdb">
-            <img className="imbd-logo" src={imdb} />
-            <span className="u500">{movie?.imdb_rate}</span>
-          </span>
-        </div>
-      )}
-
-      <div style={{ marginRight: "1.2rem" }}>
+      {/* <div style={{ marginRight: "1.2rem" }}>
         <span className="u500">محصول</span>
         {movie?.countries.map((cont, index) => (
           <span style={{ marginRight: "5px" }} className="u500">
             {cont.title}
           </span>
         ))}
-      </div>
-      <div style={{ marginRight: "1.2rem" }}>
+      </div> */}
+      {/* <div style={{ marginRight: "1.2rem" }}>
         <span className="u500">{convertToFarsi(movie?.pro_year)}</span>
-      </div>
+      </div> */}
 
       {movie?.subtitle.enable ? (
         <>
-          <div style={{ marginRight: "1.2rem" }}>
-            <span className="u500">{movie?.subtitle?.text}</span>
+          <div style={{ marginRight: "2.1rem" }}>
+            <span className="u500">زیرنویس</span>
           </div>
         </>
-      ) : (
-        <>
-          <div style={{ marginRight: "1.2rem" }}>
-            <span className="u500">زیرنویس ندارد</span>
-          </div>
-        </>
-      )}
+      ) : null}
       {movie?.dubbed.enable ? (
         <>
-          <div style={{ marginRight: "1.2rem" }}>
-            <span className="u500">{movie?.dubbed?.text}</span>
+          <div style={{ marginRight: "2.1rem" }}>
+            <span className="u500">دوبله</span>
           </div>
         </>
-      ) : (
-        <>
-          <div style={{ marginRight: "1.2rem" }}>
-            <span className="u500">دوبله ندارد</span>
-          </div>
-        </>
-      )}
+      ) : null}
 
-      {movie?.categories.map((cat, index) => (
-        <div style={{ marginRight: "1.2rem" }}>
-          <span className="u500">{cat.title}</span>
+      <div style={{ marginRight: "2rem" }}>
+        {movie?.categories.map((cat, index) => (
+          <>
+            <div style={{ marginRight: "0.4rem" }}>
+              <span className="u500">{cat.title}</span>
+            </div>
+            {index < movie?.categories.length - 1 && <span>,</span>}
+          </>
+        ))}
+      </div>
+
+      {movie?.imdb_rate !== "0" && (
+        <div style={{ marginRight: "2.1rem" }}>
+          <span className="badge-imdb">
+            <img className="imbd-logo" src={imdb} />
+            <span className="u500">{movie?.imdb_rate}</span>
+          </span>
         </div>
-      ))}
+      )}
     </div>
   );
 };

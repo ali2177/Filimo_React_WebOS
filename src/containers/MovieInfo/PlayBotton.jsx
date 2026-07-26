@@ -11,9 +11,10 @@ import {
   getCurrentFocusKey,
 } from "@noriginmedia/norigin-spatial-navigation";
 
-const PlayBotton = ({ data, onFocus, onAction }) => {
+const PlayBotton = ({ data, onFocus, onAction, onArrowPress }) => {
   const { ref, focused, focusSelf, focusKey } = useFocusable({
     onFocus,
+    onArrowPress,
     onEnterPress: () => {
       onAction();
     },

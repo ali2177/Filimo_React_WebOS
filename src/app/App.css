@@ -50,10 +50,6 @@
     height: 3rem;
   }
 
-  .calender-logo {
-    width: 2rem !important;
-    height: 2rem;
-  }
   .calender-text {
     font-size: 1.2rem !important;
     line-height: 1.7rem !important;
@@ -366,9 +362,6 @@
   object-fit: contain !important;
 }
 
-#movieinfo-page {
-  overflow: hidden;
-}
 .swiper-link {
   width: 100%;
   display: flex;
@@ -490,12 +483,11 @@
   margin-top: 1.3rem;
   display: flex;
   align-items: center;
-  gap: 24px;
 }
 .calender {
   display: flex;
   align-items: center;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: 500;
   line-height: 1.6rem;
   letter-spacing: 0em;
@@ -506,8 +498,8 @@
   fill: white;
 }
 .calender-logo {
-  width: 1.5rem !important;
-  height: 1.5rem !important;
+  width: 7.3rem !important;
+  height: 2rem !important;
   fill: white;
   margin-left: 0.4rem;
 }
@@ -995,54 +987,6 @@ Black, Opacity , 25, Alpha, Dark
   background-color: #006ce3;
 }
 
-.hero-poster {
-  border: none;
-  width: 100%;
-  height: 100vh;
-  position: absolute;
-  z-index: -2;
-  top: 0;
-  right: 0;
-}
-.hero-gradiant {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 100%;
-  z-index: -1;
-  height: 115vh;
-  background:
-    linear-gradient(
-      360deg,
-      #151515 0%,
-      rgba(21, 21, 21, 0.2) 33.06%,
-      rgba(21, 21, 21, 0) 100%
-    ),
-    linear-gradient(
-      270deg,
-      #151515 0%,
-      rgba(21, 21, 21, 0.6) 40.84%,
-      rgba(21, 21, 21, 0) 100%
-    );
-}
-.hero-content {
-  margin-top: 3.1rem;
-  margin-right: 4.2rem;
-  position: absolute;
-  z-index: 10000;
-  top: 0;
-}
-.hero-text {
-  margin-top: 16rem;
-}
-.hero-text-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  line-height: 3.2rem;
-  letter-spacing: 0em;
-  text-align: right;
-  margin-bottom: 1.5rem !important;
-}
 .hero-text-title-en {
   font-size: 24px;
   font-weight: 500;
@@ -1067,21 +1011,6 @@ Black, Opacity , 25, Alpha, Dark
   justify-content: center;
   align-items: center;
   background: black;
-}
-.hero-text-descr {
-  width: 34rem;
-  height: 5.9rem;
-  text-align: right;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  font-size: 1.1rem;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 3rem;
-  letter-spacing: 0em;
-  color: #e8e8e8;
-  display: flex;
-  align-items: center;
 }
 .hero-badge {
   margin-top: 1.4rem;
@@ -1160,18 +1089,6 @@ Tint, Red, Dark, 12, Success
   letter-spacing: 0em;
   text-align: right;
   color: #e8e8e8;
-}
-.movie-description-text {
-  font-size: 1.44rem;
-  font-weight: 500;
-  line-height: 2.6rem;
-  letter-spacing: 0em;
-  text-align: right;
-  width: 90rem;
-}
-.hero-controls {
-  margin-top: 2.5rem;
-  width: 78rem;
 }
 .btn-ctrl {
   height: 100%;
@@ -1628,10 +1545,10 @@ Tint, Red, Dark, 12, Success
 }
 
 .dot {
-  width: 0.6rem;
-  height: 0.6rem;
-  margin-right: 1rem;
-  margin-left: 1rem;
+  width: 0.2rem;
+  height: 0.2rem;
+  margin-right: 0.6rem;
+  margin-left: 0.6rem;
 }
 .snackbar-wrapper {
   background: linear-gradient(180deg, #0c0c0c 0%, #151515 70.04%);
@@ -1707,31 +1624,42 @@ Tint, Red, Dark, 12, Success
   gap: 10px;
 }
 .season-count {
-  width: 21rem;
+  width: 23rem;
   height: 40rem;
   overflow-y: scroll;
   position: absolute;
-  left: 5.3rem;
+  left: 1rem;
   top: 0;
 }
 .season {
   display: flex;
-  padding: 0.8rem 2rem;
+  padding: 1.2rem 2rem;
   justify-content: space-between;
   align-items: center;
   align-self: stretch;
   border-radius: 0.6rem;
-  border: 0.2rem solid rgba(255, 255, 255, 0.2);
+  border: 0 solid var(--Dark-Mode-Opacity-of-Neutral-White, #fff);
+  background: rgba(255, 255, 255, 0.16);
   margin-bottom: 1.1rem;
   text-decoration: none;
 }
 .season-focused {
+  color: var(--Dark-Mode-Background-Colors-Background-01, #151515);
   border-radius: 0.6rem;
-  border: 0.22rem solid rgba(255, 255, 255, 0.9) !important;
-  background: var(
-    --dark-mode-opacity-of-neutral-white-12,
-    rgba(255, 255, 255, 0.12)
-  );
+  border: 4px solid var(--Dark-Mode-Opacity-of-Neutral-White, #fff);
+  background: var(--Dark-Mode-Opacity-of-Neutral-White, #fff);
+}
+.season-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.2rem;
+  padding-top: 0;
+}
+.season-check-icon {
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
 }
 .episode-pic {
   position: absolute;

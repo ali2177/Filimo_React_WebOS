@@ -1,0 +1,292 @@
+/* ==========================================================================
+   MovieInfo page styles
+   Moved out of App.css (classes used only by the Movie Info page) plus the
+   new bottom tab strip + content panels.
+   ========================================================================== */
+
+/* ---- Hero (moved from App.css, exclusive to MovieInfo) ------------------ */
+#movieinfo-page {
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 3.1rem 4.2rem 0 4.2rem;
+  box-sizing: border-box;
+}
+
+.hero-scroll-content {
+  box-sizing: border-box;
+  overflow-y: scroll;
+  width: 100%;
+  height: 90vh;
+}
+
+/* The hero poster is position:absolute/top:0 and .hero is isolate (its own
+   stacking context), so it paints over the logo header that precedes it in
+   the DOM. Lift the header into a positive layer so the logo stays visible. */
+#movieinfo-page .more-section-header {
+  position: relative;
+  z-index: 1;
+}
+
+.movie-info-hero {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.hero-poster {
+  border: none;
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  z-index: -2;
+  top: 0;
+  right: 0;
+}
+
+.hero-gradiant {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  z-index: -1;
+  height: 100vh;
+  /* Fades out as the hero scrolls up and the dim overlay fades in. */
+  opacity: calc(1 - var(--scroll-progress, 0));
+  transition: opacity 0.1s linear;
+  background:
+    linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.8) 0%,
+      rgba(0, 0, 0, 0.25) 14.68%,
+      rgba(0, 0, 0, 0) 29.35%
+    ),
+    linear-gradient(
+      270deg,
+      rgba(0, 0, 0, 0.7) 0%,
+      rgba(0, 0, 0, 0.3) 25.19%,
+      rgba(0, 0, 0, 0) 41.98%
+    );
+}
+
+.hero-text {
+  margin-top: 10rem;
+}
+
+.hero-text-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 3.2rem;
+  letter-spacing: 0em;
+  text-align: right;
+  margin-bottom: 1.5rem !important;
+}
+
+.hero-text-logo {
+  width: 19.7rem;
+  height: 8.5rem;
+  object-fit: contain;
+  object-position: right;
+  margin-bottom: 1.5rem;
+}
+
+.hero-text-descr {
+  width: 34rem;
+  margin: 2rem 0 1.8rem;
+  /* height: 5.9rem; */
+  text-align: right;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-size: 1.03rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 2rem;
+  letter-spacing: 0em;
+  color: #e8e8e8;
+  display: flex;
+  align-items: center;
+}
+
+.hero-controls {
+  margin-top: 2.5rem;
+  width: 78rem;
+}
+
+.movie-description-text {
+  font-size: 1.44rem;
+  font-weight: 500;
+  line-height: 2.6rem;
+  letter-spacing: 0em;
+  text-align: right;
+  width: 90rem;
+}
+
+/* ---- Bottom tab strip --------------------------------------------------- */
+.movieinfo-tabs {
+  /* Pins to the top of .hero-scroll-content as the hero scrolls up behind it. */
+  position: sticky;
+  top: 0;
+  margin-top: 4.5rem;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  direction: rtl;
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: 1rem;
+  z-index: 10001;
+  padding-bottom: 1rem;
+  /* Solid backdrop so hero content passing underneath the strip is masked. */
+  border-bottom: 2px solid
+    var(--dark-mode-opacity-of-neutral-white-25, rgba(255, 255, 255, 0.25));
+}
+
+/* Player-progress-bar-style indicator: a white segment sitting exactly on the
+   strip's bottom border, sized/positioned to the active tab and slid to the
+   new tab's position+width on switch via the transform/width transition. */
+.movieinfo-tab-indicator {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 0.3rem;
+  background: #fff;
+  border-radius: 0.15rem;
+  pointer-events: none;
+  transition:
+    transform 0.25s ease,
+    width 0.25s ease;
+}
+
+.movieinfo-tab {
+  display: flex;
+  align-items: center;
+  padding: 0.8rem 1.6rem;
+  border-radius: 0.6rem;
+  border: 0.2rem solid transparent;
+  color: #a1a1a1;
+  font-size: 1.2rem;
+  font-weight: 500;
+  line-height: 2.2rem;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease;
+}
+
+.movieinfo-tab--active {
+  color: #fff;
+  /* border: 0.2rem solid rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.12); */
+}
+
+.movieinfo-tab--focused {
+  color: #fff;
+  border: 0.2rem solid rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Flat, full-screen translucent overlay that fades in as the hero scrolls up
+   (--scroll-progress: 0 at top -> 1 when tabs are pinned). Sits below the tabs
+   (10001) and panel (10000) so those stay readable, above poster/gradient. */
+.movieinfo-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: var(--scroll-progress, 0);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.9) 0%, #000 100%);
+}
+
+/* ---- Content panel ------------------------------------------------------ */
+/* Top-section (controls) state: only a peek of the active tab's content shows
+   at the very bottom, just under the tab strip (bottom: 13rem). */
+.movieinfo-tabpanel {
+  /* Fills the viewport left under the pinned tab strip. Because the panel does
+     not add scrollable height to .hero-scroll-content (each panel scrolls
+     internally), the container's max scroll equals the hero-content height, so
+     scrolling clamps exactly when the tab strip reaches the top. */
+  height: calc(90vh - 5rem);
+  position: relative;
+  z-index: 10000;
+  background: transparent;
+}
+
+/* Episodes panel: season strip (absolute, right) + scrollable episode list */
+.movieinfo-episodes-panel {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 1.5rem 0 1.5rem;
+}
+
+.movieinfo-episodes-panel .allepisode-content-wrapper {
+  position: relative;
+  overflow: hidden;
+  flex: 1;
+  min-height: 0;
+}
+
+/* Detail panel: cast/crew rows + story + specs grid */
+.movieinfo-detail-panel {
+  height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding: 0.5rem 0 4rem;
+}
+
+.movieinfo-detail-story {
+  margin: 1.5rem 1.7rem;
+  max-width: 100%;
+}
+
+.movieinfo-detail-story h3 {
+  margin-bottom: 0.8rem;
+}
+
+.movieinfo-detail-story p {
+  color: #e8e8e8;
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 2.2rem;
+  text-align: right;
+}
+
+.movieinfo-detail-specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.5rem;
+  margin: 1.5rem 1.7rem;
+  direction: rtl;
+}
+
+.movieinfo-spec {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.movieinfo-spec-label {
+  color: #a1a1a1;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.movieinfo-spec-value {
+  color: #e8e8e8;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+/* Recommended panel: reuse the shared .more / .more-movies grid */
+.movieinfo-recomm-panel {
+  height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding: 0.5rem 4.2rem 4rem;
+}
+
+.movieinfo-recomm-panel h1 {
+  margin-bottom: 1.5rem;
+}

@@ -5,9 +5,10 @@ import {
   getCurrentFocusKey,
 } from "@noriginmedia/norigin-spatial-navigation";
 import { uiStorage } from "@src/utils/uiStorage";
+import { useKeyboardAwareScroll } from "@src/hooks/useKeyboardAwareScroll";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 
-const Episode = ({ movieItem, focusKeey }) => {
+const Episode = ({ movieItem, focusKeey, isFirst = false, onExitUp }) => {
   const location = useLocation("");
   const myRef = useRef(null);
   const navigate = useNavigate();
@@ -29,6 +30,13 @@ const Episode = ({ movieItem, focusKeey }) => {
     onEnterPress: () => {
       handleAction();
     },
+    onArrowPress: (direction) => {
+      if (direction === "up" && isFirst) {
+        onExitUp?.();
+        return false;
+      }
+      return true;
+    },
     focusable: true,
     trackChildren: true,
     autoRestoreFocus: true,
@@ -39,15 +47,10 @@ const Episode = ({ movieItem, focusKeey }) => {
   //     console.log(focusKeey);
   //     setFocus("Episode_0");
   //   }, []);
-  const handleScrolling = () => {
-    setTimeout(() => {
-      if (uiStorage.getItem("mode") === "KeyboardMode") {
-        myRef?.current?.scrollIntoView({
-          block: "center",
-        });
-      }
-    }, 10);
-  };
+  // Centers the focused episode within its nearest scroll container only, so
+  // keyboard focus movement doesn't chain the scroll up to the movie detail
+  // page's .hero-scroll-content (which must stay pinned).
+  const handleScrolling = useKeyboardAwareScroll(myRef);
   const durationTimeFormat = (duration) => {
     const hrs = Math.floor(duration / 3600);
     const mins = Math.floor((duration % 3600) / 60);

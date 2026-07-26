@@ -16,6 +16,7 @@ const EpisodesWrapper = ({
   curretSeasonDetail,
   links,
   data,
+  onExitUp,
 }) => {
   const { jwt, setJwt } = useAuth();
   const { isOnline, isSeasonChange } = useOnlineStatus();
@@ -36,12 +37,12 @@ const EpisodesWrapper = ({
     if (uiStorage.getItem("lastSeasonFocus_parent_new")) {
       getUserData(
         uiStorage.getItem("lastSeasonFocus_parent_new"),
-        uiStorage.getItem("lastSeasonFocus_season_part")
+        uiStorage.getItem("lastSeasonFocus_season_part"),
       );
     } else {
       getUserData(
         data?.data[data.data.length - 1].movies?.data[0].serial_parent_new,
-        data?.data[data.data.length - 1].movies?.data[0].serial_season_part
+        data?.data[data.data.length - 1].movies?.data[0].serial_season_part,
       );
     }
   }, [data]);
@@ -49,7 +50,7 @@ const EpisodesWrapper = ({
     if (uiStorage.getItem("lastSeasonFocus_parent_new")) {
       getUserData(
         uiStorage.getItem("lastSeasonFocus_parent_new"),
-        uiStorage.getItem("lastSeasonFocus_season_part")
+        uiStorage.getItem("lastSeasonFocus_season_part"),
       );
     }
   }, [isSeasonChange]);
@@ -57,7 +58,7 @@ const EpisodesWrapper = ({
   const getUserData = async (parent_id, part) => {
     try {
       const res = await filimioFetch(
-        `https://www.filimo.com/api/fa/v1/movie/serial/episodebyseason/parent_id/${parent_id}/part/${part}/sort/DESC/perpage/4?json_type=simple`
+        `https://www.filimo.com/api/fa/v1/movie/serial/episodebyseason/parent_id/${parent_id}/part/${part}/sort/DESC/perpage/4?json_type=simple`,
       );
       const blocks = await res?.json();
       // console.log(blocks.data[0]);
@@ -114,13 +115,13 @@ const EpisodesWrapper = ({
       });
       if (node) observer.current.observe(node);
     },
-    [episodes]
+    [episodes],
   );
   return (
     <FocusContext.Provider value={focusKey}>
       <div
         style={{
-          height: "100%",
+          height: "44rem",
           overflowY: "scroll",
           paddingBottom: "3.5rem",
           boxSizing: "border-box",
@@ -129,7 +130,12 @@ const EpisodesWrapper = ({
         {episodes &&
           episodes.map((movieItem, index) => (
             <div ref={lastMovieElement}>
-              <Episode movieItem={movieItem} focusKeey={`Episode_${index}`} />
+              <Episode
+                movieItem={movieItem}
+                focusKeey={`Episode_${index}`}
+                isFirst={index === 0}
+                onExitUp={onExitUp}
+              />
             </div>
           ))}
       </div>

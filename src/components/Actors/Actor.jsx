@@ -2,11 +2,18 @@ import React from "react";
 import { useFocusable } from "@noriginmedia/norigin-spatial-navigation";
 import { useNavigate, Link } from "react-router-dom";
 import { uiStorage } from "@src/utils/uiStorage";
+import { centerHorizontally } from "@src/utils/scrollHelpers";
 
 const Actor = ({ actor, onFocus, onEnterPress, focusKeey, name }) => {
   const navigate = useNavigate();
   const { ref, focused } = useFocusable({
-    onFocus,
+    onFocus: (...args) => {
+      // Keep the focused actor centered in its row, matching the home rows.
+      if (uiStorage.getItem("mode") === "KeyboardMode") {
+        setTimeout(() => centerHorizontally(ref.current), 10);
+      }
+      onFocus?.(...args);
+    },
     onEnterPress: () => {
       uiStorage.setItem("lastFocusActor", focusKeey);
       uiStorage.removeItem("lastFocusCrew");
