@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
+import { buildApiUrl } from "@src/config/locale";
 import { useBackKey } from "@src/hooks/useBackKey";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Focusable } from "react-js-spatial-navigation";
@@ -42,7 +43,7 @@ function Profile() {
         vn: "1.00",
       };
       const res = await fetch(
-        `https://www.filimo.com/api/fa/v1/partner/TV/profile?devicetype=react_tizen`,
+        buildApiUrl(`partner/TV/profile?devicetype=react_tizen`),
         {
           method: "GET",
           headers: {

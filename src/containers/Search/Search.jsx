@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from "react";
+import { buildApiUrl } from "@src/config/locale";
 import { useBackKey } from "@src/hooks/useBackKey";
 import {
   FocusableComponentLayout,
@@ -65,7 +66,9 @@ function Search() {
         vn: "1.00",
       };
       const res = await fetch(
-        `https://www.filimo.com/api/fa/v1/movie/movie/list/tagid/1000300/text/${querry}?devicetype=react_tizen&json_type=simple`,
+        buildApiUrl(
+          `movie/movie/list/tagid/1000300/text/${querry}?devicetype=react_tizen&json_type=simple`,
+        ),
         {
           method: "GET",
           headers: {

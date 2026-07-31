@@ -32,17 +32,20 @@ const MenuItems = ({ isLogin }) => {
     if (link_type === "profile") return pathname === "/profile";
     if (link_type === "login") return pathname === "/login";
     if (link_type === "category") return pathname === "/categories";
+    if (link_type === "settings") return pathname === "/settings";
     return false;
   };
 
   const handleInterPress = (item) => {
-    if (item.link_text === "کودک" && !isLogin) {
+    // Gate on the stable link_key, not the localized link_text (which changes
+    // to English once the API locale flips).
+    if (item.link_key === "kids" && !isLogin) {
       uiStorage.setItem("lastFocus", "MOVIE_1__0");
     }
-    if (item.link_text === "کودک" && isLogin) {
+    if (item.link_key === "kids" && isLogin) {
       uiStorage.setItem("lastFocus", "MOVIE_0__0");
     }
-    if (item.link_text !== "کودک") {
+    if (item.link_key !== "kids") {
       uiStorage.setItem("lastFocus", "MOVIE_0__0");
     }
     uiStorage.removeItem("lastFocusRowBeforeReload");
@@ -66,6 +69,9 @@ const MenuItems = ({ isLogin }) => {
     }
     if (item.link_type === "category") {
       navigate("categories");
+    }
+    if (item.link_type === "settings") {
+      navigate("/settings");
     }
     if (item.link_key === "1") {
       navigate("/");
@@ -94,6 +100,12 @@ const MenuItems = ({ isLogin }) => {
       )
     : [];
 
+  // The API ships a settings item (link_type "settings", position "bottom-right")
+  // that we render pinned to the bottom of the sidebar rather than inline.
+  const settingsItem = menuData
+    ? menuData.find((item) => item.attributes.link_type === "settings")
+    : null;
+
   return (
     <FocusContext.Provider value={focusKey}>
       <div ref={ref} className="menu-items">
@@ -111,6 +123,21 @@ const MenuItems = ({ isLogin }) => {
             />
           </div>
         ))}
+
+        {settingsItem && (
+          <div className="menu-settings-item">
+            <SidebarItem
+              data={settingsItem.attributes}
+              handleEnterPress={(fk) => {
+                uiStorage.setItem("lastFocusMenuItem", fk);
+                handleInterPress(settingsItem.attributes);
+              }}
+              focuskeey="menuItem__settings"
+              menuData={menuData}
+              isActive={getIsActive(settingsItem)}
+            />
+          </div>
+        )}
       </div>
     </FocusContext.Provider>
   );

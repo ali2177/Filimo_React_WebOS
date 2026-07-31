@@ -1,0 +1,16 @@
+{
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "languageValueFa": "فارسی",
+    "languageValueEn": "English",
+    "back": "Back"
+  },
+  "alert": {
+    "networkError": "Check your internet connection.",
+    "loadError": "There was a problem loading the video.",
+    "movieRent": "Online screening tickets can only be purchased from the Filimo website.",
+    "pay": "To buy a subscription or ticket, please visit the Filimo website.",
+    "ok": "Got it"
+  }
+}

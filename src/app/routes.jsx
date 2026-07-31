@@ -23,6 +23,7 @@ const Search          = React.lazy(() => import('@containers/Search/Search'));
 const SearchResult    = React.lazy(() => import('@containers/Search/SearchResult'));
 const MyMovies        = React.lazy(() => import('@containers/MyMovies/MyMovies'));
 const Ip              = React.lazy(() => import('@containers/Ip/Ip'));
+const Settings        = React.lazy(() => import('@containers/Settings/Settings'));
 
 function AppRoutes({ isLogin }) {
   return (
@@ -52,6 +53,7 @@ function AppRoutes({ isLogin }) {
         <Route path="/search" element={<Search />} />
         <Route path="/searchResult" element={<SearchResult />} />
         <Route path="/mymovies" element={<MyMovies isLogin={isLogin} />} />
+        <Route path="/settings" element={<Settings />} />
       </Routes>
     </React.Suspense>
   );

@@ -1,11 +1,27 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { getApiBaseUrl, getApiLocale } from "@src/config/locale";
 
 const tmdbApiKey = process.env.REACT_APP_TMDB_KEY;
 
+// Stable stringify (sorted keys) so cache keys don't fragment on object-key
+// order. RTK 1.8 doesn't export its own defaultSerializeQueryArgs, so we
+// replicate the stable-key behavior here.
+const stableStringify = (value) =>
+  value && typeof value === "object"
+    ? JSON.stringify(value, Object.keys(value).sort())
+    : JSON.stringify(value);
+
 export const tmdbApi = createApi({
   reducerPath: "tmdbApi",
+  // Fold the locale into every cache key so cached responses can't leak across
+  // languages. The toggle reloads the page (wiping this in-memory cache) so
+  // this is defense-in-depth, but it's cheap and keeps the cache correct.
+  serializeQueryArgs: ({ endpointName, queryArgs }) =>
+    `${getApiLocale()}-${endpointName}(${stableStringify(queryArgs)})`,
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://www.filimo.com/api/fa/v1/",
+    // Locale is baked into the path (/api/<locale>/v1/); evaluated once at module
+    // load, which is fine because a language change triggers a full reload.
+    baseUrl: getApiBaseUrl(),
     prepareHeaders(headers) {
       const token = localStorage.getItem("jwt");
 

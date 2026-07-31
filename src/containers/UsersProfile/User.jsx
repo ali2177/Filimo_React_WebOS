@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
+import { buildApiUrl } from "@src/config/locale";
 import {
   useFocusable,
   setFocus,
@@ -68,7 +69,7 @@ const User = ({ jwtSub, user, index }) => {
 
   const getUserData = (guid, lid) => {
     filimioFetch(
-      "https://www.filimo.com/api/fa/v1/user/Authenticate/signin_profile?devicetype=react_tizen",
+      buildApiUrl("user/Authenticate/signin_profile?devicetype=react_tizen"),
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -90,7 +91,7 @@ const User = ({ jwtSub, user, index }) => {
   const getUserProfileData = async () => {
     try {
       const res = await filimioFetch(
-        "https://www.filimo.com/api/fa/v1/partner/TV/profile?devicetype=react_tizen"
+        buildApiUrl("partner/TV/profile?devicetype=react_tizen")
       );
       const blocks = await res?.json();
       if (blocks.data.attributes.Profile_kids.kids_lock) {

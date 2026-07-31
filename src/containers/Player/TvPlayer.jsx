@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
+import { buildApiUrl } from "@src/config/locale";
 import { TVPlayer, useTVPlayerStore } from "react-tv-player";
 import { Focusable } from "react-js-spatial-navigation";
 import {
@@ -120,7 +121,7 @@ const TvPlayer = () => {
     };
 
     fetch(
-      `https://www.filimo.com/api/fa/v1/movie/watch/watch/uid/${movieUid}/?devicetype=tizen_react`,
+      buildApiUrl(`movie/watch/watch/uid/${movieUid}/?devicetype=tizen_react`),
       requestOptions,
     )
       .then((response) => response.json())

@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
+import { buildApiUrl } from "@src/config/locale";
 import { usePolling } from "@src/hooks/usePolling";
 import { useBackKey } from "@src/hooks/useBackKey";
 import line from "../../assets/images/line.svg";
@@ -61,7 +62,9 @@ const Loogin = () => {
         vn: "1.00",
       };
       const res = await fetch(
-        `https://www.filimo.com/api/fa/v1/user/Authenticate/sync_account_verify/code/${code}/ref_type/tv`,
+        buildApiUrl(
+          `user/Authenticate/sync_account_verify/code/${code}/ref_type/tv`,
+        ),
         {
           headers: {
             UserAgent: JSON.stringify(userAgent),
@@ -92,7 +95,9 @@ const Loogin = () => {
         vn: "1.00",
       };
       const res = await fetch(
-        `https://www.filimo.com/api/fa/v1/user/Authenticate/get_verify_code?ref_type=tv&devicetype=react_tizen      `,
+        buildApiUrl(
+          `user/Authenticate/get_verify_code?ref_type=tv&devicetype=react_tizen      `,
+        ),
         {
           headers: {
             UserAgent: JSON.stringify(userAgent),

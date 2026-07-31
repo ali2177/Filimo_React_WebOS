@@ -73,3 +73,17 @@
   border-radius: 50%;
   background: linear-gradient(90deg, #f5b83f 0%, #e77630 100%);
 }
+
+/* Settings item (API "bottom-right") pinned to the bottom of the sidebar,
+   positioned against the absolutely-positioned nav.drawer / .drawer-focus. */
+.menu-settings-item {
+  position: absolute;
+  bottom: 2.5rem;
+}
+.drawer .menu-settings-item {
+  inset-inline-end: 2rem;
+}
+.drawer-focus .menu-settings-item {
+  left: 50%;
+  transform: translateX(-50%);
+}

@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
+import { buildApiUrl } from "@src/config/locale";
 import { TVPlayer, useTVPlayerStore } from "react-tv-player";
 import { Focusable } from "react-js-spatial-navigation";
 import {
@@ -91,7 +92,7 @@ const LivePlayer = () => {
     };
 
     fetch(
-      `https://www.filimo.com/api/fa/v1/live/live/one/live_name/${movieUid}`,
+      buildApiUrl(`live/live/one/live_name/${movieUid}`),
       requestOptions
     )
       .then((response) => response.json())

@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { buildApiUrl } from "@src/config/locale";
 import {
   useFocusable,
   setFocus,
@@ -51,7 +52,7 @@ const SignOutBtn = ({ onFocus, jwt }) => {
     };
 
     fetch(
-      "https://www.filimo.com/api/fa/v1/user/Authenticate/signout",
+      buildApiUrl("user/Authenticate/signout"),
       requestOptions
     )
       .then((response) => response.text())

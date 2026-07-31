@@ -1,0 +1,52 @@
+.settings-page {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding-block: 6rem;
+  padding-inline: 6rem;
+  background-color: #151515;
+  color: #e8e8e8;
+  text-align: start;
+}
+
+.settings-title {
+  font-size: 2rem;
+  line-height: 2.6rem;
+  margin-block-end: 3rem;
+}
+
+.settings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  max-width: 48rem;
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding-block: 1.4rem;
+  padding-inline: 2rem;
+  border-radius: 0.8rem;
+  background-color: #1f1f1f;
+  border: 0.1rem solid transparent;
+  transition:
+    transform 0.12s ease,
+    border-color 0.12s ease;
+}
+
+.settings-row-focus {
+  border-color: #e77630;
+  transform: scale(1.02);
+  background-color: #262626;
+}
+
+.settings-row-label {
+  font-size: 1.4rem;
+}
+
+.settings-row-value {
+  font-size: 1.3rem;
+  color: #b3b3b3;
+}

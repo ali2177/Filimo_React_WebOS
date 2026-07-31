@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
+import { buildApiUrl } from "@src/config/locale";
 import { useBackKey } from "@src/hooks/useBackKey";
 import { useDisableKeyboardWhileLoading } from "@src/hooks/useDisableKeyboardWhileLoading";
 import { Link, useParams, useLocation } from "react-router-dom";
@@ -126,7 +127,9 @@ function MovieInfo({ isLogin }) {
     };
 
     fetch(
-      `https://www.filimo.com/api/fa/v1/movie/movie/one/uid/${id}?devicetype=react_tizen&json_type=simple`,
+      buildApiUrl(
+        `movie/movie/one/uid/${id}?devicetype=react_tizen&json_type=simple`,
+      ),
       requestOptions,
     )
       .then((response) => response.json())
@@ -296,47 +299,20 @@ function MovieInfo({ isLogin }) {
       navigate(`/player`);
       return;
     }
-    if (movieData?.data?.watch_action.type === "pay") {
-      if (isShowAlert) {
-        return;
-      }
-      setIsShowAlert(true);
-      setFocus("Alert-btn");
-      return;
-    }
     if (movieData?.data?.watch_action.type === "login") {
       navigate("/login");
+      return;
     }
-    if (movieData?.data?.watch_action.link_text === "تمدید اشتراک") {
-      if (isShowAlert) {
-        return;
-      }
-      setIsShowAlert(true);
-      setFocus("Alert-btn");
-    } else if (
-      movieData?.data?.watch_action.link_text === "خرید بلیت و تماشا"
-    ) {
-      if (isShowAlert) {
-        return;
-      }
-      setIsShowAlert(true);
-      setFocus("Alert-btn");
-      // setTimeout(() => {
-      //   setIsShowAlert(false);
-      // }, 2000);
-    } else if (movieData?.data?.watch_action.link_text === "خرید اشتراک") {
-      if (isShowAlert) {
-        return;
-      }
-      setIsShowAlert(true);
-      setFocus("Alert-btn");
-    } else if (movieData?.data?.watch_action.link_text === "تمدید و تماشا") {
-      if (isShowAlert) {
-        return;
-      }
-      setIsShowAlert(true);
-      setFocus("Alert-btn");
+    // Any other non-watchable state (pay, movie_rent, renew/buy a ticket, …)
+    // shows the alert. Matched on the stable `type` field, not the localized
+    // `link_text` (which becomes English once the API locale flips). Note: an
+    // unrecognized `type` now shows the alert instead of doing nothing — a
+    // deliberate fail-visible choice.
+    if (isShowAlert) {
+      return;
     }
+    setIsShowAlert(true);
+    setFocus("Alert-btn");
   };
 
   if (isForbiden)

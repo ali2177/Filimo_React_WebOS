@@ -911,7 +911,8 @@ Black, Opacity , 25, Alpha, Dark
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4rem 0.65rem 3rem 0.75rem;
+  padding-block: 4rem 3rem;
+  padding-inline: 0.65rem 0.75rem;
   border-radius: 1rem;
   min-width: 700px;
   height: 200px;
@@ -928,11 +929,12 @@ Black, Opacity , 25, Alpha, Dark
 .alert {
   position: fixed;
   top: 350px;
-  right: 550px;
+  inset-inline-start: 550px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4rem 0.65rem 3rem 0.75rem;
+  padding-block: 4rem 3rem;
+  padding-inline: 0.65rem 0.75rem;
   border-radius: 1rem;
   min-width: 700px;
   height: 200px;
@@ -969,8 +971,7 @@ Black, Opacity , 25, Alpha, Dark
 }
 .alert-icon {
   padding: 0.5rem;
-  margin-right: 1rem;
-  margin-left: 1rem;
+  margin-inline: 1rem;
   border-radius: 39% 61% 42% 58% / 50% 51% 49% 50%;
   box-shadow:
     0px 3.2px 13.8px rgba(0, 0, 0, 0.02),

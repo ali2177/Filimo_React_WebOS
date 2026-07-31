@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { buildApiUrl } from "@src/config/locale";
 import {
   useFocusable,
   setFocus,
@@ -33,7 +34,9 @@ const SearchAction = ({ searchQuery, onEnterPress }) => {
         vn: "1.00",
       };
       const res = await fetch(
-        `https://www.filimo.com/api/fa/v1/movie/movie/list/tagid/1000300/text/${querry}?json_type=simple`,
+        buildApiUrl(
+          `movie/movie/list/tagid/1000300/text/${querry}?json_type=simple`,
+        ),
         {
           method: "GET",
           headers: {

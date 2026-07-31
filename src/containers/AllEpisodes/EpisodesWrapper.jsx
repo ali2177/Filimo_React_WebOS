@@ -1,4 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
+import { buildApiUrl } from "@src/config/locale";
 import { useDisableKeyboardWhileLoading } from "@src/hooks/useDisableKeyboardWhileLoading";
 import { useFilimioFetch } from "@src/hooks/useFilimioFetch";
 import {
@@ -58,7 +59,9 @@ const EpisodesWrapper = ({
   const getUserData = async (parent_id, part) => {
     try {
       const res = await filimioFetch(
-        `https://www.filimo.com/api/fa/v1/movie/serial/episodebyseason/parent_id/${parent_id}/part/${part}/sort/DESC/perpage/4?json_type=simple`,
+        buildApiUrl(
+          `movie/serial/episodebyseason/parent_id/${parent_id}/part/${part}/sort/DESC/perpage/4?json_type=simple`,
+        ),
       );
       const blocks = await res?.json();
       // console.log(blocks.data[0]);

@@ -14,10 +14,11 @@ import AppRoutes from "@src/app/routes";
 import { useFilimioFetch } from "@src/hooks/useFilimioFetch";
 import { usePolling } from "@src/hooks/usePolling";
 import { setMode } from "@src/features/uiState";
+import { buildApiUrl, isRtl } from "@src/config/locale";
 
 init({
   debug: false,
-  rtl: true,
+  rtl: isRtl(),
 });
 
 // Create Context
@@ -63,6 +64,7 @@ function App() {
       location.pathname.slice(0, 7) === "/allepi" ||
       location.pathname.slice(0, 7) === "/moreSi" ||
       location.pathname.slice(0, 7) === "/profil" ||
+      location.pathname.slice(0, 7) === "/settin" ||
       location.pathname.slice(0, 7) === "/ipchec" ||
       location.pathname.slice(0, 7) === "/usersP" ||
       location.pathname.slice(0, 7) === "/moreMo" ||
@@ -83,7 +85,7 @@ function App() {
   const getUserData = async () => {
     try {
       const res = await filimioFetch(
-        "https://www.filimo.com/api/fa/v1/partner/TV/profile?devicetype=react_tizen"
+        buildApiUrl("partner/TV/profile?devicetype=react_tizen")
       );
       const blocks = await res?.json();
       localStorage.setItem("isOffline", false);

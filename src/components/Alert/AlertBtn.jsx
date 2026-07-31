@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import {
   useFocusable,
   setFocus,
 } from "@noriginmedia/norigin-spatial-navigation";
-import { use } from "react";
 
 const AlertBtn = ({ onEnterPress }) => {
+  const { t } = useTranslation();
   const { ref, focused, focusSelf, focusKey } = useFocusable({
     onEnterPress,
     focusKey: "Alert-btn",
@@ -15,13 +16,14 @@ const AlertBtn = ({ onEnterPress }) => {
   }, []);
   return (
     <button
+      ref={ref}
       onMouseEnter={() => {
         setFocus("Alert-btn");
       }}
       onClick={onEnterPress}
       className={focused ? "alert-bnt u400 alert-bnt-focus" : "alert-bnt u400"}
     >
-      متوجه شدم
+      {t("alert.ok")}
     </button>
   );
 };
