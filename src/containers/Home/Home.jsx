@@ -1,4 +1,10 @@
-import React, { useState, useCallback, useRef, useMemo, useEffect } from "react";
+import React, {
+  useState,
+  useCallback,
+  useRef,
+  useMemo,
+  useEffect,
+} from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import Content from "@src/components/Content/Content";
 import HeroSlider from "@src/components/HeroSlider/HeroSlider";
@@ -7,7 +13,10 @@ import Loader from "@src/components/Loader/Loader";
 import Snackbar from "@src/components/Snackbar/Snackbar";
 import { useAuth } from "@src/components/AuthProvider";
 import { useOnlineStatus } from "@src/app/App";
-import { useFocusable, setFocus } from "@noriginmedia/norigin-spatial-navigation";
+import {
+  useFocusable,
+  setFocus,
+} from "@noriginmedia/norigin-spatial-navigation";
 import ContentRow from "@src/components/ContentRow";
 import { getPageType, PAGE_TYPE_CONFIG } from "./homeUtils";
 import { useBackNavigation } from "./hooks/useBackNavigation";
@@ -189,7 +198,6 @@ function Home({ isLogin }) {
           }}
         />
       )}
-
       <div ref={scrollRef} className="home-scroll-container">
         {!isKid && location.pathname === "/" && showPoster && (
           <Content
@@ -220,7 +228,9 @@ function Home({ isLogin }) {
           className={[
             "home-rows-wrapper",
             isKid ? "home-rows-wrapper--kids" : "",
-            location.pathname === "/" && !isKid && showPoster ? "main-rows" : "",
+            location.pathname === "/" && !isKid && showPoster
+              ? "main-rows"
+              : "",
             hasSlider && heroMode === "slider"
               ? "home-rows-wrapper--hero-slider"
               : "",
@@ -232,7 +242,7 @@ function Home({ isLogin }) {
           {renderedRows}
         </div>
       </div>
-
+      {/* Debug overlay — re-enable to diagnose the 1-slide hero bug. */}
       {location.pathname === "/" && !isKid && (
         <HeroSliderDebugOverlay sliderSlides={sliderSlides} data={data} />
       )}
