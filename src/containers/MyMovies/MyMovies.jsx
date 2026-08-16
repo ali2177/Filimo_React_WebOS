@@ -1,26 +1,27 @@
 import React, { useEffect, useState, useCallback } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useBackKey } from "@src/hooks/useBackKey";
-import { Focusable } from "react-js-spatial-navigation";
 import { useGetMyMovieQuery } from "../../services/TMDB";
-import MovieList from "@src/components/MovieList/MovieList";
-import Content from "@src/components/Content/Content";
-import { useNavigate } from "react-router-dom";
+import ContentRow from "@src/components/ContentRow";
+import { useFocusInit } from "@src/containers/Home/hooks/useFocusInit";
 import NetworkError from "@src/components/NetworkError/NetworkError";
 import Loader from "@src/components/Loader/Loader";
+import "@src/containers/Home/Home.css";
 
 const MyMovies = ({ isLogin }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   let jwt = localStorage.getItem("jwt");
+
   const handleBack = useCallback(() => {
     if (window.location.pathname !== "/player") navigate(-1);
   }, [navigate]);
-
   useBackKey(handleBack);
 
-  const [curretFocusedMovie, setCurretFocusedMovie] = useState(null);
-  const movieSet = (movieUid) => {
-    setCurretFocusedMovie(movieUid);
-  };
+  const [, setCurrentFocusedMovie] = useState(null);
+  const movieSet = useCallback((movieUid) => {
+    setCurrentFocusedMovie(movieUid);
+  }, []);
 
   useEffect(() => {
     jwt = localStorage.getItem("jwt");
@@ -31,32 +32,52 @@ const MyMovies = ({ isLogin }) => {
 
   const { data, error, isFetching } = useGetMyMovieQuery();
 
+  // Reuse Home's focus/scroll bootstrap: restores lastFocus or lands on
+  // MOVIE_0__0, and drives keyboard-mode scroll-into-view via scrollRef.
+  const { scrollRef, onRowFocus } = useFocusInit({
+    movies: data,
+    data,
+    pageConfig: undefined,
+    pageType: undefined,
+    other_data: undefined,
+    location,
+    hasSlider: false,
+  });
+
   if (error) return <NetworkError />;
 
   if (isFetching) return <Loader />;
 
-  return (
-    <>
-      <main className="main">
-        <div style={{ marginRight: "40px", marginBottom: "50px" }}>
-          {data.data.map((movieItem) =>
-            movieItem.link_text != null ? (
-              <div style={{ marginBottom: "100px" }}>
-                <h3 className="u700">{movieItem.link_text}</h3>
+  // Keep only sections that have a title and at least one item (mirrors the
+  // old link_text != null guard, plus a check for empty rows).
+  const sections = (data?.data ?? []).filter(
+    (item) => item.link_text != null && item.movies?.data?.length,
+  );
 
-                <MovieList
-                  movieFocused={movieSet}
-                  row={movieItem.link_key}
-                  movies={movieItem.movies.data}
-                />
-              </div>
-            ) : (
-              ""
-            )
-          )}
+  if (!sections.length) return <NetworkError />;
+
+  return (
+    <main className="main">
+      <div ref={scrollRef} className="home-scroll-container">
+        <div className="home-rows-wrapper">
+          {sections.map((movieItem, index) => (
+            <div key={movieItem.link_key ?? index}>
+              <ContentRow
+                title={movieItem.link_text}
+                movies={movieItem.movies.data}
+                movieFocused={movieSet}
+                focusKeey={`MOVIE_LIST_${index}`}
+                index={index}
+                row={movieItem.link_key}
+                onFocus={onRowFocus}
+                scrollRef={scrollRef}
+                hasSlider={false}
+              />
+            </div>
+          ))}
         </div>
-      </main>
-    </>
+      </div>
+    </main>
   );
 };
 

@@ -33,8 +33,7 @@ const SidebarItem = ({ data, handleEnterPress, focuskeey, menuData, isActive }) 
             .filter(
               (item) =>
                 item.attributes.link_type !== "subscribe" &&
-                item.attributes.link_type !== "settings" &&
-                item.attributes.link_key !== "mycontent",
+                item.attributes.link_type !== "settings",
             )
             .findIndex((item) => item.attributes.link_key === "1")}`,
         );
