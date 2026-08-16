@@ -7,7 +7,16 @@ import {
 
 export const tabFocusKey = (key) => `movieinfo-tab-${key}`;
 
-const TabItem = ({ tab, active, onTabFocus, onExitUp, onEnterDown, registerNode }) => {
+const TabItem = ({
+  tab,
+  tabs,
+  index,
+  active,
+  onTabFocus,
+  onExitUp,
+  onEnterDown,
+  registerNode,
+}) => {
   const focusKey = tabFocusKey(tab.key);
   const { ref, focused } = useFocusable({
     focusKey,
@@ -21,7 +30,18 @@ const TabItem = ({ tab, active, onTabFocus, onExitUp, onEnterDown, registerNode 
         onEnterDown();
         return false;
       }
-      return true;
+      // Move between tabs deterministically instead of letting norigin guess
+      // from bounding boxes — that geometric search misfires on Tizen's webview
+      // (sticky strip inside a scrolled container) and can strand focus so the
+      // recomm tab never activates. The strip is RTL: physical left = next tab
+      // (index+1, further left), right = previous (index-1).
+      const next = tabs[index + (direction === "left" ? 1 : -1)];
+      if (next) {
+        setFocus(tabFocusKey(next.key));
+        return false;
+      }
+      // At an edge: stay put rather than escaping into panel content.
+      return false;
     },
   });
 
@@ -30,7 +50,7 @@ const TabItem = ({ tab, active, onTabFocus, onExitUp, onEnterDown, registerNode 
       ref.current = node;
       registerNode(tab.key, node);
     },
-    [ref, registerNode, tab.key]
+    [ref, registerNode, tab.key],
   );
 
   return (
@@ -41,7 +61,7 @@ const TabItem = ({ tab, active, onTabFocus, onExitUp, onEnterDown, registerNode 
         (focused ? " movieinfo-tab--focused" : "") +
         (active ? " movieinfo-tab--active" : "")
       }
-      onMouseEnter={() => setFocus(focusKey)}
+      // onMouseEnter={() => setFocus(focusKey)}
       onClick={() => setFocus(focusKey)}
     >
       {tab.label}
@@ -49,7 +69,14 @@ const TabItem = ({ tab, active, onTabFocus, onExitUp, onEnterDown, registerNode 
   );
 };
 
-const TabBar = ({ tabs, activeTab, onTabFocus, onExitUp, onEnterDown }) => {
+const TabBar = ({
+  tabs,
+  activeTab,
+  onTabFocus,
+  onExitUp,
+  onEnterDown,
+  pinned,
+}) => {
   const { ref, focusKey } = useFocusable({ trackChildren: true });
   const navRef = useRef(null);
   const nodesRef = useRef({});
@@ -60,7 +87,7 @@ const TabBar = ({ tabs, activeTab, onTabFocus, onExitUp, onEnterDown }) => {
       ref.current = node;
       navRef.current = node;
     },
-    [ref]
+    [ref],
   );
 
   const registerNode = useCallback((key, node) => {
@@ -86,11 +113,16 @@ const TabBar = ({ tabs, activeTab, onTabFocus, onExitUp, onEnterDown }) => {
 
   return (
     <FocusContext.Provider value={focusKey}>
-      <nav ref={setNavRef} className="movieinfo-tabs">
-        {tabs.map((tab) => (
+      <nav
+        ref={setNavRef}
+        className={"movieinfo-tabs" + (pinned ? " movieinfo-tabs--pinned" : "")}
+      >
+        {tabs.map((tab, index) => (
           <TabItem
             key={tab.key}
             tab={tab}
+            tabs={tabs}
+            index={index}
             active={activeTab === tab.key}
             onTabFocus={onTabFocus}
             onExitUp={onExitUp}

@@ -3,6 +3,7 @@ import { setFocus } from "@noriginmedia/norigin-spatial-navigation";
 import { useGetMovieDetailQuery } from "@src/services/TMDB";
 import Actors from "@src/components/Actors/Actors";
 import Crews from "@src/components/Crews/Crews";
+import StorySection from "@src/components/StorySection/StorySection";
 import Loader from "@src/components/Loader/Loader";
 import NetworkError from "@src/components/NetworkError/NetworkError";
 import { stripHtmlTags } from "@src/utils";
@@ -10,7 +11,7 @@ import { stripHtmlTags } from "@src/utils";
 const toFarsi = (value) =>
   String(value ?? "").replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[d]);
 
-const DetailPanel = forwardRef(({ id, general }, ref) => {
+const DetailPanel = forwardRef(({ id, general, onExitUp }, ref) => {
   const {
     data: movieDetail,
     error,
@@ -21,7 +22,8 @@ const DetailPanel = forwardRef(({ id, general }, ref) => {
   const hasCrew = !!movieDetail?.data?.OtherCrewData;
 
   useImperativeHandle(ref, () => ({
-    focusFirst: () => setFocus(hasActors ? "Actor__0" : "Crew__0"),
+    focusFirst: () =>
+      setFocus(hasActors ? "Actor__0" : hasCrew ? "Crew__0" : "Story"),
   }));
 
   if (isFetching) return <Loader />;
@@ -64,20 +66,40 @@ const DetailPanel = forwardRef(({ id, general }, ref) => {
     });
 
   return (
-    <div className="movieinfo-detail-panel">
-      {hasActors && (
-        <Actors actorsRow={movieDetail.data.ActorCrewData.profile} />
-      )}
-      {hasCrew && <Crews crewRow={movieDetail.data.OtherCrewData} />}
+    <div className="movieinfo-detail-panel" data-scroll-boundary>
+      <div className="allepisode-content-wrapper">
+        {/* Up-arrow from whichever row is topmost returns focus to the tab strip. */}
+        {hasActors && (
+          <Actors
+            actorsRow={movieDetail.data.ActorCrewData.profile}
+            onExitUp={onExitUp}
+          />
+        )}
+        {hasCrew && (
+          <Crews
+            crewRow={movieDetail.data.OtherCrewData}
+            onExitUp={hasActors ? undefined : onExitUp}
+          />
+        )}
 
-      {story && (
-        <section className="movieinfo-detail-story">
-          <h3 className="u700">{serial?.enable ? "داستان سریال" : "داستان"}</h3>
-          <p className="u500">{story}</p>
-        </section>
-      )}
+        <StorySection
+          story={story}
+          title={serial?.enable ? "داستان سریال" : "داستان"}
+          focusKey="Story"
+          onArrowPress={
+            !hasActors && !hasCrew
+              ? (direction) => {
+                  if (direction === "up") {
+                    onExitUp?.();
+                    return false;
+                  }
+                  return true;
+                }
+              : undefined
+          }
+        />
 
-      {/* {specs.length > 0 && (
+        {/* {specs.length > 0 && (
         <section className="movieinfo-detail-specs">
           {specs.map((spec) => (
             <div className="movieinfo-spec" key={spec.label}>
@@ -88,9 +110,10 @@ const DetailPanel = forwardRef(({ id, general }, ref) => {
         </section>
       )} */}
 
-      {!hasActors && !hasCrew && !story && specs.length === 0 && (
-        <NetworkError errorText="دیتایی یافت نشد" />
-      )}
+        {!hasActors && !hasCrew && !story && specs.length === 0 && (
+          <NetworkError errorText="دیتایی یافت نشد" />
+        )}
+      </div>
     </div>
   );
 });

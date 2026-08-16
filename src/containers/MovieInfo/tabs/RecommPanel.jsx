@@ -5,12 +5,11 @@ import MovieSearch from "@src/components/Movie/MovieSearch.jsx";
 import Loader from "@src/components/Loader/Loader";
 import NetworkError from "@src/components/NetworkError/NetworkError";
 
-const RecommPanel = forwardRef(({ id }, ref) => {
-  const {
-    data: movieRecom,
-    error,
-    isFetching,
-  } = useGetMovieRecomQuery({ id });
+// Must match grid-template-columns in .movieinfo-recomm-panel .more-movies.
+const COLUMNS = 6;
+
+const RecommPanel = forwardRef(({ id, onExitUp }, ref) => {
+  const { data: movieRecom, error, isFetching } = useGetMovieRecomQuery({ id });
 
   useImperativeHandle(ref, () => ({
     focusFirst: () => setFocus("MORE_LIST_0"),
@@ -24,17 +23,31 @@ const RecommPanel = forwardRef(({ id }, ref) => {
     return <NetworkError errorText="دیتایی یافت نشد" />;
 
   return (
-    <div className="movieinfo-recomm-panel more">
-      <h1 className="u700">{row.link_text}</h1>
-      <div className="more-movies">
-        {row.movies.data.map((movieItem, index) => (
-          <MovieSearch
-            key={movieItem.uid || index}
-            movie={movieItem}
-            movieFocus={() => {}}
-            focusKeey={`MORE_LIST_${index}`}
-          />
-        ))}
+    <div className="movieinfo-recomm-panel" data-scroll-boundary>
+      <div className="allepisode-content-wrapper">
+        <div className="more-movies">
+          {row.movies.data.map((movieItem, index) => (
+            <MovieSearch
+              key={movieItem.uid || index}
+              movie={movieItem}
+              movieFocus={() => {}}
+              focusKeey={`MORE_LIST_${index}`}
+              // First row: up-arrow leaves the poster grid and returns focus to
+              // the tab strip (there is nothing focusable above it in the panel).
+              onArrowPress={
+                index < COLUMNS
+                  ? (direction) => {
+                      if (direction === "up") {
+                        onExitUp?.();
+                        return false;
+                      }
+                      return true;
+                    }
+                  : undefined
+              }
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

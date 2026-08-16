@@ -18,6 +18,7 @@ import NetworkError from "@src/components/NetworkError/NetworkError";
 import Loader from "@src/components/Loader/Loader";
 import Alert from "@src/components/Alert/Alert";
 import PlayBotton from "./PlayBotton";
+import ActionButtons from "./ActionButtons";
 import TabBar, { tabFocusKey } from "./tabs/TabBar";
 import EpisodesPanel from "./tabs/EpisodesPanel";
 import DetailPanel from "./tabs/DetailPanel";
@@ -355,6 +356,28 @@ function MovieInfo({ isLogin }) {
               src="https://www.filimo.com/assets/app/filimo/android/nlogo_tv/ic_filimo_banner_v3.webp"
               className="logo-expended"
             />
+            {(general?.movie_logo ||
+              general?.movie_name ||
+              general?.title) && (
+              <div
+                className={
+                  "movieinfo-header-title" +
+                  (tabsActive ? " movieinfo-header-title--visible" : "")
+                }
+              >
+                {general?.movie_logo ? (
+                  <img
+                    className="movieinfo-header-title-logo"
+                    src={general.movie_logo}
+                    alt={general?.movie_name || general?.title || ""}
+                  />
+                ) : (
+                  <span className="movieinfo-header-title-name u700">
+                    {general?.movie_name || general?.title}
+                  </span>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="hero movie-info-hero">
@@ -476,12 +499,23 @@ function MovieInfo({ isLogin }) {
                 </div>
 
                 <div ref={myRef} className="hero-controls">
-                  <div style={{ display: "flex", width: "100%" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      width: "100%",
+                      alignItems: "center",
+                    }}
+                  >
                     <PlayBotton
                       data={movieData}
                       onAction={handlePlayPress}
                       onFocus={handlePlayFocus}
                       onArrowPress={handlePlayArrowPress}
+                    />
+                    <ActionButtons
+                      actionData={movieData?.data?.action_data}
+                      general={general}
+                      isLogin={isLogin}
                     />
                   </div>
                 </div>
@@ -502,6 +536,7 @@ function MovieInfo({ isLogin }) {
                   <TabBar
                     tabs={tabs}
                     activeTab={activeTab}
+                    pinned={tabsActive}
                     onTabFocus={handleTabFocus}
                     onExitUp={handleTabExitUp}
                     onEnterDown={handleEnterContent}
@@ -517,10 +552,19 @@ function MovieInfo({ isLogin }) {
                       />
                     )}
                     {activeTab === "detail" && (
-                      <DetailPanel ref={panelRef} id={id} general={general} />
+                      <DetailPanel
+                        ref={panelRef}
+                        id={id}
+                        general={general}
+                        onExitUp={handleContentExitUp}
+                      />
                     )}
                     {activeTab === "recomm" && (
-                      <RecommPanel ref={panelRef} id={id} />
+                      <RecommPanel
+                        ref={panelRef}
+                        id={id}
+                        onExitUp={handleContentExitUp}
+                      />
                     )}
                   </div>
                 )}

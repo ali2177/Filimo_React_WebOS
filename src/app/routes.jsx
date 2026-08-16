@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useParams } from 'react-router-dom';
 
 const Home            = React.lazy(() => import('@containers/Home/Home'));
 const MovieInfo       = React.lazy(() => import('@containers/MovieInfo/MovieInfo'));
@@ -25,6 +25,16 @@ const MyMovies        = React.lazy(() => import('@containers/MyMovies/MyMovies')
 const Ip              = React.lazy(() => import('@containers/Ip/Ip'));
 const Settings        = React.lazy(() => import('@containers/Settings/Settings'));
 
+// Navigating between movies (e.g. from the "similar" / episodes tabs) keeps the
+// same /movie/:id route matched, so React reuses the mounted MovieInfo instance
+// and only the `id` param changes. All of MovieInfo's fetch/reset effects run on
+// mount only, so the page content would go stale. Keying by `id` forces a fresh
+// remount on every movie change, which refetches, resets tabs, and scrolls to top.
+function MovieInfoRoute({ isLogin }) {
+  const { id } = useParams();
+  return <MovieInfo key={id} isLogin={isLogin} />;
+}
+
 function AppRoutes({ isLogin }) {
   return (
     <React.Suspense fallback={null}>
@@ -33,7 +43,7 @@ function AppRoutes({ isLogin }) {
         <Route path="/" element={<Home isLogin={isLogin} />} />
         <Route path="/movies/filter/:tag_id/:other_data" element={<Home isLogin={isLogin} />} />
         <Route path="/approved" element={<Home isLogin={isLogin} />} />
-        <Route path="/movie/:id" element={<MovieInfo isLogin={isLogin} />} />
+        <Route path="/movie/:id" element={<MovieInfoRoute isLogin={isLogin} />} />
         <Route path="/moremovies/:tag_id" element={<MoreMovies />} />
         <Route path="/moreSingle/:id/:title" element={<MoreSingle />} />
         <Route path="/moreMovieSingle" element={<MoreMovieSingle />} />

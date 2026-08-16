@@ -21,12 +21,27 @@
   height: 90vh;
 }
 
+/* Top section (title/logo, schedule, description, controls) is pinned to a
+   fixed height so the bottom tab strip below it always starts at the same Y.
+   Its intrinsic content varies a lot — logo vs plain-text title, the serial
+   schedule row, exclusive badge, description length — and letting it flow made
+   the tab strip sit lower on taller movies. Content stays top-aligned; the
+   spare space at the bottom is what keeps the tab-strip peek consistent. */
+.hero-content {
+  height: 51vh;
+  box-sizing: border-box;
+}
+
 /* The hero poster is position:absolute/top:0 and .hero is isolate (its own
    stacking context), so it paints over the logo header that precedes it in
    the DOM. Lift the header into a positive layer so the logo stays visible. */
 #movieinfo-page .more-section-header {
   position: relative;
   z-index: 1;
+  /* Base class pads 200px on the left for other pages; not wanted here where
+     the movie title sits on the left edge. */
+  padding-left: 0;
+  align-items: center;
 }
 
 .movie-info-hero {
@@ -87,7 +102,6 @@
   height: 8.5rem;
   object-fit: contain;
   object-position: right;
-  margin-bottom: 1.5rem;
 }
 
 .hero-text-descr {
@@ -112,6 +126,49 @@
   width: 78rem;
 }
 
+/* ---- Like / dislike / bookmark action buttons -------------------------- */
+.action-buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+/* Legacy Tizen/WebOS WebKit ignores flexbox `gap`, so space the buttons with an
+   explicit margin between siblings instead. */
+.action-btn:not(:last-child) {
+  margin-left: 1rem;
+}
+.action-btn {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.8rem;
+  height: 3.8rem;
+  border-radius: 0.6rem;
+  border: 0 solid var(--Dark-Mode-Opacity-of-Neutral-White, #fff);
+  background: rgba(87, 87, 87, 0.75);
+  cursor: pointer;
+}
+.action-btn svg {
+  width: auto;
+  height: 1.5rem;
+  fill: #fff;
+}
+/* TV-remote focus: a border + slight scale layered on top of any toggled state,
+   matching the sidebar's focus-scale convention. */
+.action-btn-focus {
+  border: 0.2rem solid #fff;
+  transform: scale(1.05);
+}
+/* Persistent toggled state (liked / disliked / bookmarked): white pill, dark
+   icon — the same visual language as the player's focus state. */
+.action-btn-active {
+  background: #fff;
+}
+.action-btn-active svg {
+  fill: #151515;
+}
+
 .movie-description-text {
   font-size: 1.44rem;
   font-weight: 500;
@@ -123,9 +180,10 @@
 
 /* ---- Bottom tab strip --------------------------------------------------- */
 .movieinfo-tabs {
-  /* Pins to the top of .hero-scroll-content as the hero scrolls up behind it. */
+  /* Pins just below the top of .hero-scroll-content (leaving a gap from the
+     logo) as the hero scrolls up behind it. */
   position: sticky;
-  top: 0;
+  top: 1.2rem;
   margin-top: 4.5rem;
   width: 100%;
   display: flex;
@@ -139,6 +197,52 @@
   /* Solid backdrop so hero content passing underneath the strip is masked. */
   border-bottom: 2px solid
     var(--dark-mode-opacity-of-neutral-white-25, rgba(255, 255, 255, 0.25));
+  transition: background 0.15s ease;
+}
+
+/* When the strip is pinned to the top of the page (hero scrolled up), give it a
+   solid gradient backdrop so content scrolling behind it stays masked. */
+/* .movieinfo-tabs--pinned {
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.9) 0%, #000 100%);
+} */
+
+/* Movie title/logo in the header row, opposite the Filimo logo. The header is
+   a space-between flex row (RTL: Filimo logo on the right), so this lands on
+   the left edge. */
+.movieinfo-header-title {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  /* Only revealed once the tab strip is pinned to the top (tabsActive). Fades
+     in rather than popping so the transition matches the hero/overlay fade. */
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.15s ease,
+    visibility 0.15s ease;
+}
+
+.movieinfo-header-title--visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.movieinfo-header-title-logo {
+  height: 4rem;
+  width: auto;
+  max-width: 20rem;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.movieinfo-header-title-name {
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 2.4rem;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Player-progress-bar-style indicator: a white segment sitting exactly on the
@@ -218,10 +322,10 @@
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  padding: 1.5rem 0 1.5rem;
+  padding: 3rem 0 1.5rem;
 }
 
-.movieinfo-episodes-panel .allepisode-content-wrapper {
+.allepisode-content-wrapper {
   position: relative;
   overflow: hidden;
   flex: 1;
@@ -232,13 +336,27 @@
 .movieinfo-detail-panel {
   height: 100%;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
   box-sizing: border-box;
-  padding: 0.5rem 0 4rem;
+  padding: 3rem 0 4rem;
 }
 
 .movieinfo-detail-story {
   margin: 1.5rem 1.7rem;
   max-width: 100%;
+  padding: 1rem 1.2rem;
+  border-radius: 0.8rem;
+  outline: none;
+  background: transparent;
+  transition:
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.movieinfo-detail-story.focused {
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 0 0 0.12rem rgba(255, 255, 255, 0.18);
 }
 
 .movieinfo-detail-story h3 {
@@ -283,10 +401,73 @@
 .movieinfo-recomm-panel {
   height: 100%;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
   box-sizing: border-box;
-  padding: 0.5rem 4.2rem 4rem;
+  padding: 3rem 0 2rem 0;
 }
 
 .movieinfo-recomm-panel h1 {
   margin-bottom: 1.5rem;
+}
+
+/* The shared .allepisode-content-wrapper clips (overflow:hidden) so posters
+   disappear at its top edge — just under the pinned tab strip — instead of
+   showing through the transparent tabs. But with scrolling delegated to the
+   panel, the wrapper's flex:1 pinned it to the panel height, so there was never
+   any overflow to scroll. Make the wrapper itself the scroller: it keeps
+   clipping at its top edge (posters still hide under the tabs, no background
+   needed) while scrolling its grid internally. */
+.movieinfo-recomm-panel .allepisode-content-wrapper {
+  overflow-y: auto;
+}
+
+/* ---- Fixed 6-column grid that fills the panel width --------------------- */
+/* The shared MovieSearch card carries large inline margins (4rem/4rem) and a
+   fixed rem width meant for the sparse search results, which leaves the wide
+   TV panel with big empty gutters. Scope an override to this panel (so
+   Search/Crew/MoreMovies are untouched): a 6-column grid whose columns each
+   take an equal fraction of the full width, so the row always fills the space
+   regardless of the viewport/rem base. */
+.movieinfo-recomm-panel .more-movies {
+  padding-right: 0;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  column-gap: 2.1rem;
+  row-gap: 2.4rem;
+}
+
+.movieinfo-recomm-panel .btn-not-focus,
+.movieinfo-recomm-panel .btn-focus {
+  /* Fill the grid cell; height follows the poster's aspect ratio (+ title)
+     instead of the shared card's fixed rem box. Margins are replaced by the
+     grid's column/row gaps. */
+  width: 100% !important;
+  height: auto !important;
+  margin: 0 !important;
+}
+
+/* Match the design's thumbnail style: fixed 260:344 aspect, cover-cropped so
+   the poster is never stretched, and the design's 8px radius (not the shared
+   card's much rounder 1.2rem). Also drop the shared card's 20px top gap so
+   posters sit flush and the vertical rhythm stays even. */
+.movieinfo-recomm-panel .swiper-image {
+  margin-top: 0;
+  /* Fixed height + cover crops every poster into an identical box. Relying on
+     aspect-ratio + height:auto is fragile: the WebOS (old Chromium) browser
+     doesn't support `aspect-ratio`, so posters fell back to their natural
+     ratios and rendered at different heights. A pinned height matches the
+     260:344 design ratio against the ~14rem column width and works on every
+     engine. */
+  width: 100% !important;
+  height: 18.5rem !important;
+  aspect-ratio: auto;
+  object-fit: cover;
+  border-radius: 0.4rem;
+}
+
+/* Title closer to the poster and lighter, matching the design. */
+.movieinfo-recomm-panel .movie-title {
+  padding-top: 0.6rem;
+  color: #e8e8e8;
 }
