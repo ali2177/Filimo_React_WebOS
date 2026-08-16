@@ -4,3 +4,6 @@ build
 .env.production
 CLAUDE
 docs
+
+# Captured API response dumps used for local debugging (not fixtures)
+*-api-response*.json
