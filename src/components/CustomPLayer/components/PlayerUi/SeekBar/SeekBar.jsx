@@ -164,6 +164,13 @@ const SeekBar = () => {
   const activePercent  = seekbarActive ? scrubPercent : displayPercent;
   const activeTime     = duration ? (activePercent / 100) * duration : 0;
 
+  // Keyboard scrubbing moves the white bar + thumb in real time (arrows commit
+  // the seek on a debounce, so the played position would otherwise lag until the
+  // video catches up). Mouse hover keeps the thumb at the playback position and
+  // shows a separate thin preview marker instead.
+  const keyboardScrub = focused && seekbarActive;
+  const barPercent    = keyboardScrub ? scrubPercent : displayPercent;
+
   return (
     <FocusContext.Provider value={focusKey}>
       <div ref={ref} className="controls-row row-seekbar">
@@ -181,12 +188,12 @@ const SeekBar = () => {
             }}
           >
             <div className="progress-buffered" style={{ width: `${bufferedPercent}%` }} />
-            <div className="progress-played"   style={{ transform: `scaleX(${displayPercent / 100})` }} />
+            <div className="progress-played"   style={{ transform: `scaleX(${barPercent / 100})` }} />
             <div
               className={`progress-thumb${focused ? " progress-thumb-active" : ""}`}
-              style={{ left: `${displayPercent}%` }}
+              style={{ left: `${barPercent}%` }}
             />
-            {seekbarActive && (
+            {seekbarActive && !keyboardScrub && (
               <div className="progress-preview-marker" style={{ left: `${scrubPercent}%` }} />
             )}
           </div>
