@@ -17,18 +17,18 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import ContentRow from "../ContentRow";
 import ContentCrewRow from "../ContentCrewRow";
+import { useKeyboardAwareScroll } from "@src/hooks/useKeyboardAwareScroll";
 
-function Actors({ actorsRow }) {
+function Actors({ actorsRow, onExitUp }) {
   const { ref, focusKey, focusSelf, focused } = useFocusable();
   const myRef = useRef();
   const navigate = useNavigate();
   const [curretFocusedMovie, setCurretFocusedMovie] = useState(null);
 
-  const handleScrolling = () => {
-    ref.current.scrollIntoView({
-      block: "start",
-    });
-  };
+  // Scroll only within the nearest data-scroll-boundary (the detail tab panel),
+  // never chaining up to .hero-scroll-content — otherwise focusing an actor card
+  // scrolls the whole movie-info page.
+  const handleScrolling = useKeyboardAwareScroll(ref);
   const movieSet = (movieUid) => {
     setCurretFocusedMovie(movieUid);
   };
@@ -44,14 +44,25 @@ function Actors({ actorsRow }) {
         }}
         onFocus={handleScrolling}
       >
-        <h3 className="u700" style={{ marginTop: "2.5rem" }}>
-          بازیگران
-        </h3>
+        <h3 className="u700">بازیگران</h3>
 
         <ContentCrewRow
           onFocus={handleScrolling}
           movies={actorsRow}
           movieFocused={movieSet}
+          // Up-arrow from the (topmost) actors row returns focus to the tab
+          // strip — the page is a focus boundary, so there is nowhere else to go.
+          onItemArrowPress={
+            onExitUp
+              ? (direction) => {
+                  if (direction === "up") {
+                    onExitUp();
+                    return false;
+                  }
+                  return true;
+                }
+              : undefined
+          }
         />
       </div>
     </FocusContext.Provider>

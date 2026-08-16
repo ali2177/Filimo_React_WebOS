@@ -138,6 +138,23 @@ describe('getAllEpisodes endpoint URL', () => {
   });
 });
 
+describe('rateMovie / toggleBookmark mutations', () => {
+  test('rateMovie forwards the response-provided url unchanged', async () => {
+    const store = makeStore();
+    const url =
+      'https://www.filimo.com/api/fa/v1/movie/rate/add/rate/5/uid/bmwcd';
+    await store.dispatch(tmdbApi.endpoints.rateMovie.initiate({ url }));
+    expect(lastFetchUrl()).toBe(url);
+  });
+
+  test('toggleBookmark forwards the response-provided url unchanged', async () => {
+    const store = makeStore();
+    const url = 'https://www.filimo.com/api/fa/v1/user/wish/wish/uid/rn0ba';
+    await store.dispatch(tmdbApi.endpoints.toggleBookmark.initiate({ url }));
+    expect(lastFetchUrl()).toBe(url);
+  });
+});
+
 describe('request headers', () => {
   test('includes UserAgent header on every request', async () => {
     const store = makeStore();

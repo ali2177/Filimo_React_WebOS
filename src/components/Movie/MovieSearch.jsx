@@ -11,7 +11,14 @@ import {
 import { useKeyboardAwareScroll } from "@src/hooks/useKeyboardAwareScroll";
 import { uiStorage } from "@src/utils/uiStorage";
 
-function MovieSearch({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
+function MovieSearch({
+  movie,
+  movieFocus,
+  onFocus,
+  onEnterPress,
+  focusKeey,
+  onArrowPress,
+}) {
   const handleAction = () => {
     uiStorage.removeItem("recommBtn");
     uiStorage.removeItem("seasonBtn");
@@ -31,6 +38,8 @@ function MovieSearch({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
     onEnterPress: () => {
       handleAction();
     },
+    onArrowPress: (direction, details) =>
+      onArrowPress ? onArrowPress(direction, details) : true,
     focusable: true,
     trackChildren: true,
     autoRestoreFocus: true,
@@ -68,11 +77,11 @@ function MovieSearch({ movie, movieFocus, onFocus, onEnterPress, focusKeey }) {
       > */}
 
       <section ref={myRef} className="swiper-link">
-        {movie.movie_img_m ? (
+        {movie.movie_img_s ? (
           <>
             {isImageLoaded ? (
               <img
-                src={movie.movie_img_m ? movie.movie_img_m : movie.img}
+                src={movie.movie_img_s ? movie.movie_img_s : movie.img}
                 alt={movie.movie_title_en ? movie.movie_title_en : movie.title}
                 className="swiper-image"
                 onError={() => {

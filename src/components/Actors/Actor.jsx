@@ -4,7 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { uiStorage } from "@src/utils/uiStorage";
 import { centerHorizontally } from "@src/utils/scrollHelpers";
 
-const Actor = ({ actor, onFocus, onEnterPress, focusKeey, name }) => {
+const Actor = ({ actor, onFocus, onEnterPress, focusKeey, name, onArrowPress }) => {
   const navigate = useNavigate();
   const { ref, focused } = useFocusable({
     onFocus: (...args) => {
@@ -14,6 +14,7 @@ const Actor = ({ actor, onFocus, onEnterPress, focusKeey, name }) => {
       }
       onFocus?.(...args);
     },
+    onArrowPress,
     onEnterPress: () => {
       uiStorage.setItem("lastFocusActor", focusKeey);
       uiStorage.removeItem("lastFocusCrew");

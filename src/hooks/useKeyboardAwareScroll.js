@@ -5,6 +5,14 @@ import { uiStorage } from "@src/utils/uiStorage";
 function getScrollableParent(node) {
   let el = node?.parentElement;
   while (el && el !== document.body && el !== document.documentElement) {
+    // An element explicitly marked with data-scroll-boundary is always treated
+    // as the scroll container, even when its content doesn't currently overflow.
+    // Without this, a non-overflowing scroll region (e.g. the movie detail
+    // recomm/detail tab panels when they hold only a row or two) is skipped and
+    // the scroll chains up to the outer .hero-scroll-content — which scrolls the
+    // hero back up and un-pins the tab strip. A clamped scrollTo on a
+    // non-overflowing boundary is a harmless no-op.
+    if (el.dataset?.scrollBoundary != null) return el;
     const overflowY = getComputedStyle(el).overflowY;
     if (
       (overflowY === "auto" || overflowY === "scroll") &&

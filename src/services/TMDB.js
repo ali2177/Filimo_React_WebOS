@@ -13,6 +13,7 @@ const stableStringify = (value) =>
 
 export const tmdbApi = createApi({
   reducerPath: "tmdbApi",
+  tagTypes: ["MyMovies"],
   // Fold the locale into every cache key so cached responses can't leak across
   // languages. The toggle reloads the page (wiping this in-memory cache) so
   // this is defense-in-depth, but it's cheap and keeps the cache correct.
@@ -99,6 +100,22 @@ export const tmdbApi = createApi({
     // Get my Movie
     getMyMovie: builder.query({
       query: () => `/bookmark`,
+      providesTags: ["MyMovies"],
+    }),
+
+    // Like / dislike a movie. The URL is supplied by the movie-detail response
+    // (action_data.rate.user.like_url / .dislike_url) rather than constructed
+    // here — see PLAN. Method is GET to match the rest of the app; flip to POST
+    // if the live endpoint rejects GET.
+    rateMovie: builder.mutation({
+      query: ({ url }) => ({ url, method: "GET" }),
+      invalidatesTags: ["MyMovies"],
+    }),
+
+    // Toggle a bookmark. URL comes from action_data.wish.link (one toggling URL).
+    toggleBookmark: builder.mutation({
+      query: ({ url }) => ({ url, method: "GET" }),
+      invalidatesTags: ["MyMovies"],
     }),
     // Get Subtitle
     getSubtitle: builder.query({
@@ -163,6 +180,8 @@ export const {
   useGetMovieDetailQuery,
   useGetMovieRecomQuery,
   useGetMyMovieQuery,
+  useRateMovieMutation,
+  useToggleBookmarkMutation,
   useGetSubtitleQuery,
   useGetLoginCodeQuery,
   useGetRecommendationsQuery,

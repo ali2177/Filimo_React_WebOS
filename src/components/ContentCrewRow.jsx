@@ -24,6 +24,7 @@ const ContentCrewRow = ({
   movieTag,
   onFocus,
   type,
+  onItemArrowPress,
 }) => {
   // const [scroll, setscroll] = useState(0);
   const { ref, focusKey, focused, focusSelf } = useFocusable({
@@ -111,6 +112,7 @@ const ContentCrewRow = ({
                     actor={movie}
                     // onFocus={() => onAssetFocus(i, movie)}
                     onEnterPress={() => handleInterPress(movie)}
+                    onArrowPress={onItemArrowPress}
                     focusKeey={`Crew__${i}`}
                     name={
                       movie.profile[0].name_en ? movie.profile[0].name_en : "-1"
@@ -121,6 +123,7 @@ const ContentCrewRow = ({
                     actor={movie}
                     // onFocus={() => onAssetFocus(i, movie)}
                     onEnterPress={() => handleInterPress(movie)}
+                    onArrowPress={onItemArrowPress}
                     focusKeey={`Actor__${i}`}
                     name={movie.name_en ? movie.name_en : movie.name_fa}
                   />
