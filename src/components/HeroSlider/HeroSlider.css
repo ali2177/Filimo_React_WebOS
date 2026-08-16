@@ -1,7 +1,14 @@
 .hero-slider {
   --hero-fg: #e8e8e8;
   position: absolute;
-  inset: 0;
+  /* Longhand offsets instead of `inset: 0` — the `inset` shorthand isn't
+     supported by old Tizen browsers, which would drop it and collapse the
+     slider to a shrink-to-fit box pinned to the right (rtl static position),
+     pushing the dots pager to the wrong edge of the screen. */
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   z-index: 100;
   direction: rtl;
   pointer-events: none;
