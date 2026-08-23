@@ -4,6 +4,9 @@ build
 .env.production
 CLAUDE
 docs
+graphify-out/
+.claude/*
+!.claude/CLAUDE.md
 
 # Captured API response dumps used for local debugging (not fixtures)
 *-api-response*.json
