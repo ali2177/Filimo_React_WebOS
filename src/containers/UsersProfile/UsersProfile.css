@@ -1,0 +1,243 @@
+/* ==========================================================================
+   Profile picker (/usersProfile)
+   Figma nodes 2028:5579 (a profile focused) and 2893:215 (an action focused).
+
+   Sizing rule: <html style="font-size: 1.8vh"> (public/index.html) means
+   1rem = 19.44px on a 1080p canvas, so every Figma px converts as px / 19.44.
+   The px each value came from is noted inline.
+
+   Logical properties throughout (margin-inline / padding-inline / text-align:
+   start) so the screen mirrors correctly for the `en` locale — see
+   src/config/locale.js isRtl().
+   ========================================================================== */
+
+.profiles-page {
+  box-sizing: border-box;
+  min-block-size: 100vh;
+  inline-size: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  /* Figma paints this as an SVG radial gradient centred below the bottom edge:
+     rx 1793/1920 = 93.4%, ry 1284/1080 = 118.9%, origin (50%, 118.9%). */
+  background: radial-gradient(
+    ellipse 93.4% 118.9% at 50% 118.9%,
+    #2f1f08 0%,
+    #171004 50%,
+    #0c0802 75%,
+    #000000 100%
+  );
+}
+
+/* The global .u400/.u500/.u700 font utilities also inject `padding-top: 1rem`
+   (App.css:130-145), which would throw off every gap measured from Figma.
+   Neutralise it for everything on this screen. */
+.profiles-page .u400,
+.profiles-page .u500,
+.profiles-page .u700 {
+  padding-top: 0;
+  margin: 0;
+}
+
+/* ---- Header logo -------------------------------------------------------- */
+
+.profiles-logo {
+  padding-block-start: 4.12rem; /* 80px */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profiles-logo img {
+  block-size: 2.47rem; /* 48px */
+  inline-size: auto;
+  display: block;
+}
+
+/* ---- Heading ------------------------------------------------------------ */
+
+.profiles-title {
+  margin-block-start: 7rem; /* Figma top 264 − (80 + 48 logo) = 136px */
+  max-inline-size: 41.15rem; /* 800px */
+  color: #e8e8e8;
+  font-size: 2.47rem; /* 48px */
+  line-height: 2.88rem; /* 56px */
+  text-align: center;
+  margin-top: 8rem !important;
+}
+
+/* ---- Profile row -------------------------------------------------------- */
+
+.profiles-row {
+  margin-block-start: 4.94rem; /* Figma 416 − 320 = 96px */
+  /* Fixed height, not auto: a card with a second line ("زیر ۳ سال", or the add
+     card's hint) is 376px tall while a name-only card is 328px. Pinning the row
+     to the taller of the two keeps the buttons below at Figma's y=832 in every
+     variant, and stops them jumping as the profile mix changes. Anything taller
+     overflows the row box visibly rather than displacing the buttons. */
+  block-size: 19.34rem; /* 376px */
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2.06rem; /* 40px */
+}
+
+.profile-card {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.47rem; /* 48px */
+  padding: 1.23rem; /* 24px */
+  border-radius: 1.23rem; /* 24px */
+  cursor: pointer;
+}
+
+/* The focus ring is a real border in both states — transparent when idle — so
+   gaining focus recolours it instead of adding 4px and nudging the row. */
+.profile-avatar-ring {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  padding: 0.62rem; /* 12px */
+  border: 0.21rem solid transparent; /* 4px */
+  border-radius: 5.14rem; /* 100px */
+}
+
+.profile-card-focus .profile-avatar-ring {
+  border-color: #ffffff;
+}
+
+.profile-avatar,
+.profile-avatar-fallback {
+  box-sizing: border-box;
+  inline-size: 8.64rem; /* 168px */
+  block-size: 8.64rem;
+  border-radius: 50%;
+  display: block;
+}
+
+.profile-avatar {
+  object-fit: cover;
+}
+
+.profile-avatar-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.08);
+  color: #e8e8e8;
+  font-size: 2.88rem; /* 56px */
+  line-height: 1;
+}
+
+.profile-labels {
+  display: flex;
+  flex-direction: column;
+  gap: 0.41rem; /* 8px */
+  inline-size: 100%;
+  text-align: center;
+}
+
+.profile-name {
+  color: #737373;
+  font-size: 1.44rem; /* 28px */
+  line-height: 2.06rem; /* 40px */
+  overflow-wrap: anywhere;
+}
+
+.profile-card-focus .profile-name {
+  color: #e8e8e8;
+}
+
+.profile-sub {
+  color: #737373;
+  font-size: 1.03rem; /* 20px */
+  line-height: 2.06rem; /* 40px */
+}
+
+/* ---- "Add a profile" card (informational, never focusable) --------------- */
+
+.add-profile-card {
+  /* Figma gives this card an explicit 330px width and vertical-only padding —
+     it is the widest label on the row and sets the row's left edge. */
+  inline-size: 16.98rem; /* 330px */
+  padding-inline: 0;
+  cursor: default;
+}
+
+.add-profile-circle {
+  box-sizing: border-box;
+  inline-size: 8.64rem; /* 168px */
+  block-size: 8.64rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 0.05rem solid rgba(255, 255, 255, 0.16);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-profile-circle img {
+  /* Both dimensions set: `auto` would blow the glyph up to its intrinsic size. */
+  inline-size: 2.88rem; /* 56px */
+  block-size: 2.88rem;
+  display: block;
+}
+
+/* ---- Action buttons ----------------------------------------------------- */
+
+.profiles-actions {
+  margin-block-start: 2.06rem; /* Figma 832 − 792 (row bottom) = 40px */
+  /* 80 + 48 + 136 + 56 + 96 + 376 + 40 + 192 + 56 = 1080, so the whole screen
+     fits the canvas exactly and never scrolls. */
+  padding-block-end: 2.88rem; /* 56px */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.65rem; /* 32px */
+}
+
+.profiles-action-btn {
+  box-sizing: border-box;
+  inline-size: 16.67rem; /* 324px */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-block: 1.03rem !important; /* 20px */
+  /* Figma specifies px-96, but that is nominal: the label is wider than the
+     resulting 132px content box and simply overflows it there. The box width is
+     what matters, and the label is centred either way. */
+  padding-inline: 1.23rem;
+  border: none;
+  border-radius: 0.62rem; /* 12px */
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(1.03rem); /* 20px */
+  color: #ffffff;
+  font-size: 1.23rem; /* 24px */
+  line-height: 2.06rem; /* 40px */
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 120ms ease,
+    color 120ms ease;
+}
+
+/* The sign-out button sits on the bare background until focused. */
+.profiles-action-btn-ghost {
+  background: transparent;
+}
+
+.profiles-action-btn.profiles-action-btn-focus {
+  background: #ffffff;
+  color: #1a1a1a;
+}
+
+.profiles-action-btn-icon {
+  inline-size: 1.65rem; /* 32px */
+  block-size: 1.65rem;
+  flex-shrink: 0;
+  margin-left: 0.62rem; /* 12px */
+  /* fill="currentColor" in PersonIcon, so the glyph follows the focus colour. */
+}

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, createContext, useContext } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { Navbar } from "@src/components/index";
 import Splash from "@src/components/Splash";
@@ -15,6 +15,7 @@ import { useFilimioFetch } from "@src/hooks/useFilimioFetch";
 import { usePolling } from "@src/hooks/usePolling";
 import { setMode } from "@src/features/uiState";
 import { buildApiUrl, isRtl } from "@src/config/locale";
+import { hasSelectedProfile } from "@src/utils/profileSession";
 
 init({
   debug: false,
@@ -36,9 +37,20 @@ function App() {
   const [isKid, setIsKid] = useState(false);
   const [isSeasonChange, setIsSeasonChange] = useState(false);
   const location = useLocation("");
+  const navigate = useNavigate();
   const [isShowMenu, setIsShowMenu] = useState(false);
   const [isShowSplash, setIsShowSplash] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
+
+  // A signed-in account has to pick a profile before it sees any content.
+  // Mount-only: backing out of the picker to "/" must not bounce straight back.
+  useEffect(() => {
+    if (!jwt || hasSelectedProfile()) return;
+    const path = location.pathname;
+    if (path.startsWith("/login") || path.startsWith("/usersProfile")) return;
+    navigate("/usersProfile", { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   //check when we are in movieinfo or player or login page and dont show the menu
   //check when we are in movieinfo or player or login page and dont show the menu

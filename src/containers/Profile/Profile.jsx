@@ -165,7 +165,7 @@ function Profile() {
 
             <UserManegBtn />
           </div>
-          <SignOutBtn jwt={jwt} />
+          <SignOutBtn />
         </main>
       </FocusContext.Provider>
     );

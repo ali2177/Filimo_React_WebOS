@@ -1800,62 +1800,10 @@ Tint, Red, Dark, 12, Success
   font-weight: 700;
   line-height: normal;
 }
-.users-prfile-wrraper {
-  display: flex;
-  margin-left: 2.6rem;
-}
-.single-user {
-  width: 11.7rem;
-  height: 14.6rem;
-  border-radius: 10px;
-  background: var(
-    --dark-mode-opacity-of-neutral-white-8,
-    rgba(255, 255, 255, 0.08)
-  );
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-right: 1rem;
-}
-.single-user-focus {
-  border: 0.2rem solid white;
-}
-.user-profile-placeholder {
-  position: relative;
-  width: 6.3rem;
-  height: 6.3rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  color: #008099;
-  text-align: center;
-  font-size: 2rem;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 2.5rem; /* 100% */
-}
-.user-profile-placeholder-svg {
-  position: absolute;
-  width: 6.3rem;
-  height: 6.3rem;
-}
-.user-profile-pic {
-  width: 6.3rem;
-  height: 6.3rem;
-  border-radius: 100%;
-  border: 0.2rem solid #009d63;
-}
-.user-profile-name {
-  color: #f5f5f5;
-  text-align: center;
-
-  font-size: 1.4rem;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 2rem; /* 100% */
-}
+/* The profile picker's own styles now live in
+   containers/UsersProfile/UsersProfile.css. `.users-prfile` and
+   `.users-prfile-content-header` above are kept only for UsersProfileCode.jsx
+   (the /profileLockCode screen), which still uses them. */
 .code-row {
   display: flex;
   align-items: center;
