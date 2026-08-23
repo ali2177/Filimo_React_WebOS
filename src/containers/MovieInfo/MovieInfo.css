@@ -445,6 +445,15 @@
   width: 100% !important;
   height: auto !important;
   margin: 0 !important;
+  /* A grid item's automatic min-width is its content's min-content size, not
+     0 - and an <img> (a replaced element) contributes its *natural* pixel
+     width to that, regardless of the width:100%/object-fit:cover below. A
+     movie's recomm list mixes in higher-res "livetvs" tiles alongside regular
+     posters (a series' recomm list doesn't), so whichever column happens to
+     land a bigger source image gets stretched wider than its 1fr share for
+     every row in that column. Pin min-width to 0 so the track always sizes
+     from the fr fraction, never from a poster's native resolution. */
+  min-width: 0;
 }
 
 /* Match the design's thumbnail style: fixed 260:344 aspect, cover-cropped so
