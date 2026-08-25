@@ -4,6 +4,7 @@ build
 .env.production
 CLAUDE
 docs
+.serena
 graphify-out/
 .claude/*
 !.claude/CLAUDE.md
