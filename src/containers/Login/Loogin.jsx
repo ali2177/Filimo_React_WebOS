@@ -15,6 +15,7 @@ import Loader from "@src/components/Loader/Loader";
 import { useAuth } from "@src/components/AuthProvider";
 import { useOnlineStatus } from "@src/app/App";
 import { uiStorage } from "@src/utils/uiStorage";
+import { clearProfileSelected } from "@src/utils/profileSession";
 const Loogin = () => {
   const { jwt, setJwt } = useAuth();
   const { isOnline } = useOnlineStatus();
@@ -34,6 +35,7 @@ const Loogin = () => {
   useEffect(() => {
     getLoginCode();
     localStorage.removeItem("jwt");
+    clearProfileSelected();
     localStorage.removeItem("display_name");
     localStorage.removeItem("email");
     localStorage.removeItem("mobile_number");
@@ -49,7 +51,9 @@ const Loogin = () => {
       localStorage.setItem("name", userData.name);
       localStorage.setItem("username", userData.username);
       uiStorage.removeItem("lastdataloaded");
-      if (location.pathname !== "/player") navigate(-1);
+      // Signing in lands on the profile picker rather than back where the user
+      // came from — the account's profile still has to be chosen.
+      navigate("/usersProfile", { replace: true });
     }
   }, [jwt, userData]);
 

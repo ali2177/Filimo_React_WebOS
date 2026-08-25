@@ -1,0 +1,93 @@
+/* ==========================================================================
+   ConfirmDialog — generic two-button confirmation modal.
+   Figma node 5380:388 ("Dialog").
+
+   Sizes follow the app-wide rule: <html style="font-size: 1.8vh"> means
+   1rem = 19.44px on a 1080p canvas, so every Figma px is px / 19.44.
+   ========================================================================== */
+
+.confirm-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1999998;
+}
+
+.confirm-dialog-wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: 1999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.confirm-dialog {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 1.85rem; /* 36px */
+  padding: 1.85rem; /* 36px */
+  border-radius: 1.23rem; /* 24px */
+  background: #151515;
+  filter: drop-shadow(0 0.15rem 0.23rem rgba(0, 0, 0, 0.15))
+    drop-shadow(0 0.08rem 0.08rem rgba(0, 0, 0, 0.3));
+}
+
+.confirm-dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.82rem; /* 16px */
+  align-items: flex-start;
+  text-align: start;
+}
+
+/* The global .u500 / .u700 utilities add `padding-top: 1rem`, which would throw
+   off every gap measured above. Neutralise it inside the dialog. */
+.confirm-dialog .u500,
+.confirm-dialog .u700 {
+  padding-top: 0;
+  margin: 0;
+}
+
+.confirm-dialog-title {
+  color: #ffffff;
+  font-size: 1.65rem; /* 32px */
+  line-height: 2.78rem; /* 54px */
+  white-space: nowrap;
+}
+
+.confirm-dialog-message {
+  color: #c4c7c5;
+  opacity: 0.8;
+  font-size: 1.03rem; /* 20px */
+  line-height: 1.85rem; /* 36px */
+  letter-spacing: 0.02rem; /* 0.375px */
+}
+
+.confirm-dialog-actions {
+  display: flex;
+  gap: 0.82rem; /* 16px */
+  inline-size: 100%;
+}
+
+.confirm-dialog-btn {
+  box-sizing: border-box;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  padding-block: 0.62rem; /* 12px */
+  padding-inline: 2.47rem; /* 48px */
+  border-radius: 0.62rem; /* 12px */
+  font-size: 1.23rem; /* 24px */
+  line-height: 2.06rem; /* 40px */
+  white-space: nowrap;
+  background: #282828;
+  color: #e8e8e8;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+.confirm-dialog-btn-focus {
+  background: #e8e8e8;
+  color: #151515;
+}
