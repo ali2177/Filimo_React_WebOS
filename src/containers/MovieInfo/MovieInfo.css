@@ -473,6 +473,13 @@
   aspect-ratio: auto;
   object-fit: cover;
   border-radius: 0.4rem;
+  /* The focus ring (.btn-focus img { border: 0.2rem }) is drawn outside the
+     100% width/height under the default content-box, so a focused card's box
+     grew 0.4rem past its grid cell. In RTL that overhang spills left, where
+     for the last column it fell outside .allepisode-content-wrapper and got
+     clipped (inner columns hid it in the column-gap). Border-box keeps the
+     ring inside the cell, and stops focus from nudging the row vertically. */
+  box-sizing: border-box;
 }
 
 /* Title closer to the poster and lighter, matching the design. */
