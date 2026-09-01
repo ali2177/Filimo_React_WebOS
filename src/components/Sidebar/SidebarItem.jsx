@@ -5,8 +5,20 @@ import {
 } from "@noriginmedia/norigin-spatial-navigation";
 import { useLocation } from "react-router-dom";
 import { uiStorage } from "@src/utils/uiStorage";
+import { getSelectedProfile } from "@src/utils/profileSession";
+import { useReportNavFocus } from "../Navbar/NavFocusContext";
 
-const SidebarItem = ({ data, handleEnterPress, focuskeey, menuData, isActive }) => {
+// One focusable menu row. `variant="profile"` renders the head block (ringed
+// avatar + two lines) that sits above the list when signed in; everything else
+// renders the icon/label row. Focused and active look identical by design —
+// the orange dot under the icon is the only active-only marker.
+const SidebarItem = ({
+  data,
+  handleEnterPress,
+  focuskeey,
+  isActive,
+  variant,
+}) => {
   const { pathname } = useLocation();
   const { ref, focused, focusKey } = useFocusable({
     focusKey: focuskeey,
@@ -23,64 +35,108 @@ const SidebarItem = ({ data, handleEnterPress, focuskeey, menuData, isActive }) 
     },
   });
 
-  // When navigating to home, focus the home sidebar item and record it
+  // Tell the navbar whether this row holds focus. `focused` is pushed straight
+  // to the row, so it stays correct even when the nav's own `hasFocusedChild`
+  // doesn't arrive — see components/Navbar/NavFocusContext.js.
+  const reportNavFocus = useReportNavFocus();
+  useEffect(() => {
+    reportNavFocus(focusKey, focused);
+    return () => reportNavFocus(focusKey, false);
+  }, [reportNavFocus, focusKey, focused]);
+
+  // Landing on home makes the home row the one focus returns to. The row knows
+  // its own focus key, so there's no need to re-derive it from the menu list.
   useEffect(() => {
     if (pathname === "/" && data.link_key === "1") {
-      if (menuData) {
-        uiStorage.setItem(
-          "lastFocusMenuItem",
-          `menuItem__${menuData
-            .filter(
-              (item) =>
-                item.attributes.link_type !== "subscribe" &&
-                item.attributes.link_type !== "settings",
-            )
-            .findIndex((item) => item.attributes.link_key === "1")}`,
-        );
-      }
+      uiStorage.setItem("lastFocusMenuItem", focuskeey);
     }
-  }, [pathname, menuData]);
+  }, [pathname, focuskeey, data.link_key]);
 
-  return (
-    <div className="button-sign">
-      <div className={"links"}>
-        <div
-          ref={ref}
-          style={{
-            color: focused || isActive ? "white" : "gray",
-            transform: focused || isActive ? "scale(1.1)" : "scale(1)",
-          }}
-          onMouseEnter={() => {
-            setFocus(focusKey);
-          }}
-          onClick={() => {
-            handleEnterPress(focusKey);
-          }}
-          className="menuItem"
+  const highlighted = focused || isActive;
+
+  if (variant === "profile") {
+    // Figma shows the *profile's* name on top and the API's label below it. The
+    // name is only known once a profile has been picked, so fall back to the
+    // API's own label/sub_text pair when it hasn't.
+    const profile = getSelectedProfile();
+    const name = profile?.name || data.link_text;
+    const sub = profile?.name ? data.link_text : data.link_extra?.sub_text?.text;
+    const avatar = profile?.avatar || data.link_icon;
+    const ringColor = data.link_extra?.border?.color;
+
+    return (
+      <div
+        ref={ref}
+        className={
+          highlighted ? "nav-profile nav-profile--active" : "nav-profile"
+        }
+        onMouseEnter={() => {
+          setFocus(focusKey);
+        }}
+        onClick={() => {
+          handleEnterPress(focusKey);
+        }}
+      >
+        <span
+          className="nav-profile-ring"
+          style={ringColor ? { borderColor: ringColor } : undefined}
         >
-          <span className="sidbar-icon-wrap">
-            <img
-              className="sidbar-items-img"
-              style={{
-                width: "40px",
-                height: "40px",
-              }}
-              src={focused || isActive ? data.link_icon_h : data.link_icon}
-            />
-            {isActive && <span className="menu-active-dot" />}
-          </span>
-          {data.link_type === "profile" && (
-            <span className="menu-item-label u700">
-              {data.link_text.length > 10
-                ? `...${data.link_text.slice(0, 10)}`
-                : data.link_text}
+          {avatar ? (
+            <img className="nav-profile-avatar" src={avatar} alt="" />
+          ) : (
+            <span className="nav-profile-avatar nav-profile-fallback u700">
+              {name.slice(0, 1)}
             </span>
           )}
-          {data.link_type !== "profile" && (
-            <span className="menu-item-label u700">{data.link_text}</span>
-          )}
-        </div>
+        </span>
+        <span className="nav-profile-labels">
+          <span className="nav-profile-name u500">{name}</span>
+          {sub && <span className="nav-profile-sub u400">{sub}</span>}
+        </span>
       </div>
+    );
+  }
+
+  // link_extra.sub_text drives the second line — today only the subscribe row
+  // uses it ("اشتراک ندارید" in the API-supplied red).
+  const subText = data.link_extra?.sub_text;
+
+  return (
+    <div
+      ref={ref}
+      className={highlighted ? "menu-item menu-item--active" : "menu-item"}
+      onMouseEnter={() => {
+        setFocus(focusKey);
+      }}
+      onClick={() => {
+        handleEnterPress(focusKey);
+      }}
+    >
+      <span className="menu-item-icon-wrap">
+        <img
+          className="menu-item-icon"
+          src={highlighted ? data.link_icon_h : data.link_icon}
+          alt=""
+        />
+        {isActive && <span className="menu-active-dot" />}
+      </span>
+      <span className="menu-item-labels">
+        <span
+          className={
+            highlighted ? "menu-item-label u700" : "menu-item-label u500"
+          }
+        >
+          {data.link_text}
+        </span>
+        {subText?.text && (
+          <span
+            className="menu-item-sub u400"
+            style={subText.color ? { color: subText.color } : undefined}
+          >
+            {subText.text}
+          </span>
+        )}
+      </span>
     </div>
   );
 };

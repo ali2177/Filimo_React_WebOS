@@ -1,35 +1,14 @@
-import React, { useEffect, useState, useRef } from "react";
-import { useFocusable } from "@noriginmedia/norigin-spatial-navigation";
+import React from "react";
 import "./Sidebar.css";
-import logo from "../../assets/images/televika_type.png";
-import televikaX from "../../assets/images/televika_sign.png";
 import MenuItems from "./MenuItems";
 
-const Sidebar = React.memo(({ focusd, isLogin }) => {
-  const { ref, focused, focusSelf } = useFocusable();
-  return (
-    <>
-      <div ref={ref} className="logo-element">
-        {focusd ? (
-          <img
-            style={{
-              transform: focused ? "scale(1.3)" : "scale(1)",
-            }}
-            src="https://www.filimo.com/assets/app/filimo/android/nlogo_tv/ic_filimo_banner_v3.webp"
-            className="logo-expended"
-          />
-        ) : (
-          <img
-            style={{
-              transform: focused ? "scale(1.3)" : "scale(1)",
-            }}
-            src="https://www.filimo.com/assets/app/filimo/android/nlogo_tv/ic_launcher_v2.webp"
-            className="logo"
-          />
-        )}
-      </div>
-      <MenuItems isLogin={isLogin} />
-    </>
-  );
-});
+// Thin shell around the menu: supplies the padded panel column, while MenuItems
+// owns every row (head slot, list, pinned settings) because they all come from
+// the same API payload and have to share one FocusContext.
+const Sidebar = React.memo(({ isLogin }) => (
+  <div className="nav-panel">
+    <MenuItems isLogin={isLogin} />
+  </div>
+));
+
 export default Sidebar;

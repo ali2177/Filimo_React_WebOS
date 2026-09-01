@@ -11,7 +11,10 @@ import { useDisableKeyboardWhileLoading } from "@src/hooks/useDisableKeyboardWhi
 import { useFilimioFetch } from "@src/hooks/useFilimioFetch";
 import { clearHomeNavState } from "@src/utils/storageKeys";
 import { uiStorage } from "@src/utils/uiStorage";
-import { markProfileSelected } from "@src/utils/profileSession";
+import {
+  markProfileSelected,
+  setSelectedProfile,
+} from "@src/utils/profileSession";
 import { toFarsiDigits } from "@src/components/CustomPLayer/utils/toFarsiDigits";
 
 /** Nav/cache state that belongs to the outgoing profile, not the incoming one. */
@@ -65,9 +68,15 @@ const User = ({ jwtSub, user, index }) => {
           localStorage.setItem("jwt", result.data.attributes.token);
           setJwt(result.data.attributes.token);
           markProfileSelected();
+          // The navbar head block shows the active profile; this is the only
+          // place its name/avatar are available.
+          setSelectedProfile({
+            name: user.attributes.name,
+            avatar: user.attributes.avatar,
+          });
         })
         .catch((error) => console.error(error)),
-    [filimioFetch, setJwt]
+    [filimioFetch, setJwt, user.attributes.name, user.attributes.avatar]
   );
 
   const handleSelect = useCallback(() => {

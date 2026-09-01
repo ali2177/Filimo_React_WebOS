@@ -1,91 +1,235 @@
-@media only screen and (min-device-width: 2560px) {
-  .menuItem {
-    img {
-      width: 2.5rem !important;
-      height: 2.5rem !important;
-      border-radius: 10rem;
-    }
-  }
+/* Menu contents. Geometry, type and colour all come from Figma 2028:5534
+   (collapsed) and 2028:6158 / 2028:4681 (expanded); the tokens they read live
+   on .nav-drawer in Navbar.css.
 
-  .menu-items {
-    height: 44rem !important;
-  }
-}
+   The panel still mirrors for the English (LTR) build, but through flexbox and
+   [dir] overrides rather than CSS logical properties: `flex-start` on the cross
+   axis is the inline-start edge (right in RTL, left in LTR — the same edge the
+   panel is anchored to), which is what keeps the icon column flush against it.
 
-.logo-element {
-  /* padding-top: 68px;
-  margin-bottom: 100px; */
-  position: absolute;
-  top: 2rem;
-  right: 2rem;
-  width: 100%;
-  z-index: 1000;
-  /* background-color: #111111; */
-  /* background: linear-gradient(180deg, #0C0C0C 100%, #151515 70.04%); */
-}
-.logo-expended {
-  width: 110px;
-  height: 40px;
-}
-.logo {
-  width: 40px;
-  height: 40px;
-}
-.menu-items {
-  width: 100%;
-  /* height: 900px;
-  padding-right: 20px; */
-  /* height: 44rem !important; */
-  /* overflow-y: scroll; */
+   No flex `gap` anywhere in this file, on purpose. Samsung Tizen TVs run old
+   Chromium (Tizen 4.0 is Chromium 56) and flex `gap` only landed in Chromium 84,
+   so it is dropped silently and every row collapses onto its neighbour. Spacing
+   uses adjacent-sibling margins instead, which work everywhere. For the same
+   reason the inline margin and padding properties (Chromium 69) are avoided
+   too — the horizontal spacers below are physical, with a [dir="ltr"] mirror. */
+
+.nav-panel {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  height: 100%;
+  padding: var(--nav-pad);
+  box-sizing: border-box;
 }
 
-.menuItem {
+/* Head + list at the top, settings pushed to the bottom. */
+.menu-items {
+  flex: 1 1 auto;
   display: flex;
-  align-items: flex-end;
-  /* margin-bottom: 20px; */
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
 }
-.menuItem h8 {
-  font-size: 1.3rem;
-  letter-spacing: 0em;
-  text-align: right;
-  padding-top: 0;
+
+.nav-top {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
-.menu-item-label {
-  padding-right: 0.7rem;
-  padding-left: 0.7rem;
+
+.menu-items-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: var(--nav-gap-head);
 }
-.sidbar-icon-wrap {
+
+/* Row spacing. `* + *` skips the first row, so the list's own top margin above
+   stays exact — the equivalent of a column gap without needing `gap`. */
+.menu-items-list > * + * {
+  margin-top: var(--nav-gap-item);
+}
+
+/* Head slot. Signed in it holds both the brand mark and the profile block, and
+   the rail state below picks one. The height is reserved in every state so the
+   rows underneath never shift as they swap. */
+.nav-head {
+  display: flex;
+  align-items: center;
+  min-height: var(--nav-head-h);
+}
+
+.nav-logo {
+  width: var(--nav-icon);
+  height: var(--nav-icon);
+  object-fit: contain;
+}
+
+/* `display`, not `opacity`: the mark and the profile block occupy the same slot,
+   so the hidden one has to leave the flow or they stack side by side. */
+.nav-drawer:not(.nav-drawer--expanded) .nav-profile {
+  display: none;
+}
+
+.nav-drawer--expanded .nav-logo {
+  display: none;
+}
+
+/* ---------------------------------------------------------------- menu row */
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  color: var(--nav-fg);
+  cursor: pointer;
+}
+
+.menu-item--active {
+  color: var(--nav-fg-active);
+}
+
+.menu-item-icon-wrap {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex: 0 0 auto;
+  width: var(--nav-icon);
+  height: var(--nav-icon);
 }
+
+.menu-item-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Physical `left` + translateX on purpose: transforms aren't direction-aware,
+   so this pair centres the dot identically in RTL and LTR. */
 .menu-active-dot {
   position: absolute;
-  bottom: -8px;
+  bottom: -0.41rem; /* -8px @1080p */
   left: 50%;
   transform: translateX(-50%);
-  width: 8px;
-  height: 8px;
+  width: 0.41rem; /* 8px */
+  height: 0.41rem;
   border-radius: 50%;
   background: linear-gradient(90deg, #f5b83f 0%, #e77630 100%);
 }
 
-/* Settings item (API "bottom-right") pinned to the bottom of the sidebar,
-   positioned against the absolutely-positioned nav.drawer / .drawer-focus. */
-.menu-settings-item {
-  position: absolute;
-  bottom: 2.5rem;
-  right: 1rem;
+.menu-item-labels {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: start;
+  white-space: nowrap;
 }
-.drawer .menu-settings-item {
-  inset-inline-end: 2rem;
+
+/* Icon <-> label spacing lives on the label column, not on the row, so the
+   collapsed rail gets it for free: the column is display:none there, and its
+   margin goes with it. */
+.menu-item-labels,
+.nav-profile-labels {
+  margin-right: var(--nav-gap-icon);
 }
-.drawer-focus .menu-settings-item {
-  left: 50%;
-  transform: translateX(-50%);
+
+[dir="ltr"] .menu-item-labels,
+[dir="ltr"] .nav-profile-labels {
+  margin-right: 0;
+  margin-left: var(--nav-gap-icon);
+}
+
+.menu-item-labels > * + * {
+  margin-top: 0.21rem; /* 4px @1080p */
+}
+
+.menu-item-label {
+  font-size: 1.23rem; /* 24px */
+  line-height: 1.65rem; /* 32px */
+  color: inherit;
+}
+
+.menu-item-sub {
+  font-size: 0.82rem; /* 16px */
+  line-height: 1.23rem; /* 24px */
+}
+
+/* -------------------------------------------------------- profile head block */
+
+.nav-profile {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: var(--nav-fg);
+}
+
+.nav-profile--active {
+  color: var(--nav-fg-active);
+}
+
+.nav-profile-ring {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  padding: 0.21rem; /* 4px @1080p */
+  border: 0.1rem solid var(--nav-danger); /* 2px */
+  border-radius: 80px;
+}
+
+.nav-profile-avatar {
+  display: block;
+  width: var(--nav-icon);
+  height: var(--nav-icon);
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.nav-profile-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.12);
+  font-size: 1.03rem; /* 20px @1080p */
+  line-height: 1;
+  color: var(--nav-fg-active);
+}
+
+.nav-profile-labels {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: start;
+  white-space: nowrap;
+  color: inherit;
+}
+
+.nav-profile-labels > * + * {
+  margin-top: 0.15rem; /* 3px */
+}
+
+.nav-profile-name {
+  font-size: 1.23rem; /* 24px */
+  line-height: 1.65rem; /* 32px */
+}
+
+.nav-profile-sub {
+  font-size: 0.93rem; /* 18px */
+  line-height: 1.23rem; /* 24px */
+}
+
+/* ------------------------------------------------------------- rail state */
+
+/* Collapsed: icons only. Labels are removed from flow rather than hidden so the
+   rail keeps its 200px width regardless of how long the labels are. */
+.nav-drawer:not(.nav-drawer--expanded) .menu-item-labels,
+.nav-drawer:not(.nav-drawer--expanded) .nav-profile-labels {
+  display: none;
+}
+
+/* The global .u400/.u500/.u700 font utilities also inject `padding-top: 1rem`
+   (App.css), which would push every label off its icon's centre line. */
+.nav-drawer .u400,
+.nav-drawer .u500,
+.nav-drawer .u700 {
+  padding-top: 0;
 }

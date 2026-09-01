@@ -45,11 +45,6 @@
     width: 8rem !important;
     height: 3rem;
   }
-  .logo {
-    width: 3.5rem !important;
-    height: 3rem;
-  }
-
   .calender-text {
     font-size: 1.2rem !important;
     line-height: 1.7rem !important;
@@ -97,23 +92,6 @@
   .main-rows {
     margin-top: -620px !important;
   } */
-  .button-sign {
-    margin-bottom: 3.1rem !important;
-  }
-  .drawer {
-    width: 100% !important;
-    /* padding-right: 3rem; */
-  }
-  .drawer-focus {
-    width: 6.6rem !important;
-  }
-  .menuItem {
-    img {
-      width: 2.5rem !important;
-      height: 2.5rem !important;
-      border-radius: 100rem;
-    }
-  }
   #main-page-movie {
     margin-left: 1.6rem;
   }
@@ -228,20 +206,6 @@
     transform: rotate(360deg);
   }
 }
-.button-sign {
-  margin-bottom: 2.5rem;
-  /* padding-right: 56px; */
-}
-.button-notsign {
-  margin-bottom: 2.9rem;
-  /* padding-right: 56px; */
-}
-.button-sign:focus a {
-  color: white;
-}
-.button-notsign:focus a {
-  color: white;
-}
 .button:visited a {
   color: white;
 }
@@ -294,14 +258,6 @@
 
   border-radius: 10px;
   object-fit: contain;
-}
-.links {
-  color: #737373;
-}
-.links span {
-  font-weight: 700;
-  font-size: 1.238rem;
-  text-align: right;
 }
 
 /* .list{
@@ -391,7 +347,10 @@
   width: 100%;
   height: 100vh;
   isolation: isolate;
-  padding-right: 6.6rem;
+  /* Clears the collapsed navbar rail (--nav-rail-w in index.css). Physical with
+     an LTR mirror below — padding-inline-start is Chromium 69 and old Tizen
+     browsers drop it. */
+  padding-right: var(--nav-rail-w);
   box-sizing: border-box;
   /* background-image: linear-gradient(
       270deg,
@@ -404,6 +363,12 @@
   background-repeat: no-repeat;
   background-size: 90% 740px; */
 }
+
+[dir="ltr"] .content {
+  padding-right: 0;
+  padding-left: var(--nav-rail-w);
+}
+
 .content-placeholder {
   width: 100%;
   height: 740px;

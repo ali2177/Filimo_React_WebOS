@@ -39,9 +39,16 @@ jest.mock('@src/utils/uiStorage', () => ({
 // Note: forwardRef stubs are not needed because <Loader /> is rendered before
 // these are ever mounted (isLoading starts as true).
 jest.mock('../PlayBotton', () => () => <button data-testid="play-btn" />);
-jest.mock('../SeasonsBtn', () => () => <div data-testid="season-btn" />);
-jest.mock('../RecommBtn', () => () => <div data-testid="recomm-btn" />);
-jest.mock('../MoreBtn', () => () => <div data-testid="more-btn" />);
+jest.mock('../ActionButtons', () => () => <div data-testid="action-buttons" />);
+// TabBar is imported for both its default export and `tabFocusKey`.
+jest.mock('../tabs/TabBar', () => ({
+  __esModule: true,
+  default: () => <div data-testid="tab-bar" />,
+  tabFocusKey: () => 'tab-0',
+}));
+jest.mock('../tabs/EpisodesPanel', () => () => <div data-testid="episodes-panel" />);
+jest.mock('../tabs/DetailPanel', () => () => <div data-testid="detail-panel" />);
+jest.mock('../tabs/RecommPanel', () => () => <div data-testid="recomm-panel" />);
 jest.mock('@src/components/HeroBadge/HeroBadge', () => () => null);
 jest.mock('@src/components/Alert/Alert', () => () => null);
 

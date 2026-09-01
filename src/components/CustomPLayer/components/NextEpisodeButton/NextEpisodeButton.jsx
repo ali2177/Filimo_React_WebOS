@@ -86,6 +86,8 @@ const NextEpisodeButton = ({
       </div>
       <div
         ref={dismissRef}
+        role="button"
+        aria-label="بستن"
         className={`next-episode-dismiss${dismissFocused ? " next-episode-dismiss-focused" : ""}`}
         onClick={onDismiss}
       >

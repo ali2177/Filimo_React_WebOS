@@ -1,14 +1,27 @@
+:root {
+  /* Width of the collapsed navbar rail. It lives here rather than on
+       .nav-drawer because page content has to clear it from its own stylesheets
+       (the hero slider, the home rows, .content) and a component-scoped custom
+       property isn't visible to them.
+
+       Sized in rem, not px: <html> carries font-size: 1.8vh (public/index.html),
+       so 1rem is 19.44px on the 1080p Figma frame and the whole UI scales down
+       together on a 720p TV. 10.29rem is the Figma 200px at that reference. */
+  --nav-rail-w: 10rem;
+}
+
 ::-webkit-scrollbar {
-    width: 0;
-    display: none;
+  width: 0;
+  display: none;
 }
 
 * {
-    text-decoration: none;
+  text-decoration: none;
 }
 
-body, html {
-    background-color: #151515;
-    margin: 0;
-    padding: 0;
+body,
+html {
+  background-color: #151515;
+  margin: 0;
+  padding: 0;
 }

@@ -40,7 +40,7 @@ describe("NextEpisodeButton", () => {
         onDismiss={jest.fn()}
       />
     );
-    expect(screen.getByText("✕")).toBeInTheDocument();
+    expect(screen.getByLabelText("بستن")).toBeInTheDocument();
   });
 
   test("calls onNextEpisode with nextPartUid when the button is clicked", () => {
@@ -69,7 +69,7 @@ describe("NextEpisodeButton", () => {
       />
     );
 
-    fireEvent.click(screen.getByText("✕"));
+    fireEvent.click(screen.getByLabelText("بستن"));
     expect(onDismiss).toHaveBeenCalledTimes(1);
   });
 

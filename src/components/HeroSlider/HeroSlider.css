@@ -44,7 +44,12 @@
 .hero-slider-info {
   position: absolute;
   top: 18rem;
-  right: 7.6rem;
+  /* Offset from the right, because .hero-slider hardcodes `direction: rtl` (and
+     because inset-inline-* is Chromium 87, out of reach for old Tizen — see the
+     note at the top of this file). Derived from the rail rather than guessed: at
+     a hardcoded 7.6rem the text and play button ran 52px under the 200px rail at
+     1080p, and 102px under it at 720p. */
+  right: calc(var(--nav-rail-w));
   width: 40rem;
   max-width: 46vw;
   /* Each child row has a reserved height (below), so the total height — and

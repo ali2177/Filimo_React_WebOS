@@ -18,6 +18,11 @@ const HANDLED_LIST_KEYS = ["1", "kids", "movies", "series"];
 // which maps to tagid/{tag}/other_data/{filter&sort} (per the API link_type guide).
 const LIST_FILTER_SEP = "__FILTER__";
 
+// Brand mark for the collapsed rail. Signed in, the profile block takes this
+// slot instead; signed in or out, the design hides it once the panel expands.
+const FILIMO_MARK =
+  "https://www.filimo.com/assets/app/filimo/android/nlogo_tv/ic_launcher_v2.webp";
+
 const MenuItems = ({ isLogin }) => {
   const { jwt } = useAuth();
   const { ref, focusKey } = useFocusable({
@@ -28,7 +33,9 @@ const MenuItems = ({ isLogin }) => {
   });
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const { data: menuResponse } = useGetMenuQuery(jwt, { refetchOnMountOrArgChange: true });
+  const { data: menuResponse } = useGetMenuQuery(jwt, {
+    refetchOnMountOrArgChange: true,
+  });
 
   // TEMP: the menu API doesn't yet return the "My Movies" (mycontent) item —
   // backend needs to add it. Hardcode it here so the page is testable. Remove
@@ -168,6 +175,10 @@ const MenuItems = ({ isLogin }) => {
         return;
       case "nolink":
         return; // explicitly do nothing
+      case "subscribe":
+        // TODO: no purchase screen exists yet. The row is rendered because the
+        // design calls for it; wire this up once the route lands.
+        return;
       default:
         // Backend added a link_type this build doesn't route yet — no-op rather
         // than break navigation. Surface it so we know to add a case.
@@ -176,16 +187,23 @@ const MenuItems = ({ isLogin }) => {
     }
   };
 
+  // Three slots, mirroring the API's own `position` field: the profile item goes
+  // in the head block above the list ("top-right"), settings is pinned to the
+  // bottom ("bottom-right"), everything else is a list row ("right"). Signed
+  // out there is no profile item — the API sends a "login" row instead, which
+  // stays inline, and the head block shows the brand mark.
   const filteredMenu = menuData
     ? menuData.filter(
         (item) =>
-          item.attributes.link_type !== "subscribe" &&
-          item.attributes.link_type !== "settings"
+          item.attributes.link_type !== "profile" &&
+          item.attributes.link_type !== "settings",
       )
     : [];
 
-  // The API ships a settings item (link_type "settings", position "bottom-right")
-  // that we render pinned to the bottom of the sidebar rather than inline.
+  const profileItem = menuData
+    ? menuData.find((item) => item.attributes.link_type === "profile")
+    : null;
+
   const settingsItem = menuData
     ? menuData.find((item) => item.attributes.link_type === "settings")
     : null;
@@ -193,22 +211,44 @@ const MenuItems = ({ isLogin }) => {
   return (
     <FocusContext.Provider value={focusKey}>
       <div ref={ref} className="menu-items">
-        {filteredMenu.map((item, index) => (
-          <div key={`${item.id}-${index}`}>
-            <SidebarItem
-              data={item.attributes}
-              handleEnterPress={(fk) => {
-                uiStorage.setItem("lastFocusMenuItem", fk);
-                handleInterPress(item.attributes);
-              }}
-              focuskeey={`menuItem__${index}`}
-              menuData={menuData}
-              isActive={getIsActive(item)}
-            />
+        <div className="nav-top">
+          {/* Both head nodes are rendered whenever a profile exists; Sidebar.css
+              shows the brand mark on the collapsed rail and the profile block on
+              the expanded panel. Signed out there is no profile item, so the mark
+              stays in both states — which is what Figma 2028:6158 shows. */}
+          <div className="nav-head">
+            <img className="nav-logo" src={FILIMO_MARK} alt="" />
+            {profileItem && (
+              <SidebarItem
+                data={profileItem.attributes}
+                variant="profile"
+                handleEnterPress={(fk) => {
+                  uiStorage.setItem("lastFocusMenuItem", fk);
+                  handleInterPress(profileItem.attributes);
+                }}
+                focuskeey="menuItem__profile"
+                isActive={getIsActive(profileItem)}
+              />
+            )}
           </div>
-        ))}
 
-        {settingsItem && (
+          <div className="menu-items-list">
+            {filteredMenu.map((item, index) => (
+              <SidebarItem
+                key={`${item.id}-${index}`}
+                data={item.attributes}
+                handleEnterPress={(fk) => {
+                  uiStorage.setItem("lastFocusMenuItem", fk);
+                  handleInterPress(item.attributes);
+                }}
+                focuskeey={`menuItem__${index}`}
+                isActive={getIsActive(item)}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* {settingsItem && (
           <div className="menu-settings-item">
             <SidebarItem
               data={settingsItem.attributes}
@@ -217,11 +257,10 @@ const MenuItems = ({ isLogin }) => {
                 handleInterPress(settingsItem.attributes);
               }}
               focuskeey="menuItem__settings"
-              menuData={menuData}
               isActive={getIsActive(settingsItem)}
             />
           </div>
-        )}
+        )} */}
       </div>
     </FocusContext.Provider>
   );

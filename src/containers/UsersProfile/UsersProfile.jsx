@@ -55,7 +55,7 @@ const UsersProfile = () => {
   // token is decoded, and that response is cached against a useless key.
   const { data, error, isFetching } = useGetUsersProfileQuery(
     { jwtSub },
-    { skip: !jwtSub }
+    { skip: !jwtSub },
   );
 
   const profiles = data?.data;
@@ -67,12 +67,12 @@ const UsersProfile = () => {
     (async () => {
       try {
         const res = await filimioFetch(
-          buildApiUrl("partner/TV/profile?devicetype=react_tizen")
+          buildApiUrl("partner/TV/profile?devicetype=react_tizen"),
         );
         const blocks = await res?.json();
         if (cancelled) return;
         const locked = Boolean(
-          blocks?.data?.attributes?.Profile_kids?.kids_lock
+          blocks?.data?.attributes?.Profile_kids?.kids_lock,
         );
         localStorage.setItem("kids-Lock", locked);
       } catch (e) {
@@ -88,12 +88,12 @@ const UsersProfile = () => {
   useEffect(() => {
     if (!profiles?.length) return;
     const mainIndex = profiles.findIndex(
-      (user) => user?.attributes?.main_user === "yes"
+      (user) => user?.attributes?.main_user === "yes",
     );
     const index = mainIndex === -1 ? 0 : mainIndex;
     const id = setTimeout(
       () => setFocus(userFocusKey(profiles[index], index)),
-      10
+      10,
     );
     return () => clearTimeout(id);
   }, [profiles]);
@@ -139,7 +139,7 @@ const UsersProfile = () => {
               user={user}
             />
           ))}
-          {profiles.length < MAX_PROFILES && <AddProfileCard />}
+          {/* {profiles.length < MAX_PROFILES && <AddProfileCard />} */}
         </div>
 
         <div className="profiles-actions">

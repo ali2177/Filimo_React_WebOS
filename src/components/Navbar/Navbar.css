@@ -1,70 +1,102 @@
-.drawer {
+/* Sidebar shell. Two states, both anchored to the inline-start screen edge
+   (right in RTL, left in English):
+     .nav-drawer              collapsed rail — icons only, fixed 200px
+     .nav-drawer--expanded    expanded panel — labels visible, content-width
+   Figma: 2028:5534 (collapsed), 2028:6158 / 2028:4681 (expanded). */
+.nav-drawer {
+  /* The navbar's design tokens. Scoped here rather than :root because this is
+     the only surface currently ported to the new spec — App.css still carries
+     the old hardcoded palette. (--nav-rail-w is the exception and lives in
+     index.css, because page content has to clear the rail too.)
+
+     Sizes are in rem against the 1080p Figma frame, where <html>'s font-size:
+     1.8vh makes 1rem = 19.44px. Values are pixel-exact at 1080p and scale with
+     the rest of the app below that — at fixed px the panel was 819px tall and
+     pushed the settings gear off the bottom of a 720p screen. */
+  --nav-pad: 3.5rem; /* 80px @1080p */
+  --nav-icon: 2.06rem; /* 40px */
+  --nav-gap-icon: 2.06rem; /* 40px, icon <-> label */
+  --nav-gap-item: 2.06rem; /* 40px, between rows */
+  --nav-gap-head: 6.17rem; /* 120px, head block <-> first row */
+  --nav-head-h: 3.04rem; /* 59px */
+  --nav-fg: #737373;
+  --nav-fg-active: #e8e8e8;
+  --nav-danger: #e94242;
+
+  /* Physical `right` + a [dir="ltr"] mirror below, not inset-inline-start.
+     Samsung Tizen runs old Chromium (4.0 is Chromium 56) and the inline inset
+     properties only landed in Chromium 87, so they are dropped there and the
+     rail falls back to its static position — same trap the `inset` shorthand
+     sets in HeroSlider.css. */
   position: absolute;
   top: 0;
   right: 0;
-  width: 270px;
-  height: 100vh;
-  overflow: hidden;
-  border: none;
-  z-index: 999999999;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-/* Full-screen gradient overlay behind the expanded menu column */
-.drawer::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 100%;
-  width: 100vw;
-  z-index: -1;
-  pointer-events: none;
-  background: linear-gradient(
-    270deg,
-    #151515 0%,
-    rgba(21, 21, 21, 0.95) 25.32%,
-    rgba(21, 21, 21, 0.8) 49.81%,
-    rgba(21, 21, 21, 0) 100%
-  );
-}
-.drawer .menu-items {
-  align-items: flex-start;
-  padding-right: 2rem;
-}
-.drawer-focus {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 120px;
+  width: var(--nav-rail-w);
   height: 100vh;
   border: none;
   z-index: 100;
   display: flex;
   flex-direction: column;
-  justify-content: center;
 }
-.drawer-focus .menu-item-label {
-  display: none;
+
+/* Scrim. The rail dims only its own 200px; the expanded panel washes the whole
+   viewport so the content behind the labels stays readable. */
+.nav-drawer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    270deg,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
 }
-.drawer-focus .button-sign {
-  margin-bottom: 70px;
+
+.nav-drawer--expanded {
+  width: auto;
+  z-index: 999999999;
 }
-.drawer-focus .button-notsign {
-  margin-bottom: 3rem;
+
+.nav-drawer--expanded::before {
+  width: 100vw;
+  background: linear-gradient(
+    270deg,
+    #000 0%,
+    rgba(0, 0, 0, 0.95) 25.32%,
+    rgba(0, 0, 0, 0.8) 49.81%,
+    rgba(0, 0, 0, 0) 100%
+  );
 }
-.drawer .button {
-  margin-bottom: 30px;
+
+/* The English (LTR) layout, mirrored by hand. Anchoring and gradient angles are
+   both physical, and the logical properties that would express them for free
+   (inset-inline-*, margin-inline-*) are too new for the Tizen browsers this
+   ships to — so the whole nav is written physical-first and flipped here. */
+[dir="ltr"] .nav-drawer,
+[dir="ltr"] .nav-drawer::before {
+  right: auto;
+  left: 0;
 }
-.drawer-focused {
-  flex-shrink: 0;
-  background-color: beige;
-  width: 100px;
-  padding-right: "22px";
-  padding-left: "22px";
-  padding-top: "60px";
-  border: "none";
-  /* overflow: auto;
-  overflow-y: scroll; */
+
+[dir="ltr"] .nav-drawer::before {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+[dir="ltr"] .nav-drawer--expanded::before {
+  background: linear-gradient(
+    90deg,
+    #000 0%,
+    rgba(0, 0, 0, 0.95) 25.32%,
+    rgba(0, 0, 0, 0.8) 49.81%,
+    rgba(0, 0, 0, 0) 100%
+  );
 }

@@ -6,12 +6,21 @@
 
 .home-rows-wrapper {
   padding-top: 1.44rem;
+  /* Clear the collapsed navbar icon rail (keeps the hero background full-bleed).
+     Physical, with a [dir="ltr"] mirror below, because the inline margin and
+     padding properties are Chromium 69 and old Tizen browsers drop them. */
   margin-right: 1.54rem;
-  /* Clear the collapsed navbar icon rail (keeps the hero background full-bleed) */
-  padding-right: 120px;
+  padding-right: var(--nav-rail-w);
   position: relative;
   z-index: 999999;
   transition: transform 0.25s ease;
+}
+
+[dir="ltr"] .home-rows-wrapper {
+  margin-right: 0;
+  padding-right: 0;
+  margin-left: 1.54rem;
+  padding-left: var(--nav-rail-w);
 }
 
 /* Rows drop slightly while the hero slider is focused; they slide back up
@@ -20,11 +29,7 @@
   transform: translateY(4rem);
 }
 
-@media screen and (min-width: 1600px) {
-  .home-rows-wrapper {
-    padding-right: 6.6rem;
-  }
-}
+/* No wide-screen override: the rail is a fixed 200px at every width now. */
 
 .home-rows-wrapper--kids {
   padding-top: 1.54rem;
